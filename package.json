@@ -19,7 +19,6 @@
     "lint:prettier": "prettier -c --write \"src/**/*\" --end-of-line auto",
     "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
     "openapi": "umi openapi",
-    "precommit": "lint-staged",
     "prettier": "prettier -c --write \"src/**/*\"",
     "serve": "umi-serve",
     "start": "cross-env UMI_ENV=dev umi dev",
@@ -93,6 +92,8 @@
     "stylelint": "^13.0.0",
     "typescript": "^4.2.2"
   },
-  "engines": { "node": ">=10.0.0" },
-  "gitHooks": { "commit-msg": "fabric verify-commit" }
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "gitHooks": {}
 }

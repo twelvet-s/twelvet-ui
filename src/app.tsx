@@ -103,16 +103,6 @@ export const request: RequestConfig = {
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    navTheme: 'light',
-    // 拂晓蓝
-    primaryColor: '#1890ff',
-    layout: 'mix',
-    contentWidth: 'Fluid',
-    fixedHeader: false,
-    fixSiderbar: true,
-    // 是否开启分割菜单
-    splitMenus: true,
-    colorWeak: false,
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
