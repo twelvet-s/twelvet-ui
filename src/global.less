@@ -13,6 +13,9 @@ body,
 .ant-layout {
   min-height: 100vh;
 }
+.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
+  left: unset;
+}
 
 canvas {
   display: block;
@@ -26,8 +29,6 @@ body {
 
 ul,
 ol {
-  padding: 0;
-  margin: 0;
   list-style: none;
 }
 
@@ -48,16 +49,9 @@ ol {
   }
 }
 
-// 兼容IE11
+// Compatible with IE11
 @media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
   body .ant-design-pro > .ant-layout {
     min-height: 100vh;
   }
-}
-
-// 修改antd Table默认为居中(依然可以使用columns的config进行配置)
-.ant-table-content .ant-table-thead > tr > th, .ant-table-cell {text-align: center}
-
-a:hover{
-  color: #588fc1;
 }
