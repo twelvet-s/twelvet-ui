@@ -1,17 +1,14 @@
-import { useIntl } from 'umi';
-import { GithubOutlined } from '@ant-design/icons';
+import React from 'react';
 import { DefaultFooter } from '@ant-design/pro-layout';
+import { GithubOutlined } from '@ant-design/icons';
 
-export default () => {
-    const intl = useIntl();
-    const defaultMessage = intl.formatMessage({
-        id: 'app.copyright.produced',
-        defaultMessage: '蚂蚁集团体验技术部出品',
-    });
-
+/**
+ * Footer版权信息
+ */
+const Footer = () => {
     return (
         <DefaultFooter
-            copyright={`2020 ${defaultMessage}`}
+            copyright={`${new Date().getFullYear()} TwelveT`}
             links={
                 [
                     {
@@ -34,5 +31,7 @@ export default () => {
                     },
                 ]}
         />
-    );
-};
+    )
+}
+
+export default Footer;
