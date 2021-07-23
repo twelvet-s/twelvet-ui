@@ -40,6 +40,7 @@
   },
   "browserslist": ["> 1%", "last 2 versions", "not ie <= 10"],
   "dependencies": {
+    "echarts": "^4.8.0",
     "@ant-design/icons": "^4.5.0",
     "@ant-design/pro-descriptions": "^1.6.8",
     "@ant-design/pro-form": "^1.18.3",
