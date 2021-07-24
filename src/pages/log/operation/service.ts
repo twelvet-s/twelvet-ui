@@ -1,4 +1,4 @@
-import { request, download } from 'umi'
+import { request } from 'umi'
 
 // 请求的控制器名称
 const controller = "/system/operationLog";
@@ -40,6 +40,6 @@ export async function remove(infoIds: string) {
  * 导出Excel
  * @param params
  */
-export async function exportExcel(params?: Record<string, any>) {
-    return download(`${controller}/export`, params);
-}
+// export async function exportExcel(params?: Record<string, any>) {
+//     return download(`${controller}/export`, params);
+// }

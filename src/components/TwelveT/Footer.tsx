@@ -5,7 +5,7 @@ import { GithubOutlined } from '@ant-design/icons';
 /**
  * Footer版权信息
  */
-const Footer = () => {
+const Footer: React.FC = () => {
     return (
         <DefaultFooter
             copyright={`${new Date().getFullYear()} TwelveT`}

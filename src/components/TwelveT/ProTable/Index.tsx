@@ -188,28 +188,27 @@ const TWTProTable: React.FC<ProTableProps<string, ParamsType>> = props => {
     } = props
 
 
-    useEffect(() => {
-        columns && columns.map((item, index) => {
-            if (columns[index]['valueType'] == 'option') {
-                columns[index]['width'] = 320
-            }
-            // 默认不允许数据自动换行
-            if (columns[index]['ellipsis'] == undefined) {
-                columns[index]['ellipsis'] = true
-            }
-            // 设置placeholder
-            if (columns[index]['fieldProps'] == undefined) {
-                columns[index]['fieldProps'] = { "placeholder": columns[index]['title'] }
-            }
-            // 处理columns数据的标题渲染(搜索框不显示标题，由placeholder代替)
-            // columns[index]['title'] = (config, type) => { type == 'table' && columns[index]['title'] }
-        })
-    }, [columns])
+    // useEffect(() => {
+    //     columns && columns.map((item, index) => {
+    //         if (columns[index]['valueType'] == 'option') {
+    //             columns[index]['width'] = 320
+    //         }
+    //         // 默认不允许数据自动换行
+    //         if (columns[index]['ellipsis'] == undefined) {
+    //             columns[index]['ellipsis'] = true
+    //         }
+    //         // 设置placeholder
+    //         if (columns[index]['fieldProps'] == undefined) {
+    //             columns[index]['fieldProps'] = { "placeholder": columns[index]['title'] }
+    //         }
+    //         // 处理columns数据的标题渲染(搜索框不显示标题，由placeholder代替)
+    //         // columns[index]['title'] = (config, type) => { type == 'table' && columns[index]['title'] }
+    //     })
+    // }, [columns])
 
     return (
         <ProTable
             // 支持横向超出自适应
-            scroll={{ x: 'x-content' }}
             // 请求数据地址
             request={async (params, sort, filter) => {
                 try {

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { ProColumns } from '@/components/TwelveT/ProTable/Table'
-import  { ActionType } from '@/components/TwelveT/ProTable/Index'
+import TWTProTable, { ActionType } from '@/components/TwelveT/ProTable/Index'
 import { DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined } from '@ant-design/icons'
 import ProDescriptions from '@ant-design/pro-descriptions'
 import { Popconfirm, Button, message, Modal, DatePicker, Space, FormInstance } from 'antd'
@@ -8,6 +8,7 @@ import moment, { Moment } from 'moment'
 import { pageQuery, remove, exportExcel, getDictionariesType } from './service'
 import { system } from '@/utils/twelvet'
 import ProTable from '@ant-design/pro-table'
+import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 
 /**
  * 操作日志
@@ -159,15 +160,18 @@ const Operation: React.FC<{}> = () => {
     const handleCancel = () => {
         setModal({ title: "", visible: false })
     }
+    
 
     return (
         <>
             <ProTable
+                {
+                    ...proTableConfigs
+                }
                 actionRef={acForm}
                 formRef={formRef}
                 rowKey="operId"
                 columns={columns}
-                request={pageQuery}
                 rowSelection={{}}
                 beforeSearchSubmit={(params) => {
                     // 分隔搜索参数
@@ -183,93 +187,12 @@ const Operation: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
-                    <Popconfirm
-                        disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
-                        onConfirm={() => refRemove(selectedRowKeys)}
-                        title="是否删除选中数据"
-                    >
-                        <Button
-                            disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
-                            type="primary" danger
-                        >
-                            <DeleteOutlined />
-                            批量删除
-                        </Button>
-                    </Popconfirm>,
-                    <Popconfirm
-                        title="是否导出数据"
-                        onConfirm={() => {
-                            exportExcel({
-                                ...formRef.current?.getFieldsValue()
-                            })
-                        }}
-                    >
-                        <Button type="default">
-                            <FundProjectionScreenOutlined />
-                            导出数据
-                        </Button>
-                    </Popconfirm>
+
                 ]}
 
             />
 
-            <Modal
-                title={`查看详情`}
-                width={700}
-                visible={modal.visible}
-                okText={`${modal.title}`}
-                onCancel={handleCancel}
-                footer={null}
-            >
-                <ProDescriptions
-                    column={2}
-                >
 
-                    <ProDescriptions.Item label="操作模块">
-                        {descriptions && descriptions.service}
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="请求方式">
-                        {descriptions && descriptions.requestMethod}
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="请求地址">
-                        {descriptions && descriptions.operUrl}
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="操作方法">
-                        {descriptions && descriptions.method}
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="请求参数" valueType="jsonCode">
-                        {descriptions && descriptions.operParam}
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="返回参数" valueType="jsonCode">
-                        {descriptions && descriptions.jsonResult}
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="操作状态">
-                        {
-                            descriptions && descriptions.status === 1 ? '正常' : '失败'
-                        }
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="操作人员">
-                        {descriptions && descriptions.operName}
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="操作时间">
-                        {descriptions && descriptions.operTime}
-                    </ProDescriptions.Item>
-
-                    <ProDescriptions.Item label="操作地点">
-                        {descriptions && descriptions.operIp}
-                    </ProDescriptions.Item>
-
-                </ProDescriptions>
-
-            </Modal>
         </>
     )
 

@@ -1,51 +1,72 @@
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { PageLoading } from '@ant-design/pro-layout';
-import { notification } from 'antd';
-import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history } from 'umi';
-import RightContent from '@/components/RightContent';
-import Footer from '@/components/Footer';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
+import { PageLoading } from '@ant-design/pro-layout'
+import { notification } from 'antd'
+import type { RequestConfig, RunTimeLayoutConfig } from 'umi'
+import { history } from 'umi'
+import RightContent from '@/components/RightContent'
+import Footer from '@/components/Footer'
+import { currentUser as queryCurrentUser } from './services/ant-design-pro/api'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { RequestOptionsInit } from 'umi-request'
+import TWT from './setting'
 
-const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
+const isDev = process.env.NODE_ENV === 'development'
+const loginPath = '/user/login'
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
     loading: <PageLoading />,
-};
+}
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
 export async function getInitialState(): Promise<{
-    settings?: Partial<LayoutSettings>;
-    currentUser?: API.CurrentUser;
-    fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+    settings?: Partial<LayoutSettings>
+    currentUser?: API.CurrentUser
+    fetchUserInfo?: () => Promise<API.CurrentUser | undefined>
 }> {
-    const fetchUserInfo = async () => {
-        try {
-            const msg = await queryCurrentUser();
-            return msg.data;
-        } catch (error) {
-            history.push(loginPath);
-        }
-        return undefined;
-    };
-    // 如果是登录页面，不执行
-    if (history.location.pathname !== loginPath) {
-        const currentUser = await fetchUserInfo();
-        return {
-            fetchUserInfo,
-            currentUser,
-            settings: {},
-        };
-    }
+    // const fetchUserInfo = async () => {
+    //     try {
+    //         const msg = await queryCurrentUser()
+    //         return msg.data
+    //     } catch (error) {
+    //         history.push(loginPath)
+    //     }
+    //     return undefined
+    // }
+    // // 如果是登录页面，不执行
+    // if (history.location.pathname !== loginPath) {
+    //     const currentUser = await fetchUserInfo()
+    //     return {
+    //         fetchUserInfo,
+    //         currentUser,
+    //         settings: {},
+    //     }
+    // }
+    // return {
+    //     fetchUserInfo,
+    //     settings: {},
+    // }
+}
+
+/**
+ * 新增token，加入api前缀
+ * @param url 原始URL
+ * @param options 操作信息
+ * @returns {URL, Options}
+ */
+const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
+
+    const local = localStorage.getItem(TWT.accessToken)
+    
+    const { access_token, expires_in } = local ? JSON.parse(local) : { access_token: '', expires_in: 0 }
+
+    const authHeader = { Authorization: `Bearer ${access_token}` }
     return {
-        fetchUserInfo,
-        settings: {},
-    };
+        url: url.substr(0, 1) === '/' ? `/api${url}` : `/api/${url}`,
+        options: { ...options, interceptors: true, headers: authHeader },
+    }
 }
 
 /**
@@ -88,17 +109,19 @@ export async function getInitialState(): Promise<{
  */
 export const request: RequestConfig = {
     errorHandler: (error: any) => {
-        const { response } = error;
+        const { response } = error
 
         if (!response) {
             notification.error({
                 description: '您的网络发生异常，无法连接服务器',
                 message: '网络异常',
-            });
+            })
         }
-        throw error;
+        throw error
     },
-};
+    // 请求前拦截器
+    requestInterceptors: [authHeaderInterceptor]
+}
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
@@ -110,11 +133,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         },
         footerRender: () => <Footer />,
         onPageChange: () => {
-            const { location } = history;
+            const { location } = history
             // 如果没有登录，重定向到 login
-            if (!initialState?.currentUser && location.pathname !== loginPath) {
-                history.push(loginPath);
-            }
+            // if (!initialState?.currentUser && location.pathname !== loginPath) {
+            //     history.push(loginPath)
+            // }
         },
         // 开发模式
         links: isDev
@@ -129,5 +152,5 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         // 自定义 403 页面
         // unAccessible: <div>unAccessible</div>,
         ...initialState?.settings,
-    };
-};
+    }
+}
