@@ -1,17 +1,7 @@
 import request, { download } from '@/utils/request'
 
 // 请求的控制器名称
-const controller = "/system/operationLog";
-
-/**
- * 获取字典信息
- * @param params 搜索参数
- */
-export async function getDictionariesType() {
-    return request(`/system/dictionaries/data/type/sys_oper_type`, {
-        method: 'GET'
-    });
-}
+const controller = "/system/loginInfo";
 
 /**
  * 获取分页 Data
