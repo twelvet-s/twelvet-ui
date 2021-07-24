@@ -20,7 +20,7 @@ export async function getDictionariesType() {
 export async function pageQuery(params: Record<string, any>) {
     return request(`${controller}/pageQuery`, {
         method: 'GET',
-        data: {
+        params: {
             ...params
         },
     });

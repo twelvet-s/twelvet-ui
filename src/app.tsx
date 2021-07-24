@@ -59,10 +59,11 @@ export async function getInitialState(): Promise<{
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
 
     const local = localStorage.getItem(TWT.accessToken)
-    
+
     const { access_token, expires_in } = local ? JSON.parse(local) : { access_token: '', expires_in: 0 }
 
     const authHeader = { Authorization: `Bearer ${access_token}` }
+
     return {
         url: url.substr(0, 1) === '/' ? `/api${url}` : `/api/${url}`,
         options: { ...options, interceptors: true, headers: authHeader },
