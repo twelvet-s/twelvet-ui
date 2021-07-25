@@ -90,7 +90,7 @@ const Login: React.FC<{}> = () => {
         <>
             <ProTable
                 {
-                    ...proTableConfigs
+                ...proTableConfigs
                 }
                 actionRef={acForm}
                 formRef={formRef}
