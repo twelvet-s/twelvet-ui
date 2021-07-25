@@ -1,5 +1,6 @@
 import TWT from '@/setting'
 import { history } from 'umi'
+import { request } from 'umi'
 
 /**
  * 系统日志输出
@@ -146,4 +147,81 @@ export const reductionMenuList = (menus: [{
     })
 
     return res
+}
+
+/**
+ * 通用下载方法
+ * @param url 地址
+ * @param params 参数
+ * @param filename 文件名称(空即为输出默认)
+ */
+export const download = (url: string, params?: { [key: string]: any }, filename?: string) => {
+    return request(`${url}`, {
+        method: 'POST',
+        data: {
+            ...params
+        },
+        params: {
+            refresh: new Date().getTime()
+        },
+        responseType: 'blob',
+        parseResponse: false
+    })
+        .then((response) => {
+
+            // 空的将采用默认
+            if (!filename) {
+
+                const contentDisposition = response.headers.get('content-disposition')
+                if (!contentDisposition) {
+                    return response.blob()
+                }
+                const name = contentDisposition.split("filename=")
+                if (isArray(name)) {
+                    // 获取并还原编码
+                    filename = decodeURIComponent(name[1])
+                } else {
+                    filename = 'unknown'
+                }
+            }
+
+            return response.blob()
+
+        })
+        .then((blob) => {
+            if ('download' in document.createElement('a')) {
+                // 非IE下载
+                const elink = document.createElement('a')
+                elink.download = filename || 'unknown'
+                elink.style.display = 'none'
+                elink.href = URL.createObjectURL(blob)
+                document.body.appendChild(elink)
+                elink.click()
+                URL.revokeObjectURL(elink.href)
+                document.body.removeChild(elink)
+            } else {
+                // IE10+下载
+                navigator.msSaveBlob(blob, filename)
+            }
+        }).catch((r) => {
+            system.error(r)
+        })
+}
+
+/**
+ * 通用文件上传
+ * @param url 地址
+ * @param formData 数据对象 FormData
+ * @param params 参数
+ */
+export const upload = (url: string, formData: FormData) => {
+    return request(`${url}`, {
+        method: 'POST',
+        requestType: 'form',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': '*/*',
+        },
+        data: formData,
+    })
 }

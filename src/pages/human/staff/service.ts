@@ -1,4 +1,5 @@
-import { request, download, upload } from 'umi'
+import { request } from 'umi'
+import { download, upload } from '@/utils/twelvet'
 
 // 请求的控制器名称
 const controller = "/system/user";
