@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
-import { ProColumns } from '@/components/TwelveT/ProTable/Table'
-import ProTable, { ActionType } from '@/components/TwelveT/ProTable/Index'
+
+import ProTable from '@ant-design/pro-table'
+import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, PlusOutlined, EditOutlined, CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Tooltip, Divider, Space } from 'antd'
 import { FormInstance } from 'antd/lib/form'
@@ -197,6 +198,9 @@ const Post: React.FC<{}> = () => {
     return (
         <>
             <ProTable
+                {
+                    ...proTableConfigs
+                }
                 actionRef={acForm}
                 rowKey="clientId"
                 columns={columns}

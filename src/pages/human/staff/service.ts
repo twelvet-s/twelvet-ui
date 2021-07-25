@@ -1,4 +1,4 @@
-import request, { download, upload } from '@/utils/request'
+import { request, download, upload } from 'umi'
 
 // 请求的控制器名称
 const controller = "/system/user";

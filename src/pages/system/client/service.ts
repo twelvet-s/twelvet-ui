@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import { request } from 'umi'
 
 // 请求的控制器名称
 const controller = "/system/client";

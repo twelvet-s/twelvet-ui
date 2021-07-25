@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ProColumns } from '@/components/TwelveT/ProTable/Table'
-import { ActionType } from '@/components/TwelveT/ProTable/Index'
+
+import { ActionType } from '@ant-design/pro-table'
 import { Button, Cascader, Col, Divider, Drawer, Input, message, Row, Select, Tabs, TreeSelect } from 'antd'
 import Form, { FormInstance } from 'antd/lib/form'
 import { getInfo, getMenus, getOptionselect, putGen } from './service'

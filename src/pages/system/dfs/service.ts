@@ -1,4 +1,4 @@
-import request, { download } from '@/utils/request'
+import { request, download } from 'umi'
 
 // 请求的控制器名称
 const controller = "/dfs";

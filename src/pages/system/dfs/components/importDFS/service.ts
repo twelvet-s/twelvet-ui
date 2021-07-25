@@ -1,5 +1,5 @@
 
-import { upload } from '@/utils/request'
+import { upload } from 'umi'
 
 // 请求的控制器名称
 const controller = "/dfs"

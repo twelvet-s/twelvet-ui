@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { ProColumns } from '@/components/TwelveT/ProTable/Table'
-import ProTable, { ActionType } from '@/components/TwelveT/ProTable/Index'
+
+import ProTable from '@ant-design/pro-table'
+import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined } from '@ant-design/icons'
 import ProDescriptions from '@ant-design/pro-descriptions'
 import { Popconfirm, Button, message, Modal, DatePicker, Space, FormInstance } from 'antd'
 import moment, { Moment } from 'moment'
 import { pageQuery, remove, exportExcel, getDictionariesType } from './service'
 import { system } from '@/utils/twelvet'
+
 
 /**
  * 操作日志
@@ -162,6 +164,9 @@ const Operation: React.FC<{}> = () => {
     return (
         <>
             <ProTable
+                {
+                    ...proTableConfigs
+                }
                 actionRef={acForm}
                 formRef={formRef}
                 rowKey="operId"

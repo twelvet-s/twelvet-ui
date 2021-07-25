@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
-import { ProColumns } from '@/components/TwelveT/ProTable/Table'
-import ProTable, { ActionType } from '@/components/TwelveT/ProTable/Index'
+
+import ProTable from '@ant-design/pro-table'
+import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { createFromIconfontCN, PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 import { Row, Col, Button, message, Space, Popconfirm, Modal, Form, Input, InputNumber, Radio, TreeSelect, Divider } from 'antd'
 import { list, getInfo, remove, insert, update } from './service'
@@ -258,6 +259,9 @@ const Menu: React.FC<{}> = () => {
     return (
         <>
             <ProTable
+                {
+                    ...proTableConfigs
+                }
                 actionRef={acForm}
                 rowKey="menuId"
                 columns={columns}

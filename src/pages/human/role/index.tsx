@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
-import { ProColumns } from '@/components/TwelveT/ProTable/Table'
-import ProTable, { ActionType } from '@/components/TwelveT/ProTable/Index'
+
+import ProTable from '@ant-design/pro-table'
+import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import RoleStatusSwitch from './components/Switch'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Radio, Tree, TreeSelect, Row, Col, Space, Divider } from 'antd'
@@ -358,6 +359,9 @@ const Role: React.FC<{}> = () => {
     return (
         <>
             <ProTable
+                {
+                    ...proTableConfigs
+                }
                 actionRef={acForm}
                 formRef={formRef}
                 rowKey="roleId"

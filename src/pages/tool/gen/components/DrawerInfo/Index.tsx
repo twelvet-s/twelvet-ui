@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
-import { ProColumns } from '@/components/TwelveT/ProTable/Table'
-import ProTable, { ActionType } from '@/components/TwelveT/ProTable/Index'
+
+import ProTable from '@ant-design/pro-table'
+import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { Button, Divider, Drawer, message } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { pageQuery, importTable } from './service'
@@ -106,6 +107,9 @@ const DrawerInfo: React.FC<{
             }
         >
             <ProTable
+                {
+                    ...proTableConfigs
+                }
                 headerTitle='数据导入'
                 actionRef={acForm}
                 formRef={formRef}

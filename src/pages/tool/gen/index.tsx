@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
-import { ProColumns } from '@/components/TwelveT/ProTable/Table'
-import ProTable, { ActionType } from '@/components/TwelveT/ProTable/Index'
+
+import ProTable from '@ant-design/pro-table'
+import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { CloseOutlined, CloudSyncOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FileZipOutlined, SyncOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Space, Divider, FormInstance } from 'antd'
 import { batchGenCode, pageQuery, remove, synchDb } from './service'
@@ -163,6 +164,9 @@ const Gen: React.FC<{}> = () => {
     return (
         <>
             <ProTable
+                {
+                    ...proTableConfigs
+                }
                 actionRef={acForm}
                 formRef={formRef}
                 rowKey="tableId"
