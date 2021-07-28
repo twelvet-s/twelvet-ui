@@ -1,7 +1,7 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
 import { notification } from 'antd'
-import type { RequestConfig, RunTimeLayoutConfig } from 'umi'
+import { getDvaApp, RequestConfig, RunTimeLayoutConfig } from 'umi'
 import { history } from 'umi'
 import RightContent from '@/components/RightContent'
 import Footer from '@/components/Footer'
@@ -26,28 +26,46 @@ export async function getInitialState(): Promise<{
     currentUser?: API.CurrentUser
     fetchUserInfo?: () => Promise<API.CurrentUser | undefined>
 }> {
-    // const fetchUserInfo = async () => {
-    //     try {
-    //         const msg = await queryCurrentUser()
-    //         return msg.data
-    //     } catch (error) {
-    //         history.push(loginPath)
-    //     }
-    //     return undefined
-    // }
-    // // 如果是登录页面，不执行
-    // if (history.location.pathname !== loginPath) {
-    //     const currentUser = await fetchUserInfo()
-    //     return {
-    //         fetchUserInfo,
-    //         currentUser,
-    //         settings: {},
-    //     }
-    // }
-    // return {
-    //     fetchUserInfo,
-    //     settings: {},
-    // }
+    const fetchUserInfo = async () => {
+        try {
+            const msg = await queryCurrentUser()
+            return msg.data
+        } catch (error) {
+            history.push(loginPath)
+        }
+        return undefined
+    }
+    // 如果是登录页面，不执行
+    if (history.location.pathname !== loginPath) {
+        const currentUser = await fetchUserInfo()
+        return {
+            fetchUserInfo,
+            currentUser,
+            settings: {},
+        }
+    }
+    return {
+        fetchUserInfo,
+        settings: {},
+    }
+}
+
+const codeMessage = {
+    200: '服务器成功返回请求的数据。',
+    201: '新建或修改数据成功。',
+    202: '一个请求已经进入后台排队（异步任务）。',
+    204: '删除数据成功。',
+    400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
+    401: '用户没有权限（令牌、用户名、密码错误/失效）。',
+    403: '用户得到授权，但是访问是被禁止的。',
+    404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
+    406: '请求的格式不可得。',
+    410: '请求的资源被永久删除，且不会再得到的。',
+    422: '当创建一个对象时，发生一个验证错误。',
+    500: '服务器发生错误，请检查服务器。',
+    502: '网关错误。',
+    503: '服务不可用，服务器暂时过载或维护。',
+    504: '网关超时。',
 }
 
 /**
@@ -56,7 +74,7 @@ export async function getInitialState(): Promise<{
  * @param options 操作信息
  * @returns {URL, Options}
  */
-const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
+const requestHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
 
     const local = localStorage.getItem(TWT.accessToken)
 
@@ -68,6 +86,71 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
         url: url.substr(0, 1) === '/' ? `/api${url}` : `/api/${url}`,
         options: { ...options, interceptors: true, headers: authHeader },
     }
+}
+
+/**
+ * 相应处理器
+ * @param response Response
+ * @param options RequestOptionsInit
+ */
+const responseHeaderInterceptor = async (response: Response, options: RequestOptionsInit) => {
+
+    
+
+    if (response.status === 504) {
+        notification.error({
+            description: '服务异常,无法连接',
+            message: codeMessage[504],
+        });
+        throw new Error(codeMessage[504])
+    }
+
+    // blob类型直接返回
+    if (options.responseType === 'blob' && response.status == 200) {
+        return response;
+    }
+
+    const data = await response.clone().json();
+
+    // 默认返回
+    let responseRes = response
+
+    // // 处理401状态
+    if (data.code === 401) {
+        const { params, method, requestPath } = options
+        // 执行刷新token
+        const res = await getDvaApp()._store.dispatch({
+            type: 'user/refreshToken',
+            payload: {
+                requestPath,
+                method,
+                responseType: options.responseType,
+                data: params
+            }
+        })
+
+        // 存在返回再设置
+        if (res) {
+            responseRes = res
+        }
+
+    }
+
+    if (data && data.code === 403) {
+        notification.error({
+            message: data.msg,
+        });
+        // 跳转到登陆页
+        // return router.replace('/user/login');
+    } else if (data && data.status === -998) {
+        // 无操作权限
+        notification.error({
+            message: data.msg
+        });
+    }
+
+    return responseRes;
+
 }
 
 /**
@@ -121,7 +204,8 @@ export const request: RequestConfig = {
         throw error
     },
     // 请求前拦截器
-    requestInterceptors: [authHeaderInterceptor]
+    requestInterceptors: [requestHeaderInterceptor],
+    responseInterceptors: [responseHeaderInterceptor]
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout

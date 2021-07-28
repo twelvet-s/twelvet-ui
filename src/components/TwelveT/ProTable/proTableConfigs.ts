@@ -23,6 +23,6 @@ export default {
         childrenColumnName: 'children',
         // 展开缩进px
         indentSize: 50,
-        defaultExpandAllRows: false,
+        defaultExpandAllRows: true,
     }
 }

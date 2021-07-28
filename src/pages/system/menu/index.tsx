@@ -82,7 +82,7 @@ const Menu: React.FC<{}> = () => {
                                         <Space>
                                             <PlusOutlined />
                                             新增
-                                    </Space>
+                                        </Space>
                                     </a>
                                     <Divider type="vertical" />
                                 </>
@@ -260,8 +260,15 @@ const Menu: React.FC<{}> = () => {
         <>
             <ProTable
                 {
-                    ...proTableConfigs
+                ...proTableConfigs
                 }
+                expandable={{
+                    // 展开列名称
+                    childrenColumnName: 'children',
+                    // 展开缩进px
+                    indentSize: 50,
+                    defaultExpandAllRows: false,
+                }}
                 actionRef={acForm}
                 rowKey="menuId"
                 columns={columns}
