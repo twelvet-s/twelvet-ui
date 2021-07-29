@@ -95,7 +95,7 @@ const requestHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
  */
 const responseHeaderInterceptor = async (response: Response, options: RequestOptionsInit) => {
 
-    
+
 
     if (response.status === 504) {
         notification.error({
@@ -210,6 +210,9 @@ export const request: RequestConfig = {
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+
+    const { location } = history
+
     return {
         rightContentRender: () => <RightContent />,
         disableContentMargin: false,
@@ -218,7 +221,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         },
         footerRender: () => <Footer />,
         onPageChange: () => {
-            const { location } = history
+
             // 如果没有登录，重定向到 login
             // if (!initialState?.currentUser && location.pathname !== loginPath) {
             //     history.push(loginPath)
