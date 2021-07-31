@@ -1,6 +1,6 @@
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
+import type { MenuDataItem, Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
-import { message, notification } from 'antd'
+import { Input, message, notification } from 'antd'
 import { getDvaApp, RequestConfig, RunTimeLayoutConfig } from 'umi'
 import { history } from 'umi'
 import RightContent from '@/components/RightContent'
@@ -10,6 +10,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import { RequestOptionsInit } from 'umi-request'
 import TWT from './setting'
 import { getCurrentUser } from './pages/login/service'
+import { useState } from 'react'
 
 const isDev = process.env.NODE_ENV === 'development'
 const loginPath = '/login'
@@ -218,12 +219,36 @@ export const request: RequestConfig = {
     responseInterceptors: [responseHeaderInterceptor]
 }
 
+// 菜单搜索键值
+let keyWord = '';
+
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 
     const { location } = history
 
-    console.log(initialState);
+
+
+    /**
+       * 关键字搜索菜单
+       * 
+       * @param data 
+       * @param keyWord 
+       */
+    const filterByMenuDate = (data: MenuDataItem[], keyWord: string): MenuDataItem[] => {
+        console.log("====================");
+        return data.map((item) => {
+            if ((item.name && item.name.includes(keyWord)) ||
+                filterByMenuDate(item.children || [], keyWord).length > 0) {
+                return {
+                    ...item,
+                    children: filterByMenuDate(item.children || [], keyWord),
+                }
+            }
+            return undefined
+        })
+            .filter((item) => item) as MenuDataItem[]
+    }
 
     return {
         rightContentRender: () => <RightContent />,
@@ -235,6 +260,28 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         menuDataRender: () => initialState?.currentUser?.menus,
         // 分割菜单
         splitMenus: true,
+        // 搜索
+        postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
+        // 额外主体渲染
+        menuExtraRender: ({ collapsed }) => {
+            // 菜单搜索框
+            return !collapsed && (
+                <Input.Search
+                    allowClear
+                    enterButton
+                    placeholder='搜索菜单'
+                    size='small'
+                    onSearch={(e) => {
+                        keyWord = e
+                    }}
+                />
+            )
+        },
+        menu: {
+            defaultOpenAll: false,
+            // 关闭菜单多语言
+            locale: false,
+        },
         footerRender: () => <Footer />,
         onPageChange: () => {
 
@@ -243,6 +290,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
                 history.push(loginPath)
             }
         },
+
         // 开发模式
         links: isDev
             ? [
