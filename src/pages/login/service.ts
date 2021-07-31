@@ -1,3 +1,4 @@
+import TWT from '@/setting';
 import { request } from 'umi'
 
 // 请求的控制器名称
@@ -14,5 +15,40 @@ export async function login(params: { [key: string]: any }) {
         data: {
             ...params
         },
+        params: {
+            ...params,
+            grant_type: 'password',
+            scope: 'server',
+            client_id: 'twelvet',
+            client_secret: '123456'
+        }
     });
+}
+
+/**
+ * 获取当前用户登录信息
+ * @returns 
+ */
+export async function getCurrentUser(): Promise<any> {
+    return request(`system/user/getInfo`, {
+        method: 'GET'
+    })
+}
+
+/**
+ * 刷新令牌
+ * @param params 登录参数
+ */
+export async function refreshToken() {
+
+    return request(`${controller}/oauth/token`, {
+        method: 'POST',
+        params: {
+            refresh_token: localStorage.getItem(TWT.refreshToken),
+            grant_type: 'refresh_token',
+            scope: 'server',
+            client_id: 'twelvet',
+            client_secret: '123456'
+        }
+    })
 }

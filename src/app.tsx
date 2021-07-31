@@ -1,6 +1,6 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
-import { notification } from 'antd'
+import { message, notification } from 'antd'
 import { getDvaApp, RequestConfig, RunTimeLayoutConfig } from 'umi'
 import { history } from 'umi'
 import RightContent from '@/components/RightContent'
@@ -9,9 +9,10 @@ import { currentUser as queryCurrentUser } from './services/ant-design-pro/api'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { RequestOptionsInit } from 'umi-request'
 import TWT from './setting'
+import { getCurrentUser } from './pages/login/service'
 
 const isDev = process.env.NODE_ENV === 'development'
-const loginPath = '/user/login'
+const loginPath = '/login'
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -24,12 +25,21 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
     settings?: Partial<LayoutSettings>
     currentUser?: API.CurrentUser
-    fetchUserInfo?: () => Promise<API.CurrentUser | undefined>
+    fetchUserInfo?: () => Promise<{ user: API.CurrentUser, menus: any } | undefined>
 }> {
     const fetchUserInfo = async () => {
         try {
-            const msg = await queryCurrentUser()
-            return msg.data
+            const { user, menus, role, permissions, code, msg } = await getCurrentUser()
+
+            if (code != 200) {
+                return message.error(msg)
+            }
+            return {
+                user,
+                menus,
+                role,
+                permissions
+            }
         } catch (error) {
             history.push(loginPath)
         }
@@ -213,12 +223,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 
     const { location } = history
 
+    console.log(initialState);
+
     return {
         rightContentRender: () => <RightContent />,
         disableContentMargin: false,
         waterMarkProps: {
-            content: initialState?.currentUser?.name,
+            content: initialState?.currentUser?.username,
         },
+        // 渲染菜单数据
+        menuDataRender: () => initialState?.currentUser?.menus,
+        // 分割菜单
+        splitMenus: true,
         footerRender: () => <Footer />,
         onPageChange: () => {
 
@@ -236,7 +252,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
                 </a>
             ]
             : [],
-        menuHeaderRender: undefined,
         // 自定义 403 页面
         // unAccessible: <div>unAccessible</div>,
         ...initialState?.settings,

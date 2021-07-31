@@ -30,6 +30,29 @@ export const system = {
 }
 
 /**
+ * 设置授权令牌
+ * @param authority 
+ */
+export function setAuthority(authority: Record<string, any>): void {
+    const date = new Date()
+
+    // 设置access_token
+    localStorage.setItem(TWT.accessToken, JSON.stringify({ access_token: authority.access_token, expires_in: date.getTime() + authority.expires_in }));
+    // 设置refresh_token
+    localStorage.setItem(TWT.refreshToken, authority.refresh_token)
+}
+
+/**
+ * 移除授权令牌
+ */
+export function removeAuthority() {
+    // 设置access_token
+    localStorage.removeItem(TWT.accessToken);
+    // 设置refresh_token
+    localStorage.removeItem(TWT.refreshToken);
+}
+
+/**
  * 构造树型结构数据
  * @param {Array<{ [key: string]: any }>} data 数据源
  * @param {string} id id字段 默认 'id'

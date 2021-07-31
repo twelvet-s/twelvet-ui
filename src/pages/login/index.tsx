@@ -1,9 +1,12 @@
 import {
     AlipayCircleOutlined,
+    GithubOutlined,
     LockOutlined,
     MobileOutlined,
+    QqOutlined,
     TaobaoCircleOutlined,
     UserOutlined,
+    WechatFilled,
     WeiboCircleOutlined,
 } from '@ant-design/icons';
 import { Alert, Space, message, Tabs } from 'antd';
@@ -15,6 +18,7 @@ import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 
 import styles from './index.less';
 import { login } from './service';
+import { setAuthority } from '@/utils/twelvet';
 
 const LoginMessage: React.FC<{
     content: string;
@@ -37,12 +41,18 @@ const Login: React.FC = () => {
 
     const intl = useIntl();
 
+    /**
+     * 获取用户信息
+     */
     const fetchUserInfo = async () => {
-        const userInfo = await initialState?.fetchUserInfo?.();
+        const userInfo= await initialState?.fetchUserInfo?.();
         if (userInfo) {
             await setInitialState((s) => ({
                 ...s,
-                currentUser: userInfo,
+                // 用户信息
+                currentUser: userInfo.user,
+                // 菜单
+                menus: userInfo.menus
             }));
         }
     };
@@ -51,14 +61,22 @@ const Login: React.FC = () => {
         setSubmitting(true);
         try {
             // 登录
-            const msg = await login({ ...values, type });
-            if (msg.status === 'ok') {
+            const data = await login({ ...values, type });
+            if (data.code === 200) {
+
+                setAuthority(data);
+
                 const defaultloginSuccessMessage = intl.formatMessage({
                     id: 'pages.login.success',
                     defaultMessage: '登录成功！',
                 });
+
+
                 message.success(defaultloginSuccessMessage);
+
+                // 进行获取账号信息
                 await fetchUserInfo();
+
                 /** 此方法会跳转到 redirect 参数所在的位置 */
                 if (!history) return;
                 const { query } = history.location;
@@ -66,8 +84,11 @@ const Login: React.FC = () => {
                 history.push(redirect || '/');
                 return;
             }
+
+            message.error(data.msg);
+
             // 如果失败去设置用户错误信息
-            setUserLoginState(msg);
+            setUserLoginState(data);
         } catch (error) {
             const defaultloginFailureMessage = intl.formatMessage({
                 id: 'pages.login.failure',
@@ -85,6 +106,9 @@ const Login: React.FC = () => {
             <ProForm
                 initialValues={{
                     autoLogin: true,
+                    // 默认账号密码
+                    username: 'admin',
+                    password: 123456
                 }}
                 submitter={{
                     searchConfig: {
@@ -281,9 +305,9 @@ const Login: React.FC = () => {
             </ProForm>
             <Space className={styles.other}>
                 <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />
-                <AlipayCircleOutlined className={styles.icon} />
-                <TaobaoCircleOutlined className={styles.icon} />
-                <WeiboCircleOutlined className={styles.icon} />
+                <GithubOutlined className={styles.icon} title='GitHub' />
+                <WechatFilled className={styles.icon} title='WeChat' />
+                <QqOutlined className={styles.icon} title='QQ' />
             </Space>
         </div>
     );
