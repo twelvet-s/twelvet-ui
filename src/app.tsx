@@ -56,6 +56,7 @@ export async function getInitialState(): Promise<{
         }
     }
     return {
+        
         fetchUserInfo,
         settings: {},
     }
@@ -105,8 +106,6 @@ const requestHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
  * @param options RequestOptionsInit
  */
 const responseHeaderInterceptor = async (response: Response, options: RequestOptionsInit) => {
-
-
 
     if (response.status === 504) {
         notification.error({
@@ -249,7 +248,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         rightContentRender: () => <RightContent />,
         disableContentMargin: false,
         waterMarkProps: {
-            content: initialState?.currentUser?.username,
+            content: initialState?.currentUser?.user.username,
         },
         // 渲染菜单数据
         menuDataRender: () => initialState?.currentUser?.menus,

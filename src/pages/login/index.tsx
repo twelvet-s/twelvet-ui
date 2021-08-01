@@ -1,10 +1,13 @@
 import {
+    AlipayCircleOutlined,
     GithubOutlined,
     LockOutlined,
     MobileOutlined,
     QqOutlined,
+    TaobaoCircleOutlined,
     UserOutlined,
     WechatFilled,
+    WeiboCircleOutlined,
 } from '@ant-design/icons';
 import { Alert, Space, message, Tabs } from 'antd';
 import React, { useState } from 'react';
@@ -42,14 +45,14 @@ const Login: React.FC = () => {
      * 获取用户信息
      */
     const fetchUserInfo = async () => {
-        const userInfo= await initialState?.fetchUserInfo?.();
+        const userInfo = await initialState?.fetchUserInfo?.();
         if (userInfo) {
             await setInitialState((s) => ({
                 ...s,
                 // 用户信息
-                currentUser: userInfo.user,
-                // 菜单
-                menus: userInfo.menus
+                currentUser: {
+                    ...userInfo
+                }
             }));
         }
     };
