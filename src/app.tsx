@@ -210,6 +210,13 @@ const responseHeaderInterceptor = async (response: Response, options: RequestOpt
         notification.error({
             message: jsonData.msg
         });
+    } else if (jsonData && jsonData.code === 503) {
+        // 未开启相关服务
+        notification.error({
+            description: codeMessage[503],
+            message: jsonData.msg,
+        });
+        throw new Error(jsonData.msg)
     }
 
     return responseRes;
@@ -270,6 +277,7 @@ export const request: RequestConfig = {
     requestInterceptors: [requestHeaderInterceptor],
     responseInterceptors: [responseHeaderInterceptor]
 }
+
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {

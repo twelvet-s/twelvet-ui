@@ -1,4 +1,5 @@
 import TWT from '@/setting'
+import { isArray } from 'lodash'
 import { history } from 'umi'
 import { request } from 'umi'
 
