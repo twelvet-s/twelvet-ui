@@ -10,17 +10,16 @@ export default [
         layout: false,
         component: './login',
     },
+
+    // 跳转
     {
-        title: '首页',
         path: '/',
-        redirect: '/index',
+        redirect: '/system/index',
     },
+    // 跳转
     {
-        title: '首页',
-        name: 'home',
-        path: '/index',
-        icon: 'icon-home',
-        component: './index',
+        path: '/system',
+        redirect: '/system/index',
     },
     {
         title: '系统管理',
@@ -28,21 +27,13 @@ export default [
         icon: 'icon-system',
         path: '/system',
         routes: [
-            // {
-            //     title: '系统配置',
-            //     icon: 'icon-settings',
-            //     name: 'config',
-            //     path: '/system/config',
-            //     routes: [
-            //         {
-            //             title: '基础配置',
-            //             icon: 'icon-base-config',
-            //             name: 'baseConfig',
-            //             path: '/system/config/base',
-            //             component: './system/config/base'
-            //         }
-            //     ]
-            // },
+            {
+                title: '首页',
+                name: 'home',
+                path: '/system/index',
+                icon: 'icon-home',
+                component: './index',
+            },
             {
                 title: '菜单管理',
                 icon: 'icon-menu',
@@ -79,6 +70,11 @@ export default [
                 component: './system/dfs'
             }
         ]
+    },
+    // 跳转
+    {
+        path: '/human',
+        redirect: '/human/staff',
     },
     {
         title: '人力管理',
@@ -138,6 +134,11 @@ export default [
             }
         ]
     },
+    // 跳转
+    {
+        path: '/log',
+        redirect: '/log/operation',
+    },
     {
         title: '日志管理',
         name: 'log',
@@ -167,12 +168,24 @@ export default [
             }
         ]
     },
+    // 跳转
+    {
+        path: '/tool',
+        redirect: '/tool/gen',
+    },
     {
         title: '工具箱',
         name: 'tool',
         icon: 'icon-tool-box',
         path: '/tool',
         routes: [
+            {
+                title: '代码生成器',
+                icon: 'icon-gen-code',
+                name: 'gen',
+                path: '/tool/gen',
+                component: './tool/gen'
+            },
             {
                 title: '图形化编辑器',
                 name: 'graphicalEditor',
@@ -206,6 +219,5 @@ export default [
     },
     {
         component: './404',
-    }
-
+    },
 ]
