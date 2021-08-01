@@ -1,13 +1,10 @@
 import {
-    AlipayCircleOutlined,
     GithubOutlined,
     LockOutlined,
     MobileOutlined,
     QqOutlined,
-    TaobaoCircleOutlined,
     UserOutlined,
     WechatFilled,
-    WeiboCircleOutlined,
 } from '@ant-design/icons';
 import { Alert, Space, message, Tabs } from 'antd';
 import React, { useState } from 'react';

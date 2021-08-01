@@ -4,13 +4,13 @@ import { Input, message, notification } from 'antd'
 import { getDvaApp, RequestConfig, RunTimeLayoutConfig } from 'umi'
 import { history } from 'umi'
 import RightContent from '@/components/RightContent'
-import Footer from '@/components/Footer'
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { RequestOptionsInit } from 'umi-request'
 import TWT from './setting'
 import { getCurrentUser } from './pages/login/service'
 import { useState } from 'react'
+import Footer from './components/TwelveT/Footer'
 
 const isDev = process.env.NODE_ENV === 'development'
 const loginPath = '/login'
@@ -219,15 +219,10 @@ export const request: RequestConfig = {
     responseInterceptors: [responseHeaderInterceptor]
 }
 
-// 菜单搜索键值
-let keyWord = '';
-
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 
     const { location } = history
-
-
 
     /**
        * 关键字搜索菜单
@@ -261,7 +256,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         // 分割菜单
         splitMenus: true,
         // 搜索
-        postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
+        // postMenuData: (menus) => filterByMenuDate(menus || [], ''),
         // 额外主体渲染
         menuExtraRender: ({ collapsed }) => {
             // 菜单搜索框
@@ -272,7 +267,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
                     placeholder='搜索菜单'
                     size='small'
                     onSearch={(e) => {
-                        keyWord = e
+                        
                     }}
                 />
             )

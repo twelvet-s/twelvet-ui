@@ -8,7 +8,7 @@ import { GithubOutlined } from '@ant-design/icons';
 const Footer: React.FC = () => {
     return (
         <DefaultFooter
-            copyright={`${new Date().getFullYear()} TwelveT`}
+            copyright={`2020 - ${new Date().getFullYear()} TwelveT`}
             links={
                 [
                     {

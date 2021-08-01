@@ -1,6 +1,6 @@
+import Footer from '@/components/TwelveT/Footer';
 import React from 'react'
 import { useIntl, Link, SelectLang } from 'umi';
-import Footer from '@/components/Footer'
 import styles from './index.less';
 
 const Layout: React.FC = (props) => {
