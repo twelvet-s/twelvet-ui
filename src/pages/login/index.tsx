@@ -103,7 +103,8 @@ const Login: React.FC = () => {
         <div className={styles.main}>
             <ProForm
                 initialValues={{
-                    autoLogin: true,
+                    // 是否选择自动登录
+                    autoLogin: false,
                     // 默认账号密码
                     username: 'admin',
                     password: 123456

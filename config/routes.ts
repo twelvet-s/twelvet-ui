@@ -8,18 +8,32 @@ export default [
         name: 'login',
         path: '/login',
         layout: false,
-        component: './login',
-    },
-
-    // 跳转
-    {
-        path: '/',
-        redirect: '/system/index',
+        component: './login/_layout',
+        routes: [
+            {
+                title: '首页页',
+                name: 'login',
+                path: '/login',
+                component: './login',
+            },
+        ],
     },
     // 跳转
     {
         path: '/system',
-        redirect: '/system/index',
+        redirect: '/index',
+    },
+    // 跳转
+    {
+        path: '/',
+        redirect: '/index',
+    },
+    {
+        title: '首页',
+        name: 'home',
+        path: '/index',
+        icon: 'icon-home',
+        component: './index',
     },
     {
         title: '系统管理',
@@ -27,13 +41,6 @@ export default [
         icon: 'icon-system',
         path: '/system',
         routes: [
-            {
-                title: '首页',
-                name: 'home',
-                path: '/system/index',
-                icon: 'icon-home',
-                component: './index',
-            },
             {
                 title: '菜单管理',
                 icon: 'icon-menu',

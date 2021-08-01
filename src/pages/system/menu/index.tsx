@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 
-import ProTable from '@ant-design/pro-table'
+import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { createFromIconfontCN, PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 import { Row, Col, Button, message, Space, Popconfirm, Modal, Form, Input, InputNumber, Radio, TreeSelect, Divider } from 'antd'
@@ -42,7 +42,7 @@ const Menu: React.FC<{}> = () => {
     // Form参数
     const columns: ProColumns = [
         {
-            title: '菜单名称', fixed: 'left', width: 200, ellipsis: true, valueType: "text", dataIndex: 'menuName',
+            title: '菜单名称', fixed: 'left', width: 200, ellipsis: false, valueType: "text", dataIndex: 'menuName',
         },
         {
             title: 'Icon', width: 50, ellipsis: false, valueType: "text", search: false, dataIndex: 'icon', render: (item: string) => {
@@ -50,7 +50,7 @@ const Menu: React.FC<{}> = () => {
             }
         },
         {
-            title: '排序', width: 50, ellipsis: true, valueType: "text", search: false, dataIndex: 'orderNum'
+            title: '排序', width: 50, ellipsis: false, valueType: "text", search: false, dataIndex: 'orderNum'
         },
         {
             title: '权限标识', width: 200, search: false, dataIndex: 'perms'
@@ -262,13 +262,6 @@ const Menu: React.FC<{}> = () => {
                 {
                 ...proTableConfigs
                 }
-                expandable={{
-                    // 展开列名称
-                    childrenColumnName: 'children',
-                    // 展开缩进px
-                    indentSize: 50,
-                    defaultExpandAllRows: false,
-                }}
                 actionRef={acForm}
                 rowKey="menuId"
                 columns={columns}

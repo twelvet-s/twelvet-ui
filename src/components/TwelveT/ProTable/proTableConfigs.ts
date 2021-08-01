@@ -22,7 +22,7 @@ export default {
         // 展开列名称
         childrenColumnName: 'children',
         // 展开缩进px
-        indentSize: 50,
-        defaultExpandAllRows: true,
+        indentSize: 15,
+        defaultExpandAllRows: false,
     }
 }
