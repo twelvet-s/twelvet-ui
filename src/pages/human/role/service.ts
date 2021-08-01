@@ -47,7 +47,7 @@ export async function update(params: { [key: string]: any }) {
 export async function pageQuery(params: { [key: string]: any }) {
     return request(`${controller}/pageQuery`, {
         method: 'GET',
-        data: {
+        params: {
             ...params
         },
     });

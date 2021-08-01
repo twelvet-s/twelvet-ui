@@ -52,3 +52,19 @@ export async function refreshToken() {
         }
     })
 }
+
+/**
+ * 刷新Token
+ * @returns 
+ */
+export async function refreshTokenService(): Promise<any> {
+    return request(`/auth/oauth/token`, {
+        method: `POST`,
+        params: {
+            grant_type: `refresh_token`,
+            refresh_token: localStorage.getItem(TWT.refreshToken),
+            client_id: `twelvet`,
+            client_secret: `123456`
+        }
+    });
+}

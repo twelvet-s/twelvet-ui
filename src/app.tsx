@@ -1,16 +1,15 @@
 import type { MenuDataItem, Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
 import { Input, message, notification } from 'antd'
-import { getDvaApp, RequestConfig, RunTimeLayoutConfig } from 'umi'
+import { RequestConfig, RunTimeLayoutConfig, request as httpRequest } from 'umi'
 import { history } from 'umi'
 import RightContent from '@/components/RightContent'
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { RequestOptionsInit } from 'umi-request'
 import TWT from './setting'
-import { getCurrentUser } from './pages/login/service'
-import { useState } from 'react'
+import { getCurrentUser, refreshTokenService } from './pages/login/service'
 import Footer from './components/TwelveT/Footer'
+import { logout, setAuthority } from './utils/twelvet'
 
 const isDev = process.env.NODE_ENV === 'development'
 const loginPath = '/login'
@@ -101,6 +100,60 @@ const requestHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
 }
 
 /**
+ * 刷新token
+ * @param url 访问URL（成功刷新后重新请求地址）
+ * @param method 请求方式
+ * @param responseType 请求类型
+ * @param params body
+ * @param params query
+ * @returns 
+ */
+const refreshToken: Response = async (
+    url: string,
+    method: string,
+    responseType: string,
+    data: {},
+    params: {}
+) => {
+
+    let response
+
+    // 续签失败将要求重新登录
+    const res = await refreshTokenService()
+
+    if (res.code != 200) {
+        notification.error({
+            message: `续签失败`,
+            description: `续签失败,请重新登录`,
+        })
+        logout()
+    }
+
+    setAuthority(res)
+
+    console.log(url)
+
+    // 重新请求本次数据
+    if (url) {
+        await httpRequest(url, {
+            method,
+            responseType: responseType === 'blob' ? 'blob' : 'json',
+            // 禁止自动序列化response
+            parseResponse: false,
+            data,
+            params
+        }).then((res: any) => {
+            response = res
+        })
+    }
+
+    // 返回响应
+    return response
+
+
+}
+
+/**
  * 相应处理器
  * @param response Response
  * @param options RequestOptionsInit
@@ -115,29 +168,29 @@ const responseHeaderInterceptor = async (response: Response, options: RequestOpt
         throw new Error(codeMessage[504])
     }
 
+    const responseType = options.responseType
+
     // blob类型直接返回
-    if (options.responseType === 'blob' && response.status == 200) {
+    if (responseType === 'blob' && response.status == 200) {
         return response;
     }
 
-    const data = await response.clone().json();
+    const jsonData = await response.clone().json();
 
     // 默认返回
     let responseRes = response
 
     // // 处理401状态
-    if (data.code === 401) {
-        const { params, method, requestPath } = options
+    if (jsonData.code === 401) {
+        const { data, params, method, url } = options
         // 执行刷新token
-        const res = await getDvaApp()._store.dispatch({
-            type: 'user/refreshToken',
-            payload: {
-                requestPath,
-                method,
-                responseType: options.responseType,
-                data: params
-            }
-        })
+        const res = await refreshToken(
+            url,
+            method,
+            responseType,
+            data,
+            params
+        )
 
         // 存在返回再设置
         if (res) {
@@ -146,16 +199,16 @@ const responseHeaderInterceptor = async (response: Response, options: RequestOpt
 
     }
 
-    if (data && data.code === 403) {
+    if (jsonData && jsonData.code === 403) {
         notification.error({
-            message: data.msg,
+            message: jsonData.msg,
         });
         // 跳转到登陆页
         // return router.replace('/user/login');
-    } else if (data && data.status === -998) {
+    } else if (jsonData && jsonData.status === -998) {
         // 无操作权限
         notification.error({
-            message: data.msg
+            message: jsonData.msg
         });
     }
 

@@ -10,7 +10,7 @@ const controller = "/gen";
 export async function pageQuery(params: { [key: string]: any }) {
     return request(`${controller}/db/list`, {
         method: 'GET',
-        data: {
+        params: {
             ...params
         },
     });

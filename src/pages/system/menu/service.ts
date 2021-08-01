@@ -46,7 +46,7 @@ export async function update(params: { [key: string]: any }) {
 export async function list(params: { [key: string]: any }) {
     return request(`${controller}/list`, {
         method: 'GET',
-        data: {
+        params: {
             ...params
         },
     });
