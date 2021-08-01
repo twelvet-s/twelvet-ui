@@ -48,7 +48,8 @@ const Login: React.FC = () => {
                 ...s,
                 // 用户信息
                 currentUser: {
-                    ...userInfo
+                    user: userInfo.user,
+                    menus: userInfo.menus,
                 }
             }));
         }

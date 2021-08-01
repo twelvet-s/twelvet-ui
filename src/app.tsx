@@ -26,11 +26,11 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
     settings?: Partial<LayoutSettings>
     currentUser?: API.CurrentUser
-    fetchUserInfo?: () => Promise<{ user: API.CurrentUser, menus: any } | undefined>
+    fetchUserInfo?: () => Promise<{ user: API.CurrentUser, menus: {} } | undefined>
 }> {
     const fetchUserInfo = async () => {
         try {
-            const { user, menus, role, permissions, code, msg } = await getCurrentUser()
+            const { user = {}, menus = {}, role, permissions, code, msg } = await getCurrentUser()
 
             if (code != 200) {
                 return message.error(msg)
@@ -56,7 +56,7 @@ export async function getInitialState(): Promise<{
         }
     }
     return {
-        
+
         fetchUserInfo,
         settings: {},
     }
@@ -230,7 +230,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
        * @param keyWord 
        */
     const filterByMenuDate = (data: MenuDataItem[], keyWord: string): MenuDataItem[] => {
-        console.log("====================");
         return data.map((item) => {
             if ((item.name && item.name.includes(keyWord)) ||
                 filterByMenuDate(item.children || [], keyWord).length > 0) {
@@ -246,9 +245,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 
     return {
         rightContentRender: () => <RightContent />,
+
         disableContentMargin: false,
         waterMarkProps: {
-            content: initialState?.currentUser?.user.username,
+            content: initialState?.currentUser?.user?.username,
         },
         // 渲染菜单数据
         menuDataRender: () => initialState?.currentUser?.menus,
@@ -266,7 +266,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
                     placeholder='搜索菜单'
                     size='small'
                     onSearch={(e) => {
-                        
+
                     }}
                 />
             )

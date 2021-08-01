@@ -14,8 +14,8 @@ const Settings: LayoutSettings & {
   colorWeak: false,
   title: 'TwelveT',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
-  iconfontUrl: '',
+  logo: '/logo.svg',
+  iconfontUrl: '/assets/js/icon.js',
 };
 
 export default Settings;
