@@ -289,6 +289,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
        * @param keyWord 
        */
     const filterByMenuDate = (data: MenuDataItem[], keyWord: string): MenuDataItem[] => {
+        console.log('执行菜单搜索')
         return data.map((item) => {
             if ((item.name && item.name.includes(keyWord)) ||
                 filterByMenuDate(item.children || [], keyWord).length > 0) {
@@ -313,8 +314,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         menuDataRender: () => initialState?.currentUser?.menus,
         // 分割菜单
         splitMenus: true,
-        // 搜索
-        // postMenuData: (menus) => filterByMenuDate(menus || [], ''),
         // 额外主体渲染
         menuExtraRender: ({ collapsed }) => {
             // 菜单搜索框
