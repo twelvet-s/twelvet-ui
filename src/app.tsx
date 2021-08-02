@@ -126,12 +126,10 @@ const refreshToken: Response = async (
             message: `续签失败`,
             description: `续签失败,请重新登录`,
         })
-        logout()
+        return logout()
     }
 
     setAuthority(res)
-
-    console.log(url)
 
     // 重新请求本次数据
     if (url) {
