@@ -37,7 +37,7 @@ const Dept: React.FC<{}> = () => {
     // Form参数
     const columns: ProColumns = [
         {
-            title: '部门名称', ellipsis: true, width: 200, valueType: "text", dataIndex: 'deptName',
+            title: '部门名称', ellipsis: false, width: 200, valueType: "text", dataIndex: 'deptName',
         },
         {
             title: '排序', ellipsis: false, width: 200, valueType: "text", search: false, dataIndex: 'orderNum'
