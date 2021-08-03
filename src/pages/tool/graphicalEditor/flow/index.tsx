@@ -12,26 +12,26 @@ import styles from './index.less';
 GGEditor.setTrackable(false);
 
 export default () => (
-  <PageContainer content="千言万语不如一张图，流程图是表示算法思路的好方法">
-    <GGEditor className={styles.editor}>
-      <Row className={styles.editorHd}>
-        <Col span={24}>
-          <FlowToolbar />
-        </Col>
-      </Row>
-      <Row className={styles.editorBd}>
-        <Col span={4} className={styles.editorSidebar}>
-          <FlowItemPanel />
-        </Col>
-        <Col span={16} className={styles.editorContent}>
-          <Flow className={styles.flow} />
-        </Col>
-        <Col span={4} className={styles.editorSidebar}>
-          <FlowDetailPanel />
-          <EditorMinimap />
-        </Col>
-      </Row>
-      <FlowContextMenu />
-    </GGEditor>
-  </PageContainer>
+    <PageContainer content="千言万语不如一张图，流程图是表示算法思路的好方法">
+        <GGEditor className={styles.editor}>
+            <Row className={styles.editorHd}>
+                <Col span={24}>
+                    <FlowToolbar />
+                </Col>
+            </Row>
+            <Row className={styles.editorBd}>
+                <Col span={4} className={styles.editorSidebar}>
+                    <FlowItemPanel />
+                </Col>
+                <Col span={16} className={styles.editorContent}>
+                    <Flow className={styles.flow} />
+                </Col>
+                <Col span={4} className={styles.editorSidebar}>
+                    <FlowDetailPanel />
+                    <EditorMinimap />
+                </Col>
+            </Row>
+            <FlowContextMenu />
+        </GGEditor>
+    </PageContainer>
 );

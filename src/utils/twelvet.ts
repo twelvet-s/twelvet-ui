@@ -74,7 +74,7 @@ export const makeTree = (params: {
     const id = params.id || 'id'
     const parentId = params.parentId || 'parentId'
     const children = params.children || 'children'
-    const enhance = params.enhance || {}
+    const enhance = params.enhance || []
     const rootId = params.rootId || 0
 
     // 对源数据深克隆

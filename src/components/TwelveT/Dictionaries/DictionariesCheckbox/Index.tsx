@@ -6,7 +6,7 @@ import { system } from '@/utils/twelvet'
 /**
  * 字典模块数据管理类型选择器
  */
-const DictionariesRadio: React.FC<{
+const DictionariesCheckbox: React.FC<{
     type: string
 }> = (props) => {
 
@@ -53,4 +53,4 @@ const DictionariesRadio: React.FC<{
 
 }
 
-export default DictionariesRadio
+export default DictionariesCheckbox

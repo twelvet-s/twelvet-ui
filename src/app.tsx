@@ -1,6 +1,6 @@
 import type { MenuDataItem, Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
-import { Input, message, notification } from 'antd'
+import { Input, message, notification, TreeSelect } from 'antd'
 import { RequestConfig, RunTimeLayoutConfig, request as httpRequest } from 'umi'
 import { history } from 'umi'
 import RightContent from '@/components/RightContent'
@@ -9,7 +9,7 @@ import { RequestOptionsInit } from 'umi-request'
 import TWT from './setting'
 import { getCurrentUser, refreshTokenService } from './pages/login/service'
 import Footer from './components/TwelveT/Footer'
-import { logout, setAuthority } from './utils/twelvet'
+import { logout, reductionMenuList, setAuthority } from './utils/twelvet'
 
 const isDev = process.env.NODE_ENV === 'development'
 const loginPath = '/login'
@@ -282,53 +282,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 
     const { location } = history
 
-    /**
-       * 关键字搜索菜单
-       * 
-       * @param data 
-       * @param keyWord 
-       */
-    const filterByMenuDate = (data: MenuDataItem[], keyWord: string): MenuDataItem[] => {
-        console.log('执行菜单搜索')
-        return data.map((item) => {
-            if ((item.name && item.name.includes(keyWord)) ||
-                filterByMenuDate(item.children || [], keyWord).length > 0) {
-                return {
-                    ...item,
-                    children: filterByMenuDate(item.children || [], keyWord),
-                }
-            }
-            return undefined
-        })
-            .filter((item) => item) as MenuDataItem[]
-    }
-
     return {
         rightContentRender: () => <RightContent />,
 
         disableContentMargin: false,
         waterMarkProps: {
-            content: initialState?.currentUser?.user?.username,
+            // 水印设置
+            content: `${initialState?.currentUser?.user?.username}-TwelveT`,
         },
         // 渲染菜单数据
         menuDataRender: () => initialState?.currentUser?.menus,
         // 分割菜单
         splitMenus: true,
-        // 额外主体渲染
-        menuExtraRender: ({ collapsed }) => {
-            // 菜单搜索框
-            return !collapsed && (
-                <Input.Search
-                    allowClear
-                    enterButton
-                    placeholder='搜索菜单'
-                    size='small'
-                    onSearch={(e) => {
-
-                    }}
-                />
-            )
-        },
         menu: {
             defaultOpenAll: false,
             // 关闭菜单多语言
