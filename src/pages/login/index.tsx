@@ -11,7 +11,7 @@ import React, { useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, history, FormattedMessage, useModel } from 'umi';
 
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { getFakeCaptcha } from '@/services/twelvet-ui-api/login';
 
 import styles from './index.less';
 import { login } from './service';
@@ -144,7 +144,7 @@ const Login: React.FC = () => {
                         })}
                     />
                 </Tabs>
-                
+
                 {status == '400' && loginType === 'account' && (
                     <LoginMessage
                         content={intl.formatMessage({
