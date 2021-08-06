@@ -49,13 +49,6 @@ export default [
                 component: './system/menu'
             },
             {
-                title: '定时任务',
-                icon: 'icon-job',
-                name: 'job',
-                path: '/system/job',
-                component: './system/job'
-            },
-            {
                 title: '字典管理',
                 icon: 'icon-dictionaries',
                 name: 'dictionaries',
@@ -76,6 +69,26 @@ export default [
                 path: '/system/dfs',
                 component: './system/dfs'
             }
+        ]
+    },
+    // 跳转
+    // {
+    //     path: '/human',
+    //     redirect: '/human/staff',
+    // },
+    {
+        title: '系统监控',
+        icon: 'icon-monitor',
+        name: 'monitor',
+        path: '/monitor',
+        routes: [
+            {
+                title: '定时任务',
+                icon: 'icon-job',
+                name: 'job',
+                path: '/monitor/job',
+                component: './monitor/job'
+            },
         ]
     },
     // 跳转
