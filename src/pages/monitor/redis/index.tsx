@@ -44,7 +44,7 @@ const redis: React.FC<{}> = () => {
         <Row gutter={[20, 20]}>
 
             <Col md={{ span: 16 }} xs={{ span: 24 }}>
-                <Card title="命令统计">
+                <Card title="基本信息">
                     <ProDescriptions
                         column={2}
                         bordered={true}
