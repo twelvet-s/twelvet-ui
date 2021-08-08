@@ -20,9 +20,13 @@ const redis: React.FC<{}> = () => {
     // 第一次渲染时执行
     useEffect(() => {
         getInfo()
-        setInterval(() => {
+        const timer = setInterval(() => {
             getInfo()
         }, 3000)
+
+        return () => {
+            clearInterval(timer)
+        }
     }, [])
 
     /**

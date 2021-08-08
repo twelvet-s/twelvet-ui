@@ -52,8 +52,9 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
                     lineStyle: {
                         color: '#FF005A',
                         width: 2
-                    }
-                }
+                    },
+                },
+                
             },
             smooth: true,
             type: 'line',

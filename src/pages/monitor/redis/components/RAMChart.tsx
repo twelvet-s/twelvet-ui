@@ -52,6 +52,8 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
             name: '分配内存',
             itemStyle: {
                 normal: {
+                    // 上方显示数值
+                    show: true,
                     color: '#FF005A',
                     lineStyle: {
                         color: '#FF005A',
