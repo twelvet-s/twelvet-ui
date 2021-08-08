@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 
-import ProTable from '@ant-design/pro-table'
+import ProTable, { ActionType } from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined } from '@ant-design/icons'
 import ProDescriptions from '@ant-design/pro-descriptions'

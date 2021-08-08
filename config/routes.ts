@@ -72,16 +72,23 @@ export default [
         ]
     },
     // 跳转
-    // {
-    //     path: '/human',
-    //     redirect: '/human/staff',
-    // },
+    {
+        path: '/monitor',
+        redirect: '/monitor/redis',
+    },
     {
         title: '系统监控',
         icon: 'icon-monitor',
         name: 'monitor',
         path: '/monitor',
         routes: [
+            {
+                title: '缓存监控',
+                icon: 'icon-job',
+                name: 'job',
+                path: '/monitor/redis',
+                component: './monitor/redis'
+            },
             {
                 title: '定时任务',
                 icon: 'icon-job',

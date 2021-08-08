@@ -9,7 +9,7 @@ import { Card } from 'antd'
 /**
  * 扇形图
  */
-const BarChart = () => {
+const BarChart: React.FC<{}> = () => {
 
     let barChart: HTMLDivElement;
 

@@ -105,7 +105,8 @@ const Role: React.FC<{}> = () => {
         },
         {
             title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
-                return (
+                // 不允许操作admin
+                return row.roleKey != 'admin' && (
                     <>
                         <a onClick={() => refPut(row)}>
                             <Space>
@@ -360,7 +361,7 @@ const Role: React.FC<{}> = () => {
         <>
             <ProTable
                 {
-                    ...proTableConfigs
+                ...proTableConfigs
                 }
                 actionRef={acForm}
                 formRef={formRef}
