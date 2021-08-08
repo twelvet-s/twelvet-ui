@@ -44,6 +44,8 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
                 show: false
             }
         },
+        legend: {
+        },
         series: [{
             name: 'key数量',
             itemStyle: {
@@ -99,11 +101,17 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
         const ctr = instance || lineChart
 
         // 时间
+        if(timeData.length >= 6){
+            timeData.shift(); 
+        }
         const timeTemp = [...timeData, time]
         config.xAxis.data.push(...timeTemp)
         setTimeData(timeTemp)
 
         // 分配内存
+        if(dbSizeData.length >= 6){
+            dbSizeData.shift(); 
+        }
         const dbSizeTemp = [...dbSizeData, dbSize]
         config.series[0].data.push(...dbSizeTemp)
         setDbSizeData(dbSizeTemp)

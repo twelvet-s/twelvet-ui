@@ -44,7 +44,7 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
         yAxis: {
             axisTick: {
                 show: false
-            }
+            },
         },
         legend: {
         },
@@ -122,11 +122,17 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
         const ctr = instance || lineChart
 
         // 时间
+        if(timeData.length >= 6){
+            timeData.shift(); 
+        }
         const timeTemp = [...timeData, time]
         config.xAxis.data.push(...timeTemp)
         setTimeData(timeTemp)
 
         // 分配内存
+        if(usedmemoryData.length >= 6){
+            usedmemoryData.shift(); 
+        }
         const usedmemoryDataTemp = [...usedmemoryData, usedmemory]
         config.series[0].data.push(...usedmemoryDataTemp)
         setUsedmemoryData(usedmemoryDataTemp)
