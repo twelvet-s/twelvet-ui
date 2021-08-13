@@ -7,7 +7,18 @@ import styles from './styles.less'
  */
 const History = () => {
     return (
-        <Collapse defaultActiveKey={5} className={styles.historyOl}>
+        <Collapse defaultActiveKey={6} className={styles.historyOl}>
+            <Collapse.Panel header="v1.3.0 - 2021-08-13" key={6}>
+                <ol>
+                    <li>前端UI升级至antdV5</li>
+                    <li>更改request使用</li>
+                    <li>采用静态路由</li>
+                    <li>提升pro体验</li>
+                    <li>修复table卡顿BUG</li>
+                    <li>新增redis监控面板</li>
+                    <li>修复已知BUG</li>
+                </ol>
+            </Collapse.Panel>
             <Collapse.Panel header="v1.2.0 - 2021-06-23" key={5}>
                 <ol>
                     <li>新增菜单导航栏</li>
