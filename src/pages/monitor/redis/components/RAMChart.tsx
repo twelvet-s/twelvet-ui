@@ -13,11 +13,10 @@ import { Card } from 'antd';
 const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, time: string }> = props => {
 
     // 图表参数
-    const { usedmemory, time, usedMemoryPeakHuman } = props
+    const { usedmemory, time } = props
 
     const [timeData, setTimeData] = useState<string[]>([])
     const [usedmemoryData, setUsedmemoryData] = useState<number[]>([])
-    const [usedMemoryPeakHumanData, setUsedMemoryPeakHumanData] = useState<number[]>([])
 
     const config: Record<string, any> = {
         xAxis: {

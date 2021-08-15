@@ -96,6 +96,7 @@ const LineChart: React.FC<LineChartProps> = props => {
     useEffect(() => {
         // 获取echarts实例
         const instance: any = echarts.init(lineChartRef, "macarons")
+        instance.showLoading()
         // 设置参数
         setEcharts(instance)
         // 开启自适应
@@ -121,6 +122,7 @@ const LineChart: React.FC<LineChartProps> = props => {
 
         // 设置数据
         ctr.setOption(config)
+        ctr.hideLoading()
 
     }
 
