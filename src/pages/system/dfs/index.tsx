@@ -113,7 +113,15 @@ const DFS: React.FC<{}> = () => {
                 actionRef={acForm}
                 rowKey="fileId"
                 columns={columns}
-                request={pageQuery}
+                request={async (params, sorter, filter) => {
+                    const { data } = await pageQuery(params)
+                    const {records, total} = data
+                    return Promise.resolve({
+                        data: records,
+                        success: true,
+                        total,
+                    });
+                }}
                 formRef={formRef}
                 rowSelection={{}}
                 beforeSearchSubmit={(params) => {

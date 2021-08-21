@@ -88,12 +88,20 @@ const Login: React.FC<{}> = () => {
         <>
             <ProTable
                 {
-                    ...proTableConfigs
+                ...proTableConfigs
                 }
                 actionRef={acForm}
                 rowKey="infoId"
                 columns={columns}
-                request={pageQuery}
+                request={async (params, sorter, filter) => {
+                    const { data } = await pageQuery(params)
+                    const {records, total} = data
+                    return Promise.resolve({
+                        data: records,
+                        success: true,
+                        total,
+                    });
+                }}
                 formRef={formRef}
                 rowSelection={{}}
                 beforeSearchSubmit={(params) => {
@@ -133,8 +141,8 @@ const Login: React.FC<{}> = () => {
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined />
-                        导出数据
-                    </Button>
+                            导出数据
+                        </Button>
                     </Popconfirm>
                 ]}
 

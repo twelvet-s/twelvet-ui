@@ -243,7 +243,15 @@ const DrawerInfo: React.FC<{
                 formRef={formRef}
                 rowKey="dictCode"
                 columns={columns}
-                request={pageQuery}
+                request={async (params, sorter, filter) => {
+                    const { data } = await pageQuery(params)
+                    const {records, total} = data
+                    return Promise.resolve({
+                        data: records,
+                        success: true,
+                        total,
+                    });
+                }}
                 rowSelection={{}}
                 // beforeRequest={(params) => {
                 //     // 加入类型

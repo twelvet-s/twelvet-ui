@@ -249,7 +249,15 @@ const Dictionaries: React.FC<{}> = () => {
                 formRef={formRef}
                 rowKey="dictId"
                 columns={columns}
-                request={pageQuery}
+                request={async (params, sorter, filter) => {
+                    const { data } = await pageQuery(params)
+                    const {records, total} = data
+                    return Promise.resolve({
+                        data: records,
+                        success: true,
+                        total,
+                    });
+                }}
                 rowSelection={{}}
                 beforeSearchSubmit={(params) => {
                     // 分隔搜索参数
