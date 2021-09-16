@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-    nodejs 'nodejs'
+    yarn 'yarn'
   }
   parameters {
     choice(
@@ -21,39 +21,19 @@ pipeline {
           sh 'node -v'
           sh 'npm config set sass_binary_site=https://npm.taobao.org/mirrors/node-sass'
           sh 'npm cache clean --force'
+          sh 'npm install -g yarn --unsafe-perm'
+        }
+      }
+    }
+    stage('Build twelvet-react-ui') {
+      steps {
+        dir('twelvet-react-ui') {
           sh 'rm -rf node_modules'
           sh 'rm -rf package-lock.json'
-          sh 'npm install --unsafe-perm'
-        }
-      }
-    }
-    stage('Build staging') {
-      when {
-        beforeAgent true
-        branch 'dev*'
-      }
-      steps {
-        dir('twelvet-react-ui') {
           sh 'rm -rf dist'
-          sh 'npm run build:stage'
+          sh 'yarn build'
           dir('dist') {
             sh(script: 'tar cvzf twelvet-react-ui.tar.gz .', returnStatus: true)
-            archiveArtifacts artifacts: '**/*.tar.gz', fingerprint: true
-          }
-        }
-      }
-    }
-    stage('Build prod') {
-      when {
-        beforeAgent true
-        branch 'master*'
-      }
-      steps {
-        dir('twelvet-react-ui') {
-          sh 'rm -rf dist'
-          sh 'npm run build:prod'
-          dir('dist') {
-            sh(script: 'tar cvzf vue-shh-twelvet-react-ui.tar.gz .', returnStatus: true)
             archiveArtifacts artifacts: '**/*.tar.gz', fingerprint: true
           }
         }
