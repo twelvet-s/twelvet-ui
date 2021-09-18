@@ -7,7 +7,15 @@ import styles from './styles.less'
  */
 const History = () => {
     return (
-        <Collapse defaultActiveKey={6} className={styles.historyOl}>
+        <Collapse defaultActiveKey={7} className={styles.historyOl}>
+            <Collapse.Panel header="v2.0.0 - 2021-10-01" key={7}>
+                <ol>
+                    <li>jenkins一件打包发布</li>
+                    <li>docker-compose启动</li>
+                    <li>nacos多环境配置</li>
+                    <li>修复已知BUG</li>
+                </ol>
+            </Collapse.Panel>
             <Collapse.Panel header="v1.3.0 - 2021-08-13" key={6}>
                 <ol>
                     <li>前端UI升级至antdV5</li>
