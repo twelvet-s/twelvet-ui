@@ -13,6 +13,8 @@ const History = () => {
                     <li>jenkins一件打包发布</li>
                     <li>docker-compose启动</li>
                     <li>nacos多环境配置</li>
+                    <li>操作日志、访问日志进行权限控制</li>
+                    <li>修复request获取失败抛出导致的直接退出</li>
                     <li>修复已知BUG</li>
                 </ol>
             </Collapse.Panel>
