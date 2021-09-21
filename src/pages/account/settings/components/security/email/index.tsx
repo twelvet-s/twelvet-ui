@@ -1,98 +1,105 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 
-import { Form, FormInstance, Input, message, Modal } from 'antd';
+import { Button, FormInstance, message, Modal } from 'antd';
 import { EmailType } from './data';
 import { system } from '@/utils/twelvet';
 import { updatePwd } from './service';
+import ProForm, { ProFormCheckbox, ProFormDatePicker, ProFormDateTimePicker, ProFormSelect, ProFormText, ProFormTextArea, StepsForm } from '@ant-design/pro-form';
+import { PlusOutlined } from '@ant-design/icons';
 
-const layout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 18 },
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 4 },
+        sm: { span: 4 },
+    },
+    wrapperCol: {
+        xs: { span: 18 },
+        sm: { span: 18 },
+    },
 }
 
 /**
  * 修改用户邮箱组件
  */
-class Email extends Component<EmailType> {
 
-    state = {
-        loadingModal: false
-    }
+const Email: React.FC<EmailType> = () => {
 
-    formRef = React.createRef<FormInstance>();
+    const [visible, setVisible] = useState(false);
 
-    /**
-     * 保存数据
-     */
-    onSave = () => {
-        this.formRef.current?.validateFields()
-            .then(
-                async (fields) => {
-                    try {
-                        // 开启加载中
-                        this.setState({
-                            loadingModal: true
-                        })
-
-                        const { code, msg } = await updatePwd(fields)
-
-                        if (code != 200) {
-                            return message.error(msg)
-                        }
-
-                        message.success(msg)
-
-                        // 关闭模态框
-                        this.handleCancel()
-
-                    } catch (e) {
-                        system.error(e)
-                    } finally {
-                        this.setState({
-                            loadingModal: false
-                        })
-                    }
-                }
-            ).catch(e => {
-                system.error(e)
-            })
-    }
-
-    /**
-     * 关闭莫泰框
-     */
-    handleCancel = () => {
-        this.formRef.current?.resetFields()
-        this.props.onCancel()
-    }
-
-    render() {
-        const { passwordModal } = this.props
-
-        const { loadingModal } = this.state
-
-        return (
-            <Modal
-                title={`修改邮箱`}
-                visible={passwordModal}
-                okText={`修改`}
-                confirmLoading={loadingModal}
-                onOk={this.onSave}
-                onCancel={this.handleCancel}
+    return (
+        <>
+            <Button type="primary" onClick={() => setVisible(true)}>
+                <PlusOutlined />
+                分步表单新建
+            </Button>
+            <StepsForm
+                onFinish={async (values) => {
+                    console.log(values);
+                    setVisible(false);
+                    message.success('提交成功');
+                }}
+                formProps={{
+                    validateMessages: {
+                        required: '此项为必填项',
+                    },
+                }}
+                stepsFormRender={(dom, submitter) => {
+                    return (
+                        <Modal
+                            title="修改/绑定邮件"
+                            width={800}
+                            onCancel={() => setVisible(false)}
+                            visible={visible}
+                            footer={submitter}
+                            destroyOnClose
+                        >
+                            {dom}
+                        </Modal>
+                    );
+                }}
             >
-
-                <Form
-                    // 用于获取数据 
-                    ref={this.formRef}
+                <StepsForm.StepForm
+                    name="base"
+                    title="验证邮件"
+                    onFinish={async () => {
+                        return true;
+                    }}
                 >
+                    <ProFormText
+                        name="name"
+                        width="md"
+                        label="实验名称"
+                        tooltip="最长为 24 位，用于标定的唯一 id"
+                        placeholder="请输入名称"
+                        rules={[{ required: true }]}
+                    />
+                    
+                </StepsForm.StepForm>
+                <StepsForm.StepForm name="checkbox" title="设置参数">
+                    <ProFormCheckbox.Group
+                        name="checkbox"
+                        label="迁移类型"
+                        width="lg"
+                        options={['结构迁移', '全量迁移', '增量迁移', '全量校验']}
+                    />
+                </StepsForm.StepForm>
+                <StepsForm.StepForm name="time" title="发布实验">
+                    <ProFormCheckbox.Group
+                        name="checkbox"
+                        label="部署单元"
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                        options={['部署单元1', '部署单元2', '部署单元3']}
+                    />
+                    
+                </StepsForm.StepForm>
+            </StepsForm>
+        </>
+    )
 
-                    敬请期待
-
-                </Form>
-
-            </Modal>
-        )
-    }
 }
 
 export default Email
