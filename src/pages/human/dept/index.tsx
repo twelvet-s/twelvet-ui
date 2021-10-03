@@ -363,6 +363,7 @@ const Dept: React.FC<{}> = () => {
                                 {...formItemLayout}
                                 label="状态"
                                 name="status"
+                                initialValue={'1'}
                             >
                                 <Radio.Group>
                                     <Radio value={'1'}>正常</Radio>
