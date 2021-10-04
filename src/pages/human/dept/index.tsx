@@ -66,19 +66,13 @@ const Dept: React.FC<{}> = () => {
                         </a>
                         <Divider type="vertical" />
 
-                        {
-                            row.parentId != '0' && (
-                                <>
-                                    <a onClick={() => refPut(row)}>
-                                        <Space>
-                                            <EditOutlined />
-                                            修改
-                                        </Space>
-                                    </a >
-                                    <Divider type="vertical" />
-                                </>
-                            )
-                        }
+                        <a onClick={() => refPut(row)}>
+                            <Space>
+                                <EditOutlined />
+                                修改
+                            </Space>
+                        </a >
+                        <Divider type="vertical" />
 
                         <Popconfirm
                             onConfirm={() => refRemove(row)}
@@ -159,7 +153,14 @@ const Dept: React.FC<{}> = () => {
                 }
             })
 
-            setDataSource(tree)
+            setDataSource([
+                {
+                    key: 0,
+                    title: `顶级企业`,
+                    value: 0,
+                    children: tree
+                }
+            ])
         } catch (e) {
             system.error(e)
         }

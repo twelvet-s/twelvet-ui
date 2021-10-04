@@ -75,7 +75,7 @@ const Operation: React.FC<{}> = () => {
         },
         {
             title: '操作类型', ellipsis: false, width: 200, valueType: "text", search: false, dataIndex: 'businessType', render: (businessType: string) => {
-                return operType && operType[businessType]
+                return operType && operType[businessType.toString()]
             }
         },
         {
