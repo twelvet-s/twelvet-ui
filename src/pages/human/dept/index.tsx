@@ -66,13 +66,20 @@ const Dept: React.FC<{}> = () => {
                         </a>
                         <Divider type="vertical" />
 
-                        <a onClick={() => refPut(row)}>
-                            <Space>
-                                <EditOutlined />
-                                修改
-                            </Space>
-                        </a >
-                        <Divider type="vertical" />
+                        {
+                            row.parentId != '0' && (
+                                <>
+                                    <a onClick={() => refPut(row)}>
+                                        <Space>
+                                            <EditOutlined />
+                                            修改
+                                        </Space>
+                                    </a >
+                                    <Divider type="vertical" />
+                                </>
+                            )
+                        }
+
                         <Popconfirm
                             onConfirm={() => refRemove(row)}
                             title="确定删除吗"
@@ -119,10 +126,6 @@ const Dept: React.FC<{}> = () => {
             const { code, msg, data } = await getInfo(row.deptId)
             if (code != 200) {
                 return message.error(msg)
-            }
-
-            if (data.parentId == 0) {
-                data.parentId = data.deptId
             }
 
             // 赋值表单数据
