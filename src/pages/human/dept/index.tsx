@@ -58,20 +58,14 @@ const Dept: React.FC<{}> = () => {
             title: '操作', fixed: 'right', search: false, width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
                 return (
                     <>
-                        {
-                            row.menuType == `M` && (
-                                <>
-                                    <a onClick={() => refPost(row)}>
-                                        <Space>
-                                            <PlusOutlined />
-                                            新增
-                                        </Space>
-                                    </a>
-                                    <Divider type="vertical" />
-                                </>
-                            )
-                        }
-                        
+                        <a onClick={() => refPost(row)}>
+                            <Space>
+                                <PlusOutlined />
+                                新增
+                            </Space>
+                        </a>
+                        <Divider type="vertical" />
+
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined />
@@ -105,9 +99,11 @@ const Dept: React.FC<{}> = () => {
         // 更新数据
         putData()
 
-        const field: { [key: string]: any } = { parentId: row.deptId }
-        // 设置表单数据
-        form.setFieldsValue(field)
+        if (row.deptId != 0) {
+            const field: { [key: string]: any } = { parentId: row.deptId }
+            // 设置表单数据
+            form.setFieldsValue(field)
+        }
 
         setModal({ title: "新增", visible: true })
     }
@@ -124,6 +120,11 @@ const Dept: React.FC<{}> = () => {
             if (code != 200) {
                 return message.error(msg)
             }
+
+            if (data.parentId == 0) {
+                data.parentId = data.deptId
+            }
+
             // 赋值表单数据
             form.setFieldsValue(data)
 
@@ -231,7 +232,7 @@ const Dept: React.FC<{}> = () => {
         <>
             <ProTable
                 {
-                    ...proTableConfigs
+                ...proTableConfigs
                 }
                 actionRef={acForm}
                 rowKey="deptId"
@@ -289,6 +290,7 @@ const Dept: React.FC<{}> = () => {
                         }}
                         label="上级部门"
                         name="parentId"
+                        rules={[{ required: true, message: '请选择上级部门' }]}
                     >
                         <TreeSelect
                             // 支持搜索
@@ -296,7 +298,7 @@ const Dept: React.FC<{}> = () => {
                             // 根据title进行搜索
                             treeNodeFilterProp="title"
                             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                            placeholder="上级部门"
+                            placeholder="请选择上级部门"
                             treeData={dataSource}
                         />
                     </Form.Item>
