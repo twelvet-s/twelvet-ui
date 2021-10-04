@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { Modal } from 'antd';
 import { EmailType } from './data';
 
 const formItemLayout = {
@@ -17,13 +18,28 @@ const formItemLayout = {
  * 修改用户邮箱组件
  */
 
-const Email: React.FC<EmailType> = () => {
+const Email: React.FC<EmailType> = (props) => {
 
-    const [visible, setVisible] = useState(false);
+    /**
+     * 取消Modal的显示
+     */
+    const handleCancel = () => {
+
+        props.onCancel()
+    }
 
     return (
         <>
-            
+            <Modal
+                title={`修改邮箱`}
+                visible={props.emailModal}
+                okText={`修改`}
+                onCancel={handleCancel}
+            >
+
+                敬请期待
+
+            </Modal>
         </>
     )
 

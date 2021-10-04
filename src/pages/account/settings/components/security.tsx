@@ -102,7 +102,7 @@ class SecurityView extends Component<{
                 />
 
                 <Phone
-                    passwordModal={phoneModal}
+                    phoneModal={phoneModal}
                     onCancel={() => {
                         this.setState({
                             phoneModal: false
@@ -111,7 +111,7 @@ class SecurityView extends Component<{
                 />
 
                 <Email
-                    passwordModal={emailModal}
+                    emailModal={emailModal}
                     onCancel={() => {
                         this.setState({
                             emailModal: false

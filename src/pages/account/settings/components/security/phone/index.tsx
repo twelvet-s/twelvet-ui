@@ -67,14 +67,14 @@ class Phone extends Component<PhoneType> {
     }
 
     render() {
-        const { passwordModal } = this.props
+        const { phoneModal } = this.props
 
         const { loadingModal } = this.state
 
         return (
             <Modal
                 title={`修改手机号`}
-                visible={passwordModal}
+                visible={phoneModal}
                 okText={`修改`}
                 confirmLoading={loadingModal}
                 onOk={this.onSave}

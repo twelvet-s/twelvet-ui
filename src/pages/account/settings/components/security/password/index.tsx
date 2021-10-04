@@ -92,7 +92,7 @@ class Password extends Component<PasswordType> {
                         label="旧密码"
                         name="oldPassword"
                     >
-                        <Input.Password />
+                        <Input.Password autoComplete="off"/>
                     </Form.Item>
 
                     <Form.Item
@@ -101,7 +101,7 @@ class Password extends Component<PasswordType> {
                         label="新密码"
                         name="newPassword"
                     >
-                        <Input.Password />
+                        <Input.Password autoComplete="off" />
                     </Form.Item>
 
                     <Form.Item
@@ -110,7 +110,7 @@ class Password extends Component<PasswordType> {
                         label="确认密码"
                         name="confirmPassword"
                     >
-                        <Input.Password />
+                        <Input.Password autoComplete="off" />
                     </Form.Item>
 
                 </Form>
