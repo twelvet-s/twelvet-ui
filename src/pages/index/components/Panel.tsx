@@ -77,6 +77,7 @@ const Panel = () => {
                                 <li>Spring Boot</li>
                                 <li>Spring Cloud Alibaba</li>
                                 <li>Nacos</li>
+                                <li>RabbitMQ</li>
                                 <li>Fast DFS</li>
                                 <li>...</li>
                             </ul>
