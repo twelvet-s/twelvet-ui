@@ -40,7 +40,7 @@ const Panel = () => {
                 <Divider type="vertical" />
                 <a target='_blank' href="https://gitee.com/twelvet/twelvet/">
                     <Tag icon={<GithubOutlined />} color='success'>
-                        免费开源 
+                        免费开源
                     </Tag>
                 </a>
             </h1>
@@ -59,7 +59,7 @@ const Panel = () => {
                     <Row>
                         <Col md={{ span: 16 }} sm={{ span: 24 }} xs={{ span: 24 }}>
                             <h3>后端技术</h3>
-                            <ul>
+                            <ul style={{ padding: 0 }}>
                                 <li>Spring Boot</li>
                                 <li>Spring Cloud Alibaba</li>
                                 <li>Nacos</li>
@@ -70,7 +70,7 @@ const Panel = () => {
 
                         <Col md={{ span: 8 }} sm={{ span: 24 }} xs={{ span: 24 }}>
                             <h3>前端技术</h3>
-                            <ul>
+                            <ul style={{ padding: 0 }}>
                                 <li>React</li>
                                 <li>Umi</li>
                                 <li>Antd</li>
