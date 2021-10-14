@@ -64,8 +64,8 @@ const Menu: React.FC<{}> = () => {
             ellipsis: false,
             dataIndex: 'status',
             valueEnum: {
-                true: { text: '正常', status: 'success' },
-                false: { text: '停用', status: 'error' },
+                1: { text: '正常', status: 'success' },
+                0: { text: '停用', status: 'error' },
             },
         },
         {
