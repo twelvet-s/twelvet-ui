@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 
-import ProTable from '@ant-design/pro-table'
+import ProTable, { ActionType } from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, PlusOutlined, EditOutlined, CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Tooltip, Divider, Space } from 'antd'
