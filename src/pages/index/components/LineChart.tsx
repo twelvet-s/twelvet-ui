@@ -100,16 +100,16 @@ const LineChart: React.FC<LineChartProps> = props => {
         // 设置参数
         setEcharts(instance)
         // 开启自适应
-        window.addEventListener('resize', instance.resize)
+        
 
         // 设置到state
         setLineChart(instance)
-
     }, [])
 
     // 依赖props更新
     useEffect(() => {
         if (!lineChart) { return }
+        window.addEventListener('resize', lineChart.resize())
         setEcharts()
     }, [option])
 

@@ -48,15 +48,11 @@ const BarChart: React.FC<{}> = () => {
     useEffect(() => {
         // 获取echarts实例
         const instance: any = EchartsCtr.init(barChart, "macarons")
+        // 开启自适应
+        window.addEventListener('resize', instance.resize())
         // 设置参数
         instance.setOption(config)
-
-        // 开启自适应
-        window.addEventListener('resize', instance.resize)
-        // 关闭监听
-        return () => {
-            window.removeEventListener('resize', instance.resize)
-        }
+        return window.removeEventListener('resize', instance.resize())
     }, [])
 
     return (
