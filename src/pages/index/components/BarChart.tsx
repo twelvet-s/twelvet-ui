@@ -52,7 +52,17 @@ const BarChart: React.FC<{}> = () => {
         window.addEventListener('resize', instance.resize())
         // 设置参数
         instance.setOption(config)
-        return window.removeEventListener('resize', instance.resize())
+        // return window.removeEventListener('resize', instance.resize())
+        // console.log(instance)
+        // window.removeEventListener('resize', function () {
+        //     instance.resize()
+        // })
+        if (instance) {
+            setTimeout(() => {
+                instance.resize()
+            }, 200)
+        }
+
     }, [])
 
     return (
