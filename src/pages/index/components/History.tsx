@@ -6,7 +6,22 @@ import styles from './styles.less'
  */
 const History = () => {
     return (
-        <Collapse defaultActiveKey={7} className={styles.historyOl}>
+        <Collapse defaultActiveKey={8} className={styles.historyOl}>
+            <Collapse.Panel header="v2.5.0 - 2022-3-31" key={8}>
+                <ol>
+                    <li>优化docker-compose一件启动体验</li>
+                    <li>新增docker一件启动脚本</li>
+                    <li>新增MQ服务</li>
+                    <li>新增Netty服务</li>
+                    <li>修复首页X轴超出BUG</li>
+                    <li>升级nacos到最新版2.0.4</li>
+                    <li>升级spring-cloud到最新版2021.0.0</li>
+                    <li>升级spring-boot到最新版本2.6.6</li>
+                    <li>修改获取缓存信息方式</li>
+                    <li>新增分布式锁注解</li>
+                    <li>其他细节优化</li>
+                </ol>
+            </Collapse.Panel>
             <Collapse.Panel header="v2.0.0 - 2021-10-01" key={7}>
                 <ol>
                     <li>jenkins一件打包发布</li>
