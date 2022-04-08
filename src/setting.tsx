@@ -7,6 +7,8 @@ const TWT: any = {
     // OAuth2
     accessToken: 'TWT_access_token',
     refreshToken: 'TWT_refresh_token',
+    // 权限cookie
+    preAuthorize: 'TWT_pre_authorize',
     // 是否dev模式
     isDev,
     // api请求前缀

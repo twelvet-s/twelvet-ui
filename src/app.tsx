@@ -48,6 +48,7 @@ export async function getInitialState(): Promise<{
     // 如果是登录页面，不执行
     if (history.location.pathname !== loginPath) {
         const currentUser = await fetchUserInfo()
+        localStorage.setItem(TWT.preAuthorize, currentUser.permissions.join(','))
         return {
             fetchUserInfo,
             currentUser,
