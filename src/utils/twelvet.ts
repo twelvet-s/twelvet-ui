@@ -260,8 +260,8 @@ export const auth = (auth: string) => {
     if (!auths) {
         return true
     }
-    const authArr = auths.split(',')
-    if (authArr[0] === '*:*:*') {
+    const authArr = JSON.parse(auths);
+    if (authArr.includes('*:*:*')) {
         return false
     }
     
