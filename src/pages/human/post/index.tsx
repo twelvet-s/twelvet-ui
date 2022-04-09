@@ -6,7 +6,7 @@ import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutline
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Radio, Space, Divider } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getByPostId, insert, update } from './service'
-import { system } from '@/utils/twelvet'
+import {system, aotu, auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
 
 /**
@@ -66,7 +66,7 @@ const Post: React.FC<{}> = () => {
             title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
                 return (
                     <>
-                        <a onClick={() => refPut(row)}>
+                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -77,7 +77,7 @@ const Post: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row.postId)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除
@@ -229,7 +229,7 @@ const Post: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
-                    <Button type="default" onClick={refPost}>
+                    <Button type="default" onClick={refPost} hidden={auth('system:dict:insert')}>
                         <PlusOutlined />
                         新增
                     </Button>,
@@ -254,7 +254,7 @@ const Post: React.FC<{}> = () => {
                             })
                         }}
                     >
-                        <Button type="default">
+                        <Button type="default" hidden={auth('system:dict:export')}>
                             <FundProjectionScreenOutlined />
                             导出数据
                         </Button>

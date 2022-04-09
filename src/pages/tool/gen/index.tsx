@@ -5,7 +5,7 @@ import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { CloseOutlined, CloudSyncOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FileZipOutlined, SyncOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Space, Divider, FormInstance } from 'antd'
 import { batchGenCode, pageQuery, remove, synchDb } from './service'
-import { system } from '@/utils/twelvet'
+import {auth, system} from '@/utils/twelvet'
 import DrawerInfo from './components/DrawerInfo/Index'
 import PreviewCode from './components/PreviewCode/Index'
 import EditCode from './components/EditCode/Index'
@@ -82,7 +82,7 @@ const Gen: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row.tableId)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除
@@ -144,7 +144,7 @@ const Gen: React.FC<{}> = () => {
     }
 
     /**
-     * 
+     *
      * @param tableName 同步表结构域
      */
     const refSynchDb = async (tableName: string) => {
@@ -195,7 +195,7 @@ const Gen: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
-                    <Button
+                    <Button hidden={auth('system:dict:import')}
                         type="primary"
                         onClick={() => {
                             setDrawerInfoVisible(true)

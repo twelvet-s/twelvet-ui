@@ -6,7 +6,7 @@ import { DeleteOutlined, PlusOutlined, EditOutlined, CloseOutlined, QuestionCirc
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Tooltip, Divider, Space } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, getByClientId, insert, update } from './service'
-import { system } from '@/utils/twelvet'
+import { system,auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index'
 
@@ -58,7 +58,7 @@ const Post: React.FC<{}> = () => {
             title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
                 return (
                     <>
-                        <a onClick={() => refPut(row)}>
+                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -69,7 +69,7 @@ const Post: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row.clientId)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除
@@ -228,7 +228,7 @@ const Post: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
-                    <Button type="default" onClick={refPost}>
+                    <Button hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
                         <PlusOutlined />
                         新增
                     </Button>,

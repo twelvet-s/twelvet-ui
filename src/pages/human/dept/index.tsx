@@ -5,7 +5,7 @@ import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 import { Row, Col, Button, message, Space, Popconfirm, Modal, Form, Input, InputNumber, Radio, TreeSelect, Divider } from 'antd'
 import { list, getInfo, remove, insert, update } from './service'
-import { system, makeTree } from '@/utils/twelvet'
+import {system, makeTree, aotu, auth} from '@/utils/twelvet'
 import { FormInstance } from 'antd/lib/form'
 
 /**
@@ -58,7 +58,7 @@ const Dept: React.FC<{}> = () => {
             title: '操作', fixed: 'right', search: false, width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
                 return (
                     <>
-                        <a onClick={() => refPost(row)}>
+                        <a onClick={() => refPost(row)} hidden={auth('system:dict:insert')}>
                             <Space>
                                 <PlusOutlined />
                                 新增
@@ -66,7 +66,7 @@ const Dept: React.FC<{}> = () => {
                         </a>
                         <Divider type="vertical" />
 
-                        <a onClick={() => refPut(row)}>
+                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -78,7 +78,7 @@ const Dept: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#'  hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除
