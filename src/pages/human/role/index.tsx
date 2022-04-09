@@ -7,7 +7,7 @@ import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutline
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Radio, Tree, TreeSelect, Row, Col, Space, Divider } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getByroleId, insert, update, roleMenuTreeSelectByMenuId, roleMenuTreeSelect, roleDeptTreeSelectByDeptId, roleDeptTreeSelect } from './service'
-import { system } from '@/utils/twelvet'
+import {system, auto, auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import { DataNode } from 'antd/lib/tree'
 import { Key } from 'antd/lib/table/interface'
@@ -108,7 +108,7 @@ const Role: React.FC<{}> = () => {
                 // 不允许操作admin
                 return row.roleKey != 'admin' && (
                     <>
-                        <a onClick={() => refPut(row)}>
+                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -119,7 +119,7 @@ const Role: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row.roleId)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除
@@ -391,7 +391,7 @@ const Role: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
-                    <Button type="default" onClick={refPost}>
+                    <Button type="default" hidden={auth('system:dict:insert')} onClick={refPost}>
                         <PlusOutlined />
                         新增
                     </Button>,
@@ -416,7 +416,7 @@ const Role: React.FC<{}> = () => {
                             })
                         }}
                     >
-                        <Button type="default">
+                        <Button type="default" hidden={auth('system:dict:export')}>
                             <FundProjectionScreenOutlined />
                             导出数据
                         </Button>

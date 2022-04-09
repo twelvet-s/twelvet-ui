@@ -6,14 +6,14 @@ import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutline
 import { Popconfirm, Button, message, Modal, Form, Input, Radio, Space, Divider } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getBydictId, insert, update, clearCache } from './service'
-import { system } from '@/utils/twelvet'
+import { system, auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import DrawerInfo from './components/drawerInfo/Index'
 
 /**
  * 字典模块类型管理
  */
-const Dictionaries: React.FC<{}> = () => {
+const Dictionaries: React.FC<{}> = (xinzen) => {
 
     // 显示Modal
     const [modal, setModal] = useState<{ title: string, visible: boolean }>({ title: ``, visible: false })
@@ -76,7 +76,7 @@ const Dictionaries: React.FC<{}> = () => {
             title: '操作', fixed: 'right', width: 320, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
                 return (
                     <>
-                        <a onClick={() => refPut(row)}>
+                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -98,12 +98,12 @@ const Dictionaries: React.FC<{}> = () => {
                         </a>
 
                         <Divider type="vertical" />
-                        
+
                         <Popconfirm
                             onConfirm={() => refRemove(row.dictId)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除
@@ -273,7 +273,7 @@ const Dictionaries: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
-                    <Button type="default" onClick={refPost}>
+                    <Button hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
                         <PlusOutlined />
                         新增
                     </Button>,
@@ -298,7 +298,7 @@ const Dictionaries: React.FC<{}> = () => {
                             })
                         }}
                     >
-                        <Button type="default">
+                        <Button type="default" hidden={auth('system:dict:export')}>
                             <FundProjectionScreenOutlined />
                             导出数据
                         </Button>

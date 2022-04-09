@@ -5,7 +5,7 @@ import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { CaretRightOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FundProjectionScreenOutlined, PlusOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Space, Radio, Form, Modal, Input, Row, Col, Tooltip, Divider } from 'antd'
 import { pageQuery, remove, exportExcel, run, insert, update, getByJobId } from './service'
-import { system } from '@/utils/twelvet'
+import {system, auto, auth} from '@/utils/twelvet'
 import JobStatus from './components/jobStatusSwitch/Index'
 import Details from './components/details/Index'
 import { FormInstance } from 'antd/lib/form'
@@ -79,7 +79,7 @@ const Job: React.FC<{}> = () => {
                 row: { [key: string]: string }) => {
                 return (
                     <>
-                        <a onClick={() => refPut(row)}>
+                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -114,7 +114,7 @@ const Job: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row.jobId)}
                             title="是否删除"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <DeleteOutlined />
                                     删除
@@ -157,7 +157,7 @@ const Job: React.FC<{}> = () => {
 
     /**
      * 执行任务
-     * @param row 
+     * @param row
      */
     const runJob = async (row: { [key: string]: any }) => {
         try {
@@ -295,7 +295,7 @@ const Job: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
-                    <Button type="default" onClick={refPost}>
+                    <Button hidden={auth('system:dict:insert')}  type="default" onClick={refPost}>
                         <PlusOutlined />
                         新增
                     </Button>,
