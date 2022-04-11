@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import EchartsCtr from 'echarts'
+import * as EchartsCtr from 'echarts'
 import 'echarts/lib/chart/bar'
 import 'echarts/theme/macarons'
 import styles from './styles.less'

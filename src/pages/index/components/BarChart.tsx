@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import EchartsCtr from 'echarts'
+import * as EchartsCtr from 'echarts'
 import 'echarts/lib/chart/bar'
 import 'echarts/theme/macarons'
 import styles from './styles.less'
@@ -47,20 +47,20 @@ const BarChart: React.FC<{}> = () => {
     // 第一次渲染时执行
     useEffect(() => {
         // 获取echarts实例
-        const instance: any = EchartsCtr.init(barChart, "macarons")
+        let instance: any = EchartsCtr.init(barChart, "macarons")
         // 开启自适应
         window.addEventListener('resize', instance.resize())
         // 设置参数
         instance.setOption(config)
-        // return window.removeEventListener('resize', instance.resize())
-        // console.log(instance)
-        // window.removeEventListener('resize', function () {
-        //     instance.resize()
-        // })
-        if (instance) {
-            setTimeout(() => {
-                instance.resize()
-            }, 200)
+        // if (instance) {
+        //     setTimeout(() => {
+        //         instance.resize()
+        //     }, 200)
+        // }
+        if (instance === undefined) {
+            instance = EchartsCtr.init(barChart, "macarons");
+        } else {
+            instance.resize()
         }
 
     }, [])
