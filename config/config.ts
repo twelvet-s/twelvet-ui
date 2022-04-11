@@ -70,7 +70,8 @@ export default defineConfig({
         },
     ],
     nodeModulesTransform: { type: 'none' },
-    mfsu: {},
+    mfsu: { production: { output: '.mfsu-production' } }, // https://github.com/umijs/umi/issues/6766
+    // mfsu: { }, // https://github.com/ant-design/ant-design-pro/issues/8835
     webpack5: {},
     exportStatic: {},
 });
