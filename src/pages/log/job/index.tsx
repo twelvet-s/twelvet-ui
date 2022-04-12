@@ -5,7 +5,7 @@ import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, EyeOutlined, FundProjectionScreenOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, DatePicker, Space } from 'antd'
 import { pageQuery, remove, exportExcel } from './service'
-import { system } from '@/utils/twelvet'
+import {system, auto, auth} from '@/utils/twelvet'
 import { RequestData } from '@ant-design/pro-table'
 import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData'
 import moment, { Moment } from 'moment'
@@ -125,7 +125,7 @@ const Login: React.FC<{}> = () => {
                         onConfirm={() => refRemove(selectedRowKeys, action)}
                         title="是否删除选中数据"
                     >
-                        <Button
+                        <Button hidden={auth('system:dict:remove')}
                             disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
                             type="primary" danger
                         >
@@ -141,7 +141,7 @@ const Login: React.FC<{}> = () => {
                         }}
                         title="是否导出数据"
                     >
-                        <Button type="default">
+                        <Button type="default" hidden={auth('system:dict:export')}>
                             <FundProjectionScreenOutlined />
                             导出数据
                         </Button>

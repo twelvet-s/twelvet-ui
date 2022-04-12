@@ -5,7 +5,7 @@ import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { createFromIconfontCN, PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 import { Row, Col, Button, message, Space, Popconfirm, Modal, Form, Input, InputNumber, Radio, TreeSelect, Divider } from 'antd'
 import { list, getInfo, remove, insert, update } from './service'
-import { system, makeTree } from '@/utils/twelvet'
+import { system, makeTree, auth } from '@/utils/twelvet'
 import { FormInstance } from 'antd/lib/form'
 
 /**
@@ -78,7 +78,7 @@ const Menu: React.FC<{}> = () => {
                         {
                             (row.menuType == `M` || row.menuType == `C`) && (
                                 <>
-                                    <a onClick={() => refPost(row)}>
+                                    <a onClick={() => refPost(row)} hidden={auth('system:menu:insert')}>
                                         <Space>
                                             <PlusOutlined />
                                             新增
@@ -89,7 +89,7 @@ const Menu: React.FC<{}> = () => {
                             )
                         }
 
-                        <a onClick={() => refPut(row)}>
+                        <a onClick={() => refPut(row)} hidden={auth('system:menu:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -100,7 +100,7 @@ const Menu: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:menu:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除
@@ -275,7 +275,7 @@ const Menu: React.FC<{}> = () => {
                 }}
                 request={list}
                 toolBarRender={() => [
-                    <Button type="default" onClick={() => refPost({ menuId: 0 })}>
+                    <Button hidden={auth('system:menu:insert')} type="default" onClick={() => refPost({ menuId: 0 })}>
                         <PlusOutlined />
                         新增
                     </Button>

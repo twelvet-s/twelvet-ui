@@ -8,7 +8,7 @@ import { downloadFile, pageQuery, remove } from './service'
 import ImportDFS from './components/importDFS/Index'
 import { FormInstance } from 'antd/lib/form'
 import { isArray } from 'lodash'
-import { system } from '@/utils/twelvet'
+import { system,auth } from '@/utils/twelvet'
 
 /**
  * 分布式文件系统
@@ -57,7 +57,7 @@ const DFS: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row.fileId)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除

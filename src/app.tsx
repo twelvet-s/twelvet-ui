@@ -33,6 +33,9 @@ export async function getInitialState(): Promise<{
             if (code != 200) {
                 return message.error(msg)
             }
+
+            localStorage.setItem(TWT.preAuthorize, JSON.stringify(permissions))
+
             return {
                 user,
                 menus,
@@ -47,6 +50,7 @@ export async function getInitialState(): Promise<{
     // 如果是登录页面，不执行
     if (history.location.pathname !== loginPath) {
         const currentUser = await fetchUserInfo()
+        
         return {
             fetchUserInfo,
             currentUser,
