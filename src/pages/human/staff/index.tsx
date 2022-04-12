@@ -8,8 +8,8 @@ import { FormInstance } from 'antd/lib/form'
 import DpetSearch from './components/dpetSearch/Index'
 import ImportStaff from './components/importStaff/Index'
 import StaffStatusSwitch from './components/staffStatusSwitch/Index'
-import { pageQuery, remove, exportExcel, getByStaffId, getByStaff, insert, update, treeSelect,updatePassword } from './service'
-import { system } from '@/utils/twelvet'
+import { pageQuery, remove, exportExcel, getByStaffId, getByStaff, insert, update, treeSelect } from './service'
+import { system ,auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import moment, { Moment } from 'moment'
 import { useAccess, Access } from 'umi';
@@ -116,7 +116,7 @@ const Staff: React.FC<{}> = () => {
             title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
                 return (
                     <>
-                        <a onClick={() => refPut(row)}>
+                        <a onClick={() => refPut(row)}  hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -127,7 +127,7 @@ const Staff: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row.userId)}
                             title="确定删除吗"
                         >
-                            <a href='#'>
+                            <a href='#' hidden={auth('system:dict:remove')}>
                                 <Space>
                                     <CloseOutlined />
                                     删除
@@ -432,7 +432,7 @@ const Staff: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
-                    <Button type="default" onClick={refPost}>
+                    <Button hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
                         <PlusOutlined />
                         新增
                     </Button>,
@@ -457,12 +457,12 @@ const Staff: React.FC<{}> = () => {
                             })
                         }}
                     >
-                        <Button type="default">
+                        <Button type="default" hidden={auth('system:dict:export')}>
                             <FundProjectionScreenOutlined />
                             导出数据
                         </Button>
                     </Popconfirm>,
-                    <Button type="primary" onClick={() => {
+                    <Button hidden={auth('system:dict:import')} type="primary" onClick={() => {
                         setImportStaffVisible(true)
                     }}>
                         <PlusOutlined />
