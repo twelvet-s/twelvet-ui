@@ -12,6 +12,7 @@ import { pageQuery, remove, exportExcel, getByStaffId, getByStaff, insert, updat
 import { system ,auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import moment, { Moment } from 'moment'
+import { useAccess, Access } from 'umi';
 
 /**
  * 职员模块
@@ -22,6 +23,9 @@ const Staff: React.FC<{}> = () => {
 
     // 显示Modal
     const [modal, setModal] = useState<{ title: string, visible: boolean, modelType: string }>({ title: ``, visible: false, modelType: '' })
+
+
+    const [resetPassword,setResetPassword] = useState<{ title: string, visible: boolean, modelType: string }>({ title: ``, visible: false, modelType: ''})
 
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false)
@@ -34,6 +38,8 @@ const Staff: React.FC<{}> = () => {
 
     const [form] = Form.useForm<FormInstance>()
 
+    const [prform] = Form.useForm<FormInstance>()
+
     // 部门数据
     const [DEPTS, setDEPTS] = useState<Array<{ [key: string]: any }>>([])
 
@@ -45,6 +51,7 @@ const Staff: React.FC<{}> = () => {
 
     const { TextArea } = Input
 
+    const access = useAccess();
     const formItemLayout = {
         labelCol: {
             xs: { span: 4 },
@@ -127,6 +134,15 @@ const Staff: React.FC<{}> = () => {
                                 </Space>
                             </a>
                         </Popconfirm>
+                        <Access accessible={access.hasAuthority('system:user:resetPwd')} >
+                            <Divider type="vertical" />
+                            <a onClick={()=>changPassword(row.userId)}>
+                            <Space>
+                                    <EditOutlined />
+                                    重置密码
+                                </Space>
+                            </a>
+                        </Access>
                     </>
                 )
             }
@@ -182,6 +198,16 @@ const Staff: React.FC<{}> = () => {
         makeDept()
     }
 
+
+
+    const changPassword = async (userId: (string | number)[] | string | undefined) =>{
+        prform.setFieldsValue({userId:userId})
+        // 设置Modal状态
+        setResetPassword({ title: "重置密码", visible: true, modelType: 'PUT' })
+    }
+
+
+
     /**
      * 获取修改职员信息
      * @param row row
@@ -197,10 +223,9 @@ const Staff: React.FC<{}> = () => {
 
             staff.postIds = postIds
             staff.roleIds = roleIds
-
+                
             // 赋值表单数据
             form.setFieldsValue(staff)
-
 
             let POSTS: Array<{ [key: string]: any }> = new Array<{ [key: string]: any }>()
             // 制作岗位数据
@@ -298,6 +323,13 @@ const Staff: React.FC<{}> = () => {
         setModal({ title: "", visible: false, modelType: '' })
         form.resetFields()
     }
+    /**
+     * 取消Modal的显示
+     */
+    const rehandleCancelHandler = () => {
+        setResetPassword({ title: "", visible: false, modelType: '' })
+        form.resetFields()
+    }
 
     /**
      * 保存数据
@@ -324,6 +356,38 @@ const Staff: React.FC<{}> = () => {
 
                         // 关闭模态框
                         handleCancel()
+                    } catch (e) {
+                        system.error(e)
+                    } finally {
+                        setLoadingModal(false)
+                    }
+                }).catch(e => {
+                    system.error(e)
+                })
+    }
+    /**
+     * 保存数据
+     */
+    const resetPasswordHandler = () => {
+        
+        prform.validateFields()
+            .then(
+                async (fields) => {
+                    try {
+                        // 开启加载中
+                        setLoadingModal(true)
+
+                        // ID为0则insert，否则将update
+                        debugger
+                        const { code, msg } = await updatePassword(fields)
+                        if (code != 200) {
+                            return message.error(msg)
+                        }
+
+                        message.success(msg)
+
+                        // 关闭模态框
+                        rehandleCancelHandler()
                     } catch (e) {
                         system.error(e)
                     } finally {
@@ -407,6 +471,43 @@ const Staff: React.FC<{}> = () => {
                 ]}
 
             />
+
+            <Modal
+                            title={`${resetPassword.title}`}
+                            visible={resetPassword.visible}
+                            width={500}
+                            okText={`${resetPassword.title}`}
+                            confirmLoading={loadingModal}
+                            onOk={resetPasswordHandler}
+                            onCancel={rehandleCancelHandler}
+                        >
+                             <Form
+                                name="resetPassword"
+                                form={prform}
+                            >
+                            <Row>
+                            <Col span={24}>
+                                    <Form.Item
+                                        label="新密码"
+                                        name="password"
+                                        rules={[{ required: true, message: '密码不能为空' }]}
+                                    >
+                                        <Input placeholder="输入新密码" />
+                                        
+                                    </Form.Item>
+                                    <Form.Item 
+                                        hidden
+                                        label="用户ID"
+                                        name="userId"
+                                        initialValue={0}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+
+                                </Col>
+                            </Row>
+                            </Form>
+            </Modal>
 
             <Modal
                 title={`${modal.title}职员`}

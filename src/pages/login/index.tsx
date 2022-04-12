@@ -50,6 +50,8 @@ const Login: React.FC = () => {
                 currentUser: {
                     user: userInfo.user,
                     menus: userInfo.menus,
+                    permissions: userInfo.permissions,
+                    roles: userInfo.roles
                 }
             }));
         }

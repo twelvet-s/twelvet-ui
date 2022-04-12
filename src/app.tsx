@@ -29,8 +29,7 @@ export async function getInitialState(): Promise<{
 }> {
     const fetchUserInfo = async () => {
         try {
-            const { user = {}, menus = {}, role, permissions, code, msg } = await getCurrentUser()
-
+            const { user = {}, menus = {}, roles, permissions, code, msg } = await getCurrentUser()
             if (code != 200) {
                 return message.error(msg)
             }
@@ -40,7 +39,7 @@ export async function getInitialState(): Promise<{
             return {
                 user,
                 menus,
-                role,
+                roles,
                 permissions
             }
         } catch (error) {

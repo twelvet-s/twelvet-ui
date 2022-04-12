@@ -39,6 +39,19 @@ export async function update(params: { [key: string]: any }) {
         },
     });
 }
+/**
+ * 修改密码
+ * @param params 修改密码
+ */
+export async function updatePassword(params: { [key: string]: any }) {
+    debugger
+    return request(`${controller}/resetPwd`, {
+        method: 'PUT',
+        data: {
+            ...params
+        },
+    });
+}
 
 /**
  * 获取分页 Data
