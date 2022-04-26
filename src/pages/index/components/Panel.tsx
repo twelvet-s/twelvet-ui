@@ -6,7 +6,7 @@ import styles from './styles.less'
 /**
  * 消息面板
  */
-const Panel = () => {
+const Panel: React.FC<{}> = () => {
     return (
         <Card title="公告">
             <div>

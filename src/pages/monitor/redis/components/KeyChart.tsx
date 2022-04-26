@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/lib/echarts.js';
 import 'echarts/lib/chart/line';
 import 'echarts/theme/macarons';
 import styles from './styles.less';
@@ -49,14 +49,12 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
         series: [{
             name: 'key数量',
             itemStyle: {
-                normal: {
+                color: '#FF005A',
+                lineStyle: {
                     color: '#FF005A',
-                    lineStyle: {
-                        color: '#FF005A',
-                        width: 2
-                    },
+                    width: 2
                 },
-                
+
             },
             smooth: true,
             type: 'line',
@@ -74,7 +72,7 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
     // 第一次渲染时执行
     useEffect(() => {
         // 获取echarts实例
-        const instance: any = echarts.init(lineChartRef, "macarons")
+        const instance: any = echarts.init(lineChartRef)
         instance.showLoading()
         // 设置参数
         setEcharts(instance)
@@ -101,16 +99,16 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
         const ctr = instance || lineChart
 
         // 时间
-        if(timeData.length >= 6){
-            timeData.shift(); 
+        if (timeData.length >= 6) {
+            timeData.shift();
         }
         const timeTemp = [...timeData, time]
         config.xAxis.data.push(...timeTemp)
         setTimeData(timeTemp)
 
         // 分配内存
-        if(dbSizeData.length >= 6){
-            dbSizeData.shift(); 
+        if (dbSizeData.length >= 6) {
+            dbSizeData.shift();
         }
         const dbSizeTemp = [...dbSizeData, dbSize]
         config.series[0].data.push(...dbSizeTemp)

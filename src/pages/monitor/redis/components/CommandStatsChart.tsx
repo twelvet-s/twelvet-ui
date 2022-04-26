@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import * as EchartsCtr from 'echarts'
+import * as echarts from 'echarts/lib/echarts.js'
 import 'echarts/lib/chart/bar'
 import 'echarts/theme/macarons'
 import styles from './styles.less'
@@ -18,7 +18,7 @@ const CommandStatsChart: React.FC<{ commandStats: {} | undefined }> = (props) =>
     // 第一次渲染时执行
     useEffect(() => {
         // 获取echarts实例
-        const instance: any = EchartsCtr.init(commandStatsChart, "macarons")
+        const instance: any = echarts.init(commandStatsChart)
         // 开启自适应
         window.addEventListener('resize', instance.resize)
 

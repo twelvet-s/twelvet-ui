@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/lib/echarts.js';
 import 'echarts/lib/chart/line';
 import 'echarts/theme/macarons';
 import styles from './styles.less';
@@ -50,14 +50,12 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
         series: [{
             name: '分配内存',
             itemStyle: {
-                normal: {
-                    // 上方显示数值
-                    show: true,
+                // 上方显示数值
+                show: true,
+                color: '#FF005A',
+                lineStyle: {
                     color: '#FF005A',
-                    lineStyle: {
-                        color: '#FF005A',
-                        width: 2
-                    }
+                    width: 2
                 }
             },
             smooth: true,
@@ -66,23 +64,23 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
             animationDuration: 2000,
             animationEasing: 'cubicInOut',
         },
-        // {
-        //     name: '消耗峰值',
-        //     itemStyle: {
-        //         normal: {
-        //             color: '#FF005A',
-        //             lineStyle: {
-        //                 color: '#FF005A',
-        //                 width: 2
-        //             }
-        //         }
-        //     },
-        //     smooth: true,
-        //     type: 'line',
-        //     data: [],
-        //     animationDuration: 2000,
-        //     animationEasing: 'cubicInOut',
-        // },
+            // {
+            //     name: '消耗峰值',
+            //     itemStyle: {
+            //         normal: {
+            //             color: '#FF005A',
+            //             lineStyle: {
+            //                 color: '#FF005A',
+            //                 width: 2
+            //             }
+            //         }
+            //     },
+            //     smooth: true,
+            //     type: 'line',
+            //     data: [],
+            //     animationDuration: 2000,
+            //     animationEasing: 'cubicInOut',
+            // },
         ]
 
     }
@@ -93,7 +91,7 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
     // 第一次渲染时执行
     useEffect(() => {
         // 获取echarts实例
-        const instance: any = echarts.init(lineChartRef, "macarons")
+        const instance: any = echarts.init(lineChartRef)
         instance.showLoading()
         // 设置参数
         setEcharts(instance)
@@ -121,23 +119,23 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
         const ctr = instance || lineChart
 
         // 时间
-        if(timeData.length >= 6){
-            timeData.shift(); 
+        if (timeData.length >= 6) {
+            timeData.shift();
         }
         const timeTemp = [...timeData, time]
         config.xAxis.data.push(...timeTemp)
         setTimeData(timeTemp)
 
         // 分配内存
-        if(usedmemoryData.length >= 6){
-            usedmemoryData.shift(); 
+        if (usedmemoryData.length >= 6) {
+            usedmemoryData.shift();
         }
         const usedmemoryDataTemp = [...usedmemoryData, usedmemory]
         config.series[0].data.push(...usedmemoryDataTemp)
         setUsedmemoryData(usedmemoryDataTemp)
 
 
-        
+
         // 消耗峰值
         // const usedMemoryPeakHumanDataTemp = [...usedMemoryPeakHumanData, usedMemoryPeakHuman]
         // console.log(usedMemoryPeakHumanDataTemp)

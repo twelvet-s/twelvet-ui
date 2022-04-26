@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import echarts from 'echarts/lib/echarts';
-import 'echarts/lib/chart/line';
-import 'echarts/theme/macarons';
+import * as echarts from 'echarts/lib/echarts.js';
 import styles from './styles.less';
 import React from 'react';
 import { Card } from 'antd';
@@ -51,12 +49,10 @@ const LineChart: React.FC<LineChartProps> = props => {
         series: [{
             name: 'expected',
             itemStyle: {
-                normal: {
+                color: '#FF005A',
+                lineStyle: {
                     color: '#FF005A',
-                    lineStyle: {
-                        color: '#FF005A',
-                        width: 2
-                    }
+                    width: 2
                 }
             },
             smooth: true,
@@ -70,15 +66,13 @@ const LineChart: React.FC<LineChartProps> = props => {
             smooth: true,
             type: 'line',
             itemStyle: {
-                normal: {
+                color: '#3888fa',
+                lineStyle: {
                     color: '#3888fa',
-                    lineStyle: {
-                        color: '#3888fa',
-                        width: 2
-                    },
-                    areaStyle: {
-                        color: '#f3f8ff'
-                    }
+                    width: 2
+                },
+                areaStyle: {
+                    color: '#f3f8ff'
                 }
             },
             data: [],
@@ -95,12 +89,12 @@ const LineChart: React.FC<LineChartProps> = props => {
     // 第一次渲染时执行
     useEffect(() => {
         // 获取echarts实例
-        const instance: any = echarts.init(lineChartRef, "macarons")
+        const instance: any = echarts.init(lineChartRef)
         instance.showLoading()
         // 设置参数
         setEcharts(instance)
         // 开启自适应
-        
+
 
         // 设置到state
         setLineChart(instance)
