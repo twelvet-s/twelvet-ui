@@ -6,7 +6,7 @@ import { DeleteOutlined, FundProjectionScreenOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, DatePicker } from 'antd'
 import moment, { Moment } from 'moment'
 import { pageQuery, remove, exportExcel } from './service'
-import {system, auto, auth} from '@/utils/twelvet'
+import {system, auth} from '@/utils/twelvet'
 import { RequestData } from '@ant-design/pro-table'
 import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData'
 import { FormInstance } from 'antd/lib/form'
@@ -29,6 +29,18 @@ const Login: React.FC<{}> = () => {
         },
         {
             title: 'IP', width: 200, valueType: "text", dataIndex: 'ipaddr'
+        },
+        {
+            title: '搜索日期',
+            key: 'between',
+            hideInTable: true,
+            dataIndex: 'between',
+            renderFormItem: () => (
+                <RangePicker format="YYYY-MM-DD" disabledDate={(currentDate: Moment) => {
+                    // 不允许选择大于今天的日期
+                    return moment(new Date(), 'YYYY-MM-DD') < currentDate
+                }} />
+            )
         },
         {
             title: '状态',

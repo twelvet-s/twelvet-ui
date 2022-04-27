@@ -7,7 +7,7 @@ import ProDescriptions from '@ant-design/pro-descriptions'
 import { Popconfirm, Button, message, Modal, DatePicker, Space, FormInstance } from 'antd'
 import moment, { Moment } from 'moment'
 import { pageQuery, remove, exportExcel, getDictionariesType } from './service'
-import {system, auto, auth} from '@/utils/twelvet'
+import {system, auth} from '@/utils/twelvet'
 
 
 /**
