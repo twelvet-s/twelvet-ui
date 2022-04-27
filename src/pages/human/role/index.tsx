@@ -7,10 +7,11 @@ import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutline
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Radio, Tree, TreeSelect, Row, Col, Space, Divider } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getByroleId, insert, update, roleMenuTreeSelectByMenuId, roleMenuTreeSelect, roleDeptTreeSelectByDeptId, roleDeptTreeSelect } from './service'
-import {system, auto, auth} from '@/utils/twelvet'
+import { system, auth } from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import { DataNode } from 'antd/lib/tree'
 import { Key } from 'antd/lib/table/interface'
+import { useAccess, Access } from 'umi';
 
 /**
  * 角色模块
@@ -35,6 +36,8 @@ const Role: React.FC<{}> = () => {
 
     const [deptData, setDeptData] = useState<DataNode[]>()
     const [checkdDeptData, setCheckdDeptData] = useState<Key[]>([])
+
+    const access = useAccess();
 
     // 权限范围
     const [dataScope, setDataScope] = useState<string>()
@@ -96,6 +99,10 @@ const Role: React.FC<{}> = () => {
             ellipsis: false,
             width: 80,
             dataIndex: 'status',
+            valueEnum: {
+                "1": { text: '正常', status: 'success' },
+                "0": { text: '停用', status: 'error' },
+            },
             render: (_: string, row: { [key: string]: string }) => [
                 <RoleStatusSwitch row={row} key={row.roleId} />
             ]
@@ -108,12 +115,14 @@ const Role: React.FC<{}> = () => {
                 // 不允许操作admin
                 return row.roleKey != 'admin' && (
                     <>
-                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
-                            <Space>
-                                <EditOutlined />
-                                修改
-                            </Space>
-                        </a>
+                        <Access accessible={access.hasAuthority('system:dict:update')} >
+                            <a onClick={() => refPut(row)}>
+                                <Space>
+                                    <EditOutlined />
+                                    修改
+                                </Space>
+                            </a>
+                        </Access>
                         <Divider type="vertical" />
                         <Popconfirm
                             onConfirm={() => refRemove(row.roleId)}
@@ -369,7 +378,7 @@ const Role: React.FC<{}> = () => {
                 columns={columns}
                 request={async (params, sorter, filter) => {
                     const { data } = await pageQuery(params)
-                    const {records, total} = data
+                    const { records, total } = data
                     return Promise.resolve({
                         data: records,
                         success: true,
