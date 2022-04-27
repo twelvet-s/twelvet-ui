@@ -115,14 +115,12 @@ const Role: React.FC<{}> = () => {
                 // 不允许操作admin
                 return row.roleKey != 'admin' && (
                     <>
-                        <Access accessible={access.hasAuthority('system:dict:update')} >
-                            <a onClick={() => refPut(row)}>
-                                <Space>
-                                    <EditOutlined />
-                                    修改
-                                </Space>
-                            </a>
-                        </Access>
+                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
+                            <Space>
+                                <EditOutlined />
+                                修改
+                            </Space>
+                        </a>
                         <Divider type="vertical" />
                         <Popconfirm
                             onConfirm={() => refRemove(row.roleId)}
