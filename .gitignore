@@ -9,6 +9,7 @@ _roadhog-api-doc
 # production
 /dist
 /.vscode
+.mfsu-production
 
 # misc
 .DS_Store
@@ -19,6 +20,7 @@ yarn-error.log
 .idea
 yarn.lock
 package-lock.json
+pnpm-lock.yaml
 *bak
 .vscode
 .yarn
