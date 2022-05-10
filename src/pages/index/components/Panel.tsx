@@ -12,11 +12,11 @@ const Panel: React.FC<{}> = () => {
             <div>
                 领取阿里云通用云产品1888优惠券：
                 ☛☛
-                <a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=jcjwnfv3" target='_blank'>
+                <a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=jcjwnfv3" target='_blank' rel="noreferrer">
                     阿里云推广大使
                 </a>
                 <Divider type='vertical' />
-                <a href="https://www.aliyun.com/1111/new?userCode=jcjwnfv3" target='_blank'>
+                <a href="https://www.aliyun.com/1111/new?userCode=jcjwnfv3" target='_blank' rel="noreferrer">
                     服务器秒杀
                 </a>
                 ☚☚
@@ -25,11 +25,11 @@ const Panel: React.FC<{}> = () => {
             <div>
                 腾讯云服务器秒杀区：
                 ☛☛
-                <a href="https://curl.qcloud.com/cAvXfLWI" target='_blank'>
+                <a href="https://curl.qcloud.com/cAvXfLWI" target='_blank' rel="noreferrer">
                     新用户优惠券
                 </a>
                 <Divider type='vertical' />
-                <a href="https://curl.qcloud.com/VrLWYkZI" target='_blank'>
+                <a href="https://curl.qcloud.com/VrLWYkZI" target='_blank' rel="noreferrer">
                     服务器秒杀
                 </a>
                 ☚☚
@@ -38,14 +38,14 @@ const Panel: React.FC<{}> = () => {
             <h1>
                 TwelveT 微服务
                 <Divider type="vertical" />
-                <a target='_blank' href="https://gitee.com/twelvet/twelvet/">
+                <a target='_blank' href="https://gitee.com/twelvet/twelvet/" rel="noreferrer">
                     <Tag icon={<GithubOutlined />} color='success'>
                         免费开源
                     </Tag>
                 </a>
             </h1>
 
-            <Row gutter={[15, 30]}>
+            <Row gutter={[70, 30]}>
                 <Col md={{ span: 16 }} sm={{ span: 24 }} xs={{ span: 24 }}>
                     <p>一款基于Spring Cloud Alibaba的权限管理系统，集成市面上流行库，可以作用为快速开发的一个框架使用。</p>
 
@@ -97,7 +97,7 @@ const Panel: React.FC<{}> = () => {
 
                     <Row>
                         <Col className={styles.topSpace} xxl={{ span: 12 }} xl={{ span: 24 }} xs={{ span: 24 }}>
-                            <a target='_blank' href="https://gitee.com/twelvet/twelvet/">
+                            <a target='_blank' href="https://gitee.com/twelvet/twelvet/" rel="noreferrer">
                                 <Button type='primary'>
                                     <GithubOutlined />
                                     GitHub
@@ -105,7 +105,7 @@ const Panel: React.FC<{}> = () => {
                             </a>
                         </Col>
                         <Col className={styles.topSpace} xxl={{ span: 12 }} xl={{ span: 24 }} xs={{ span: 24 }}>
-                            <a target='_blank' href="https://www.twelvet.cn/">
+                            <a target='_blank' href="https://www.twelvet.cn/" rel="noreferrer">
                                 <Button type='default'>
                                     <HomeOutlined />
                                     官方网站
