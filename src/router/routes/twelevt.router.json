@@ -1,0 +1,321 @@
+{
+    "menus": [{
+            "name": "系统管理",
+            "path": "/system",
+            "hidden": true,
+            "redirect": "noRedirect",
+            "component": "Layout",
+            "alwaysShow": true,
+            "icon": "icon-system",
+            "menuType": "M",
+            "meta": {
+                "title": "系统管理",
+                "icon": "icon-system"
+            },
+            "routes": [{
+                    "name": "欢迎页",
+                    "path": "/index",
+                    "hidden": true,
+                    "component": "/index",
+                    "icon": "icon-home",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "欢迎页",
+                        "icon": "icon-home"
+                    }
+                },
+                {
+                    "name": "菜单管理",
+                    "path": "/system/menu",
+                    "hidden": true,
+                    "component": "system/menu",
+                    "icon": "icon-menu",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "菜单管理",
+                        "icon": "icon-menu"
+                    }
+                },
+                {
+                    "name": "字典管理",
+                    "path": "/system/dictionaries",
+                    "hidden": false,
+                    "component": "/system/dictionaries",
+                    "icon": "icon-dictionaries",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "字典管理",
+                        "icon": "icon-dictionaries"
+                    }
+                },
+                {
+                    "name": "OAuth2终端",
+                    "path": "/system/client",
+                    "hidden": false,
+                    "component": "/system/client",
+                    "icon": "icon-client",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "OAuth2终端",
+                        "icon": "icon-client"
+                    }
+                },
+                {
+                    "name": "文件管理",
+                    "path": "/system/dfs",
+                    "hidden": true,
+                    "component": "/system/dfs",
+                    "icon": "icon-DFS",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "文件管理",
+                        "icon": "icon-DFS"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "系统监控",
+            "path": "/monitor",
+            "hidden": true,
+            "redirect": "noRedirect",
+            "component": "Layout",
+            "alwaysShow": true,
+            "icon": "icon-monitor",
+            "menuType": "M",
+            "meta": {
+                "title": "系统监控",
+                "icon": "icon-monitor"
+            },
+            "routes": [{
+                    "name": "缓存监控",
+                    "path": "/monitor/redis",
+                    "hidden": true,
+                    "component": "/monitor/redis",
+                    "icon": "icon-redis",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "缓存监控",
+                        "icon": "icon-redis"
+                    }
+                },
+                {
+                    "name": "定时任务",
+                    "path": "/monitor/job",
+                    "hidden": false,
+                    "component": "/monitor/job",
+                    "icon": "icon-job",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "定时任务",
+                        "icon": "icon-job"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "人力管理",
+            "path": "/human",
+            "hidden": true,
+            "redirect": "noRedirect",
+            "component": "Layout",
+            "alwaysShow": true,
+            "icon": "icon-human-resources",
+            "menuType": "M",
+            "meta": {
+                "title": "人力管理",
+                "icon": "icon-human-resources"
+            },
+            "routes": [{
+                    "name": "职员管理",
+                    "path": "/human/staff",
+                    "hidden": true,
+                    "component": "./human/staff",
+                    "icon": "icon-team",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "职员管理",
+                        "icon": "icon-team"
+                    }
+                },
+                {
+                    "name": "角色管理",
+                    "path": "/human/role",
+                    "hidden": true,
+                    "component": "./human/role",
+                    "icon": "icon-role",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "角色管理",
+                        "icon": "icon-role"
+                    }
+                },
+                {
+                    "name": "部门管理",
+                    "path": "/human/dept",
+                    "hidden": true,
+                    "component": "./human/dept",
+                    "icon": "icon-dept",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "部门管理",
+                        "icon": "icon-dept"
+                    }
+                },
+                {
+                    "name": "岗位管理",
+                    "path": "/human/post",
+                    "hidden": true,
+                    "component": "./human/post",
+                    "icon": "icon-post",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "岗位管理",
+                        "icon": "icon-post"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "日志管理",
+            "path": "/log",
+            "hidden": true,
+            "redirect": "noRedirect",
+            "component": "Layout",
+            "alwaysShow": true,
+            "icon": "icon-log",
+            "menuType": "M",
+            "meta": {
+                "title": "日志管理",
+                "icon": "icon-log"
+            },
+            "routes": [{
+                    "name": "操作日志",
+                    "path": "/log/operation",
+                    "hidden": true,
+                    "component": "./log/operation",
+                    "icon": "icon-log-operation",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "操作日志",
+                        "icon": "icon-log-operation"
+                    }
+                },
+                {
+                    "name": "登录日志",
+                    "path": "/log/login",
+                    "hidden": true,
+                    "component": "./log/login",
+                    "icon": "icon-log-login",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "登录日志",
+                        "icon": "icon-log-login"
+                    }
+                },
+                {
+                    "name": "定时任务日志",
+                    "path": "/log/job",
+                    "hidden": true,
+                    "component": "./log/job",
+                    "icon": "icon-log-job",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "定时任务日志",
+                        "icon": "icon-log-job"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "工具箱",
+            "path": "/tool",
+            "hidden": true,
+            "redirect": "noRedirect",
+            "component": "Layout",
+            "alwaysShow": true,
+            "icon": "icon-tool-box",
+            "menuType": "M",
+            "meta": {
+                "title": "工具箱",
+                "icon": "icon-tool-box"
+            },
+            "routes": [{
+                    "name": "代码生成器",
+                    "path": "/tool/gen",
+                    "hidden": true,
+                    "component": "/tool/gen",
+                    "icon": "icon-gen-code",
+                    "menuType": "C",
+                    "meta": {
+                        "title": "代码生成器",
+                        "icon": "icon-gen-code"
+                    }
+                },
+                {
+                    "name": "图形化编辑器",
+                    "path": "/tool/graphicalEditor",
+                    "hidden": true,
+                    "redirect": "noRedirect",
+                    "component": "Layout",
+                    "alwaysShow": true,
+                    "icon": "icon-graphical-edit",
+                    "menuType": "M",
+                    "meta": {
+                        "title": "图形化编辑器",
+                        "icon": "icon-graphical-edit"
+                    },
+                    "routes": [{
+                            "name": "流程编辑器",
+                            "path": "/tool/graphicalEditor/flow",
+                            "hidden": true,
+                            "component": "./tool/graphicalEditor/flow",
+                            "icon": "icon-flow-edit",
+                            "menuType": "C",
+                            "meta": {
+                                "title": "流程编辑器",
+                                "icon": "icon-flow-edit"
+                            }
+                        },
+                        {
+                            "name": "拓扑编辑器",
+                            "path": "/tool/graphicalEditor/koni",
+                            "hidden": true,
+                            "component": "./tool/graphicalEditor/koni",
+                            "icon": "icon-koni-edit",
+                            "menuType": "C",
+                            "meta": {
+                                "title": "拓扑编辑器",
+                                "icon": "icon-koni-edit"
+                            }
+                        },
+                        {
+                            "name": "脑图编辑器",
+                            "path": "/tool/graphicalEditor/mind",
+                            "hidden": true,
+                            "component": "./tool/graphicalEditor/mind",
+                            "icon": "icon-mind-edit",
+                            "menuType": "C",
+                            "meta": {
+                                "title": "脑图编辑器",
+                                "icon": "icon-mind-edit"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "TwelveT",
+            "path": "https://www.twelvet.cn",
+            "hidden": false,
+            "component": "Layout",
+            "icon": "icon-system",
+            "menuType": "M",
+            "meta": {
+                "title": "TwelveT",
+                "icon": "icon-system"
+            }
+        }
+    ]
+}

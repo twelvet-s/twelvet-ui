@@ -1,8 +1,3 @@
-/lambda/
-/scripts
-/config
-.history
-public
+/*.json
+/*.js
 dist
-.umi
-mock

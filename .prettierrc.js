@@ -1,5 +1,10 @@
-const fabric = require('@umijs/fabric');
-
 module.exports = {
-  ...fabric.prettier,
+  tabWidth: 2,
+  semi: true,
+  printWidth: 80,
+  singleQuote: true,
+  quoteProps: 'consistent',
+  endOfLine: 'auto',
+  htmlWhitespaceSensitivity: 'strict',
+  vueIndentScriptAndStyle: true,
 };
