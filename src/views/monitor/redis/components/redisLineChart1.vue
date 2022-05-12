@@ -1,16 +1,22 @@
 <template>
   <a-card title="Key数量">
-    <div id="chart" :style="{ height: '300px' }"></div>
+    <div ref="chart" :style="{ height: '300px' }"></div>
   </a-card>
 </template>
 
 <script lang="ts">
-  import { onMounted, onUnmounted } from 'vue';
+  import { onMounted, onUnmounted, toRefs } from 'vue';
   import * as echarts from 'echarts';
   import { getRedisChartApi } from '@/api/monitor/redis';
 
   export default {
-    setup() {
+    props:{
+      data: Object,
+    },
+    setup(props: any) {
+      // eslint-disable-next-line no-undef
+      const { data }: Array = toRefs(props);
+      console.log(data.value);  // 父组件数据
       const config = {
         xAxis: {
           data: [],
@@ -58,27 +64,27 @@
         ],
       };
 
-      let timer: any;
+      // let timer: any;
       const getRedisChart = (lineChart) => {
         const dataTiem: string[] = [];
         const dataSize: string[] = [];
-        timer = setInterval(() => {
-          getRedisChartApi().then((res) => {
-            dataTiem.push(res.data.time);
-            dataSize.push(res.data.dbSize);
-            lineChart.setOption({
-              xAxis: [
-                {
-                  data: dataTiem,
-                },
-              ],
-              series: [
-                {
-                  data: dataSize,
-                },
-              ],
-            });
-          }, 2000000000000);
+        // timer = setInterval(() => {
+        getRedisChartApi().then((res) => {
+          dataTiem.push(res.data.time);
+          dataSize.push(res.data.dbSize);
+          lineChart.setOption({
+            xAxis: [
+              {
+                data: dataTiem,
+              },
+            ],
+            series: [
+              {
+                data: dataSize,
+              },
+            ],
+          });
+          // }, 2000000000000);
         });
       };
 

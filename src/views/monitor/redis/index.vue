@@ -19,7 +19,7 @@
     </a-col>
 
     <a-col :md="{ span: 12 }" :xs="{ span: 24 }">
-      <LineChart1 />
+      <LineChart1 :data="data" />
     </a-col>
   </a-row>
 </template>
