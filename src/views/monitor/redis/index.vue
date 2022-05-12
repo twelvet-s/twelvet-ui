@@ -15,7 +15,7 @@
     </a-col>
 
     <a-col :md="{ span: 12 }" :xs="{ span: 24 }">
-      <LineChart />
+      <!-- <LineChart /> -->
     </a-col>
 
     <a-col :md="{ span: 12 }" :xs="{ span: 24 }">
@@ -26,14 +26,14 @@
 
 <script lang="ts">
   import BarChart from './components/redisBarChart.vue';
-  import LineChart from './components/redisLineChart.vue';
+  // import LineChart from './components/redisLineChart.vue';
   import LineChart1 from './components/redisLineChart1.vue';
 
   export default {
     name: 'Redis',
     components: {
       BarChart,
-      LineChart,
+      // LineChart,
       LineChart1,
     },
     setup() {

@@ -12,7 +12,7 @@
     setup() {
       const config = {
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: [],
           boundaryGap: false,
           axisTick: {
             show: false,
@@ -37,12 +37,10 @@
             show: false,
           },
         },
-        legend: {
-          data: ['expected', 'actual'],
-        },
+        legend: {},
         series: [
           {
-            name: 'expected',
+            name: '内存使用',
             itemStyle: {
               color: '#FF005A',
               lineStyle: {
@@ -52,31 +50,12 @@
             },
             smooth: true,
             type: 'line',
-            data: [100, 100, 300, 200, 300, 500, 800],
+            data: [],
             animationDuration: 2000,
             animationEasing: 'cubicInOut',
           },
-          {
-            name: 'actual',
-            smooth: true,
-            type: 'line',
-            itemStyle: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2,
-              },
-              areaStyle: {
-                color: '#f3f8ff',
-              },
-            },
-            data: [120, 300, 400, 180, 400, 600, 999],
-            animationDuration: 2000,
-            animationEasing: 'quadraticOut',
-          },
         ],
       };
-
       let timer: any;
 
       onMounted(() => {
