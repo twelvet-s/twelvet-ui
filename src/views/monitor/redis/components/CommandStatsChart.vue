@@ -23,6 +23,10 @@
     setup(props) {
       let barChart;
 
+      onMounted(() => {
+        barChart = echarts.init(document.getElementById('main') as HTMLElement);
+      });
+
       watch(
         () => props.commandStats,
         (newValue, oldValue) => {
@@ -55,10 +59,6 @@
           deep: true,
         }
       );
-
-      onMounted(() => {
-        barChart = echarts.init(document.getElementById('main') as HTMLElement);
-      });
     },
   };
 </script>

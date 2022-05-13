@@ -10,12 +10,7 @@
   import { getRedisChartApi } from '@/api/monitor/redis';
 
   export default {
-    props: {
-      data: Object,
-    },
-    setup(props: any) {
-      // eslint-disable-next-line no-undef
-      const { data }: Array = toRefs(props);
+    setup(props) {
       // console.log(data.value); // 父组件数据
       const config = {
         xAxis: {
