@@ -10,13 +10,13 @@
   import { getRedisChartApi } from '@/api/monitor/redis';
 
   export default {
-    props:{
+    props: {
       data: Object,
     },
     setup(props: any) {
       // eslint-disable-next-line no-undef
       const { data }: Array = toRefs(props);
-      console.log(data.value);  // 父组件数据
+      // console.log(data.value); // 父组件数据
       const config = {
         xAxis: {
           data: [],
@@ -63,36 +63,6 @@
           },
         ],
       };
-
-      // let timer: any;
-      const getRedisChart = (lineChart) => {
-        const dataTiem: string[] = [];
-        const dataSize: string[] = [];
-        // timer = setInterval(() => {
-        getRedisChartApi().then((res) => {
-          dataTiem.push(res.data.time);
-          dataSize.push(res.data.dbSize);
-          lineChart.setOption({
-            xAxis: [
-              {
-                data: dataTiem,
-              },
-            ],
-            series: [
-              {
-                data: dataSize,
-              },
-            ],
-          });
-          // }, 2000000000000);
-        });
-      };
-
-      onMounted(() => {
-        const lineChart = echarts.init(document.getElementById('chart'));
-        lineChart.setOption(config);
-        getRedisChart(lineChart);
-      });
     },
   };
 </script>
