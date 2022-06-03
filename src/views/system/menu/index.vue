@@ -116,8 +116,12 @@
 </template>
 
 <script lang="ts">
+  // 我我不李姐 我提交他老是显示最新的代码 但是我没鸭 为什么呢
   import { onMounted, reactive, toRefs } from 'vue';
   import { getMenuListApi } from '@/api/system/menu';
+  import { json } from 'stream/consumers';
+  import { forEach } from 'lodash';
+  import { transListDataToTreeData } from '@/utils/twelvet';
 
   export default {
     name: 'Menu',
@@ -141,7 +145,7 @@
           },
           {
             title: '排序',
-            dataIndex: 'menuId',
+            dataIndex: 'orderNum',
           },
           {
             title: '权限标识',
@@ -182,7 +186,9 @@
           getMenuListApi(form).then((res) => {
             state.loading = false;
             const { data } = res;
-            state.menuList = data;
+
+            const dataTree = transListDataToTreeData(data, 0);
+            state.menuList = dataTree;
           });
         } finally {
           state.loading = false;

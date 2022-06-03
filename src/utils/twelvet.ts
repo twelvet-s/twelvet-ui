@@ -35,3 +35,18 @@ export function tansParams(params) {
   });
   return result;
 }
+
+// 树结构
+export function transListDataToTreeData(list, root) {
+  const arr = [];
+  list.forEach((item) => {
+    if (item.parentId === root) {
+      const children = transListDataToTreeData(list, item.menuId);
+      if (children.length > 0) {
+        item.children = children;
+      }
+      arr.push(item);
+    }
+  });
+  return arr;
+}
