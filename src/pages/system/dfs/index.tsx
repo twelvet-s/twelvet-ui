@@ -10,7 +10,6 @@ import ImportDFS from './components/importDFS/Index'
 import type { FormInstance } from 'antd/lib/form'
 import { isArray } from 'lodash'
 import { system, auth } from '@/utils/twelvet'
-// import { download } from '../../../utils/twelvet';
 
 /**
  * 分布式文件系统
@@ -140,7 +139,6 @@ const DFS: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
-                    // eslint-disable-next-line react/jsx-key
                     <Popconfirm
                         disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
                         onConfirm={() => refRemove(selectedRowKeys)}
@@ -154,14 +152,12 @@ const DFS: React.FC<{}> = () => {
                             批量删除
                         </Button>
                     </Popconfirm>,
-                    // eslint-disable-next-line react/jsx-key
                     <Button type="primary" onClick={() => {
                         setImpDFSVisible(true)
                     }}>
                         <PlusOutlined />
                         上传文件
                     </Button>,
-                    // eslint-disable-next-line react/jsx-key
                     <Button type="primary" icon={<DownloadOutlined />} onClick={() => {
                         downloadFile()
                     }}>
