@@ -32,7 +32,7 @@ const importDFS: React.FC<{
     const handleUpload = async () => {
         try {
 
-            if(files.length <= 0){
+            if (files.length <= 0) {
                 return message.warning('请先选择需上传的图片')
             }
 
@@ -80,7 +80,7 @@ const importDFS: React.FC<{
                 footer={[
                     <Button type="default" onClick={onCancel}>
                         取消
-				    </Button>,
+                    </Button>,
                     <Button loading={uploadLoading} type="primary" onClick={handleUpload}>
                         开始上传
                     </Button>,

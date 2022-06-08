@@ -1,3 +1,4 @@
+//@ts-check
 import React, { useRef, useState } from 'react'
 
 import ProTable from '@ant-design/pro-table'
@@ -6,9 +7,10 @@ import { CloseOutlined, DeleteOutlined, DownloadOutlined, PlusOutlined } from '@
 import { Button, Divider, message, Popconfirm, Space } from 'antd'
 import { downloadFile, pageQuery, remove } from './service'
 import ImportDFS from './components/importDFS/Index'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import { isArray } from 'lodash'
-import { system,auth } from '@/utils/twelvet'
+import { system, auth } from '@/utils/twelvet'
+// import { download } from '../../../utils/twelvet';
 
 /**
  * 分布式文件系统
@@ -108,14 +110,14 @@ const DFS: React.FC<{}> = () => {
         <>
             <ProTable
                 {
-                    ...proTableConfigs
+                ...proTableConfigs
                 }
                 actionRef={acForm}
                 rowKey="fileId"
                 columns={columns}
                 request={async (params, sorter, filter) => {
                     const { data } = await pageQuery(params)
-                    const {records, total} = data
+                    const { records, total } = data
                     return Promise.resolve({
                         data: records,
                         success: true,
@@ -138,6 +140,7 @@ const DFS: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
+                    // eslint-disable-next-line react/jsx-key
                     <Popconfirm
                         disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
                         onConfirm={() => refRemove(selectedRowKeys)}
@@ -151,11 +154,18 @@ const DFS: React.FC<{}> = () => {
                             批量删除
                         </Button>
                     </Popconfirm>,
+                    // eslint-disable-next-line react/jsx-key
                     <Button type="primary" onClick={() => {
                         setImpDFSVisible(true)
                     }}>
                         <PlusOutlined />
                         上传文件
+                    </Button>,
+                    // eslint-disable-next-line react/jsx-key
+                    <Button type="primary" icon={<DownloadOutlined />} onClick={() => {
+                        downloadFile()
+                    }}>
+                        下载文件
                     </Button>
                 ]}
 
