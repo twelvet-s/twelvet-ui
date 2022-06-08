@@ -9,8 +9,8 @@
 export default {
   dev: {
     '/api/': {
-      // target: 'http://localhost:8080',
-      target: 'http://cloud.twelvet.cn/api',
+      target: 'http://localhost:8080',
+      // target: 'http://cloud.twelvet.cn/api',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',
@@ -19,8 +19,8 @@ export default {
   },
   test: {
     '/api/': {
-      //   target: 'https://preview.pro.ant.design',
-      target: 'http://cloud.twelvet.cn/api/',
+      target: 'https://preview.pro.ant.design',
+      // target: 'http://cloud.twelvet.cn/api/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',
@@ -29,8 +29,8 @@ export default {
   },
   pre: {
     '/api/': {
-      //   target: 'your pre url',
-      target: 'http://cloud.twelvet.cn/api/',
+      target: 'your pre url',
+      // target: 'http://cloud.twelvet.cn/api/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',
