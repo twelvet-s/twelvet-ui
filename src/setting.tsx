@@ -14,7 +14,8 @@ const TWT: any = {
     // api请求前缀
     urlPrefix,
     action: `${urlPrefix}/`,
-    uploadUrl: `${urlPrefix}/dfs/commonUpload`
+    uploadUrl: `${urlPrefix}/dfs/commonUpload`,
+    static: 'http://static.twelvet.cn/'
 }
 
 export default TWT

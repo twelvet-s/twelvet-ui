@@ -10,6 +10,7 @@ import ImportDFS from './components/importDFS/Index'
 import type { FormInstance } from 'antd/lib/form'
 import { isArray } from 'lodash'
 import { system, auth } from '@/utils/twelvet'
+import TWT from '@/setting'
 
 /**
  * 分布式文件系统
@@ -44,13 +45,13 @@ const DFS: React.FC<{}> = () => {
             title: '创建日期', width: 200, valueType: "Date", search: false, dataIndex: 'createTime'
         },
         {
-            title: '操作', fixed: 'right', width: 320, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 320, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 return (
                     <>
-                        <a onClick={() => downloadFile(row.fileId)}>
+                        <a href={`${TWT.static}${row.path}`} target={'_blank'} rel="noreferrer">
                             <Space>
                                 <DownloadOutlined />
-                                下载文件
+                                查看
                             </Space>
                         </a>
                         <Divider type="vertical" />
@@ -140,6 +141,7 @@ const DFS: React.FC<{}> = () => {
                 }}
                 toolBarRender={(action, { selectedRowKeys }) => [
                     <Popconfirm
+                        key={"dels"}
                         disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
                         onConfirm={() => refRemove(selectedRowKeys)}
                         title="是否删除选中数据"
@@ -152,16 +154,11 @@ const DFS: React.FC<{}> = () => {
                             批量删除
                         </Button>
                     </Popconfirm>,
-                    <Button type="primary" onClick={() => {
+                    <Button type="primary" key={"upload"} onClick={() => {
                         setImpDFSVisible(true)
                     }}>
                         <PlusOutlined />
                         上传文件
-                    </Button>,
-                    <Button type="primary" icon={<DownloadOutlined />} onClick={() => {
-                        downloadFile()
-                    }}>
-                        下载文件
                     </Button>
                 ]}
 

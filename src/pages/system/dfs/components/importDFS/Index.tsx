@@ -3,7 +3,7 @@ import { message, Upload, Modal, Button } from 'antd'
 import { system } from '@/utils/twelvet'
 import { InboxOutlined } from '@ant-design/icons'
 import styles from './index.less'
-import { RcFile } from 'antd/lib/upload'
+import type { RcFile } from 'antd/lib/upload'
 import { uploadFile } from './service'
 
 const importDFS: React.FC<{
@@ -78,10 +78,10 @@ const importDFS: React.FC<{
                 okText="上传"
                 onCancel={onCancel}
                 footer={[
-                    <Button type="default" onClick={onCancel}>
+                    <Button key={"cancel"} type="default" onClick={onCancel}>
                         取消
                     </Button>,
-                    <Button loading={uploadLoading} type="primary" onClick={handleUpload}>
+                    <Button key={"ok"} loading={uploadLoading} type="primary" onClick={handleUpload}>
                         开始上传
                     </Button>,
                 ]}
@@ -95,7 +95,7 @@ const importDFS: React.FC<{
                     // 文件列表
                     fileList={files}
                     onChange={(info: any) => {
-                        const fileList: Array<any> = info.fileList
+                        const fileList: any[] = info.fileList
 
                         const filesTemp: RcFile[] = []
 
