@@ -1,11 +1,12 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
 import { message, notification } from 'antd'
-import { RequestConfig, RunTimeLayoutConfig, request as httpRequest } from 'umi'
+import type { RequestConfig, RunTimeLayoutConfig} from 'umi';
+import { request as httpRequest } from 'umi'
 import { history } from 'umi'
 import RightContent from '@/components/RightContent'
 import { QuestionCircleOutlined } from '@ant-design/icons'
-import { RequestOptionsInit } from 'umi-request'
+import type { RequestOptionsInit } from 'umi-request'
 import TWT from './setting'
 import { getCurrentUser, refreshTokenService } from './pages/login/service'
 import Footer from './components/TwelveT/Footer'
@@ -50,7 +51,7 @@ export async function getInitialState(): Promise<{
     // 如果是登录页面，不执行
     if (history.location.pathname !== loginPath) {
         const currentUser = await fetchUserInfo()
-        
+
         return {
             fetchUserInfo,
             currentUser,
@@ -94,7 +95,13 @@ const requestHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
 
     const { access_token, expires_in } = local ? JSON.parse(local) : { access_token: '', expires_in: 0 }
 
-    const authHeader = { Authorization: `Bearer ${access_token}` }
+    let authHeader;
+    if (access_token) {
+        authHeader = { Authorization: `Bearer ${access_token}` }
+    } else {
+        authHeader = {}
+    }
+
 
     return {
         url: url.substr(0, 1) === '/' ? `/api${url}` : `/api/${url}`,
@@ -314,7 +321,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         // 开发模式
         links: isDev
             ? [
-                <a href="https://www.twelvet.cn/docs/" target="_blank">
+                <a href="https://www.twelvet.cn/docs/" target="_blank" rel="noreferrer">
                     <QuestionCircleOutlined />
                     <span>官方文档</span>
                 </a>
