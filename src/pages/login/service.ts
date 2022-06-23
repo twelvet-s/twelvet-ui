@@ -9,9 +9,12 @@ const controller = "/auth";
  * @param params 登录参数
  * @returns 
  */
-export async function login(params: { [key: string]: any }) {
-    return request(`${controller}/oauth/token`, {
+export async function login(params: Record<string, any>) {
+    return request(`${controller}/oauth2/token`, {
         method: 'POST',
+        headers: {
+            Authorization: 'Basic ' + window.btoa("twelvet:123456")
+        },
         data: {
             ...params
         },
@@ -41,7 +44,7 @@ export async function getCurrentUser(): Promise<any> {
  */
 export async function refreshToken() {
 
-    return request(`${controller}/oauth/token`, {
+    return request(`${controller}/oauth2/token`, {
         method: 'POST',
         params: {
             refresh_token: localStorage.getItem(TWT.refreshToken),
@@ -58,7 +61,7 @@ export async function refreshToken() {
  * @returns 
  */
 export async function refreshTokenService(): Promise<any> {
-    return request(`/auth/oauth/token`, {
+    return request(`/auth/oauth2/token`, {
         method: `POST`,
         params: {
             grant_type: `refresh_token`,

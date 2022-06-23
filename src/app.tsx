@@ -1,7 +1,7 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
 import { message, notification } from 'antd'
-import type { RequestConfig, RunTimeLayoutConfig} from 'umi';
+import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { request as httpRequest } from 'umi'
 import { history } from 'umi'
 import RightContent from '@/components/RightContent'
@@ -90,19 +90,21 @@ const codeMessage = {
  * @returns {URL, Options}
  */
 const requestHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-
+    console.log('======================', options)
     const local = localStorage.getItem(TWT.accessToken)
 
     const { access_token, expires_in } = local ? JSON.parse(local) : { access_token: '', expires_in: 0 }
 
     let authHeader;
     if (access_token) {
-        authHeader = { Authorization: `Bearer ${access_token}` }
+        authHeader = { ...options.headers, Authorization: `Bearer ${access_token}` }
     } else {
-        authHeader = {}
+        authHeader = {
+            ...options.headers,
+        }
     }
 
-
+    
     return {
         url: url.substr(0, 1) === '/' ? `/api${url}` : `/api/${url}`,
         options: { ...options, interceptors: true, headers: authHeader },
@@ -162,7 +164,7 @@ const refreshToken: Response = async (
 }
 
 /**
- * 相应处理器
+ * 响应处理器
  * @param response Response
  * @param options RequestOptionsInit
  */
@@ -321,7 +323,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         // 开发模式
         links: isDev
             ? [
-                <a href="https://www.twelvet.cn/docs/" target="_blank" rel="noreferrer">
+                <a key='docs' href="https://www.twelvet.cn/docs/" target="_blank" rel="noreferrer">
                     <QuestionCircleOutlined />
                     <span>官方文档</span>
                 </a>
