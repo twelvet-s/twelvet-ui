@@ -179,7 +179,7 @@ export const reductionMenuList = (menus: [{
  * @param params 参数
  * @param filename 文件名称(空即为输出默认)
  */
-export const download = (url: string, params?: { [key: string]: any }, filename?: string) => {
+export const download = (url: string, params?: Record<string, any>, filename?: string) => {
     return request(`${url}`, {
         method: 'POST',
         data: {

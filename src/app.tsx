@@ -8,7 +8,7 @@ import RightContent from '@/components/RightContent'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { RequestOptionsInit } from 'umi-request'
 import TWT from './setting'
-import { getCurrentUser, refreshTokenService } from './pages/login/service'
+import { getCurrentUser, refreshToken as refreshTokenService } from './pages/login/service'
 import Footer from './components/TwelveT/Footer'
 import { logout, setAuthority } from './utils/twelvet'
 
@@ -90,13 +90,13 @@ const codeMessage = {
  * @returns {URL, Options}
  */
 const requestHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-    console.log('======================', options)
+
     const local = localStorage.getItem(TWT.accessToken)
 
     const { access_token, expires_in } = local ? JSON.parse(local) : { access_token: '', expires_in: 0 }
 
     let authHeader;
-    if (access_token) {
+    if (!options.headers.Authorization) {
         authHeader = { ...options.headers, Authorization: `Bearer ${access_token}` }
     } else {
         authHeader = {
@@ -104,7 +104,7 @@ const requestHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
         }
     }
 
-    
+
     return {
         url: url.substr(0, 1) === '/' ? `/api${url}` : `/api/${url}`,
         options: { ...options, interceptors: true, headers: authHeader },
@@ -133,7 +133,7 @@ const refreshToken: Response = async (
     // 续签失败将要求重新登录
     const res = await refreshTokenService()
 
-    if (res.code != 200) {
+    if (res.code == 400) {
         notification.error({
             message: `续签失败`,
             description: `续签失败,请重新登录`,

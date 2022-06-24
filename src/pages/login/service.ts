@@ -4,6 +4,8 @@ import { request } from 'umi'
 // 请求的控制器名称
 const controller = "/auth";
 
+const auth = 'Basic ' + window.btoa("twelvet:123456")
+
 /**
  * 登录
  * @param params 登录参数
@@ -13,7 +15,7 @@ export async function login(params: Record<string, any>) {
     return request(`${controller}/oauth2/token`, {
         method: 'POST',
         headers: {
-            Authorization: 'Basic ' + window.btoa("twelvet:123456")
+            Authorization: auth
         },
         data: {
             ...params
@@ -21,9 +23,7 @@ export async function login(params: Record<string, any>) {
         params: {
             ...params,
             grant_type: 'password',
-            scope: 'server',
-            client_id: 'twelvet',
-            client_secret: '123456'
+            scope: 'server'
         }
     });
 }
@@ -46,28 +46,12 @@ export async function refreshToken() {
 
     return request(`${controller}/oauth2/token`, {
         method: 'POST',
+        headers: {
+            Authorization: auth
+        },
         params: {
             refresh_token: localStorage.getItem(TWT.refreshToken),
-            grant_type: 'refresh_token',
-            scope: 'server',
-            client_id: 'twelvet',
-            client_secret: '123456'
+            grant_type: 'refresh_token'
         }
     })
-}
-
-/**
- * 刷新Token
- * @returns 
- */
-export async function refreshTokenService(): Promise<any> {
-    return request(`/auth/oauth2/token`, {
-        method: `POST`,
-        params: {
-            grant_type: `refresh_token`,
-            refresh_token: localStorage.getItem(TWT.refreshToken),
-            client_id: `twelvet`,
-            client_secret: `123456`
-        }
-    });
 }
