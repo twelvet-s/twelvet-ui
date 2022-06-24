@@ -14,8 +14,8 @@ const History = () => {
                     <li>优化前端登录逻辑兼容</li>
                     <li>新增Nacos源码启动服务，避免需要自行下载</li>
                     <li>OSS接入七牛云储存</li>
-                    <li>升级nacos到最新版2.1.0</li>
-                    <li>升级spring-cloud到最新版2021.0.3</li>
+                    <li>升级Nacos到最新版2.1.0</li>
+                    <li>升级Spring Cloud到最新版2021.0.3</li>
                     <li>网关增加日志Debug</li>
                     <li>其他细节优化</li>
                 </ol>
