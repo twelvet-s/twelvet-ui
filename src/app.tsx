@@ -72,7 +72,7 @@ const codeMessage = {
     204: '删除数据成功。',
     400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
     401: '用户没有权限（令牌、用户名、密码错误/失效）。',
-    403: '用户得到授权，但是访问是被禁止的。',
+    403: '用户权限不足。',
     404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
     406: '请求的格式不可得。',
     410: '请求的资源被永久删除，且不会再得到的。',
@@ -176,6 +176,15 @@ const responseHeaderInterceptor = async (response: Response, options: RequestOpt
             message: codeMessage[504],
         });
         throw new Error(codeMessage[504])
+    }
+
+    if (response.status === 403) {
+        notification.error({
+            message: codeMessage[403],
+        });
+        return false
+        // 跳转到登陆页
+        // return router.replace('/user/login');
     }
 
     const responseType = options.responseType
