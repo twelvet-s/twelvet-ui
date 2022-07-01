@@ -3,7 +3,14 @@
     <a-col :md="{ span: 16 }" :xs="{ span: 24 }">
       <div>
         <a-card title="基本信息">
-          <!-- <a-descriptions :data="redisData" bordered :column="2" :size="size" /> -->
+          <a-descriptions  bordered :column="2" :size="size" >
+            <a-descriptions-item
+              :label="index"
+              v-for="(item, index) in infoData.pleasehoderData"
+              :key="index"
+              >{{ item }}</a-descriptions-item
+            >
+          </a-descriptions> 
         </a-card>
       </div>
     </a-col>
@@ -44,8 +51,13 @@
       LineChart1,
     },
     setup() {
+      // let  pleasehoderData:Record<string, unknown>=ref()
+      const infoData: Record<string, unknown> = reactive({
+        pleasehoderData:{}
+      });
       const redisData = reactive({
         commandStats: {},
+    
         info: {
           usedmemory: '',
           used_memory_human: '',
@@ -59,12 +71,12 @@
        * 设置数据
        */
       const getInfo = async () => {
-        getRedisChartApi().then(({ data }) => {
-          const { commandStats, info, dbSize, time } = data;
+       await getRedisChartApi().then(({ data }) => {
+          const { commandStats,  dbSize, time } = data;
           redisData.commandStats = commandStats;
-          redisData.info = info;
-          redisData.info = dbSize;
-          redisData.info = time;
+          infoData.pleasehoderData = data.info;
+          // redisData.info = dbSize;
+          // redisData.info = time;
         });
       };
 
@@ -84,6 +96,7 @@
 
       return {
         ...toRefs(redisData),
+        infoData
       };
     },
   };
