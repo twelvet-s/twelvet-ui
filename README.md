@@ -1,14 +1,14 @@
 # twelvet
 
-[![AUR](https://img.shields.io/badge/license-MIT-blue)](https://gitee.com/twelvet/twelvet/blob/master/LICENSE)
+[![AUR](https://img.shields.io/github/license/twelvet-s/twelvet)](https://gitee.com/twelvet/twelvet/blob/master/LICENSE)
 [![](https://img.shields.io/badge/Author-TwelveT-orange.svg)](https://www.twelvet.cn)
-[![](https://img.shields.io/badge/version-1.1.0-success)](https://gitee.com/twelvet/twelvet)
+[![](https://img.shields.io/badge/version-2.0.0-success)](https://gitee.com/twelvet/twelvet)
 [![star](https://gitee.com/twelvet/twelvet/badge/star.svg?theme=white)](https://gitee.com/twelvet/twelvet/stargazers)
 [![fork](https://gitee.com/twelvet/twelvet/badge/fork.svg?theme=white)](https://gitee.com/twelvet/twelvet/members)
 
 一款基于Spring Cloud Alibaba的权限管理系统，集成市面上流行库，可以作用为快速开发的一个框架使用
 
-一套以微服务架构的脚手架,使用Spring Boot Alibaba系列进行架构,学习并了解它将能快速掌握微服务核心基础。 
+一套以微服务架构的脚手架,使用Spring Cloud Alibaba系列进行架构,学习并了解它将能快速掌握微服务核心基础。 
 此项目是为了减少业务代码的重复轮子,它具有一个系统该有的通用性核心业务代码,无论是微服务还是单体,都是通用的业务
 但更多的,是为了学习微服务的理念以及开发 您可以使用它进行网站管理后台，网站会员中心，CMS，CRM，OA等待系统的开发,
 当然,不仅仅是一些小系统,我们可以生产更多的服务模块,不断完善项目。 
@@ -24,6 +24,8 @@
 
 前端源码：https://gitee.com/twelvet/twelvet-ui-react
 
+技术文档：https://www.twelvet.cn/docs/
+
 ## 系统模块
 
 ~~~
@@ -32,10 +34,10 @@ com.twelvet
 ├── twelvet-gateway         // 网关模块 [88]
 ├── twelvet-auth            // 认证中心 [8888]
 ├── twelvet-api             // 接口模块
-│       └── twelvet-api-system                          // 系统接口
-│       └── twelvet-api-dfs                             // DFS接口
-│       └── twelvet-api-job                             // 定时任务接口
-├── twelvet-framework          // 核心模块
+│       └── twelvet-api-system                             // 系统接口
+│       └── twelvet-api-dfs                                // DFS接口
+│       └── twelvet-api-job                                // 定时任务接口
+├── twelvet-framework       // 核心模块
 │       └── twelvet-framework-core                         // 核心模块
 │       └── twelvet-framework-log                          // 日志记录
 │       └── twelvet-framework-datascope                    // 数据权限
@@ -46,16 +48,18 @@ com.twelvet
 │       └── twelvet-framework-utils                        // 工具模块
 ├── twelvet-server         // 业务模块
 │       └── twelvet-server-system                          // 系统模块 [8081]
+│       └── twelvet-server-job                             // 定时任务 [8082]
+│       └── twelvet-server-dfs                             //  DFS服务 [8083]
+│       └── twelvet-server-gen                             // 代码生成 [8084]
 │       └── twelvet-server-mq                              // 消息队列 [8085]
-│       └── twelvet-server-job                            // 定时任务 [8082]
-│       └── twelvet-server-gen                            // 代码生成 [8084]
-│       └── twelvet-server-dfs                            //  DFS服务 [8083]
-├── twelvet-visual          // 图形化管理模块
+│       └── twelvet-server-es                              // elasticsearch服务 [8086]
+│       └── twelvet-server-netty                           // netty服务 [8087]
+├── twelvet-visual        // 图形化管理模块
 │       └── twelvet-visual-monitor                         // 监控中心 [8100]
 ├──pom.xml                // 公共依赖
 ~~~
 
-## 内置功能
+## 内置功能（注意：ES、MQ、Netty等服务均为示例服务，在正式环境不推荐如此分模块）
 
 1. 用户管理：用户是系统操作者，该功能主要完成系统用户配置。
 2. 部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
@@ -64,17 +68,15 @@ com.twelvet
 5. 角色管理：角色菜单权限分配、设置角色按机构进行数据范围权限划分。
 6. 字典管理：对系统中经常使用的一些较为固定的数据进行维护。
 7. 参数管理：对系统动态配置常用参数。
-8. 异步/MQ操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
-9. 异步/MQ登录日志：系统登录日志记录查询包含登录异常。
-10. 定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
-11. 系统接口：根据业务代码自动生成相关的api接口文档。
-12. 服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
-13. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
-14. 分布式文件储存。
-15. Swagger网关聚合文档。
-
-## 孵化项目
-1. 多线程爬虫（孵化中）
+8. 异步/MQ操作/登录日志：系统操作日志/系统登录日志记记录和查询。
+9. 定时任务：在线（添加、修改、删除）任务调度包含执行结果日志。
+10. 代码生成：一键生成CRUD前后端代码，为业务开发提供更快的速度。
+11. 服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
+12. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
+13. 分布式文件储存。
+14. Swagger网关聚合文档。
+15. Elasticsearch全文搜索基础服务。
+16. Netty高性能网络服务。
 
 ## 演示图
 
@@ -99,13 +101,33 @@ com.twelvet
 
 演示地址：[http://cloud.twelvet.cn](http://cloud.twelvet.cn)
 
+## 支持Linux一件Docker启动(最小化启动服务)
+内存 > 16
+需要自行安装maven、docker、docker-compose、node、yarn
+```shell
+# mvn
+mvn clean && mvn install
+# 进入脚本目录
+cd ./docker
+# 可执行权限
+chmod 751 deploy.sh
+# 执行启动（按需执行参数，[init|port|base|server|stop|rm]）
+# 初始化
+./deploy.sh init
+# 基础服务
+./deploy.sh base
+# 启动twelvet
+./deploy.sh server
+# 启动UI
+./deploy.sh nginx
+```
+
+
+
 ## TwelveT微服务交流群
 
 QQ群： [![加入QQ群](https://img.shields.io/badge/985830229-blue.svg)](https://jq.qq.com/?_wv=1027&k=cznM6Q00) 点击按钮入群。
 
 ## 捐赠与支持
 
-<img src="https://www.twelvet.cn/assets/images/pay.png"/>
-
-
-[![Stargazers over time](https://whnb.wang/stars/twelvet/twelvet)](https://whnb.wang)
+<img src="https://www.twelvet.cn/assets/images/pay.png" alt="捐赠"/>
