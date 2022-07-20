@@ -116,11 +116,8 @@
 </template>
 
 <script lang="ts">
-  // 我我不李姐 我提交他老是显示最新的代码 但是我没鸭 为什么呢
   import { onMounted, reactive, toRefs } from 'vue';
   import { getMenuListApi } from '@/api/system/menu';
-  import { json } from 'stream/consumers';
-  import { forEach } from 'lodash';
   import { transListDataToTreeData } from '@/utils/twelvet';
 
   export default {
