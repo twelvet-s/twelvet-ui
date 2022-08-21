@@ -48,8 +48,9 @@ const Login: React.FC<{}> = () => {
             dataIndex: 'status',
             width: 200,
             valueEnum: {
-                1: { text: '正常', status: 'success' },
-                0: { text: '停用', status: 'error' },
+                1: { text: '登录成功', status: 'success' },
+                2: { text: '退出成功', status: 'success' },
+                0: { text: '登录失败', status: 'error' },
             },
         },
         {
