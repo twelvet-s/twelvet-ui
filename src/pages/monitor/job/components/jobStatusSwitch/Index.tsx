@@ -26,7 +26,12 @@ const RoleSwitch: React.FC<{
                 return message.error(msg);
             }
 
-            setChecked(checked)
+            if (checked === '1') {
+                setChecked('0')
+            } else {
+                setChecked('1')
+            }
+
             return message.success(msg);
         } catch (e) {
             system.log(e)
