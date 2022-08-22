@@ -1,5 +1,9 @@
 ﻿/**
- * 以下配置均被约定所代替,采用自动路由方式
+ * 以下配置可被约定所代替,采用自动路由方式
+ * 开启方式：：
+ * ./config.ts 注释routes配置
+ * ./src/app.tsx 将splitMenus改为false
+ * 首页欢迎页自行添加路由否则404
  */
 export default [
     // 登录
