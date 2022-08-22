@@ -66,8 +66,8 @@ const Job: React.FC<{}> = () => {
             ellipsis: false,
             dataIndex: 'status',
             valueEnum: {
-                0: { text: '失败', status: 'error' },
-                1: { text: '成功', status: 'success' },
+                0: { text: '成功', status: 'success' },
+                1: { text: '失败', status: 'error' },
             },
             render: (_: string, row: { [key: string]: string }) => [
                 <JobStatus row={row} />
