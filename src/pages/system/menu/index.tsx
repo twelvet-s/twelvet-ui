@@ -461,11 +461,11 @@ const Menu: React.FC<{}> = () => {
                                         {...formItemLayout}
                                         label="显示状态"
                                         name="visible"
-                                        initialValue={1}
+                                        initialValue={0}
                                     >
                                         <Radio.Group>
-                                            <Radio value={1}>是</Radio>
-                                            <Radio value={0}>否</Radio>
+                                            <Radio value={0}>是</Radio>
+                                            <Radio value={1}>否</Radio>
                                         </Radio.Group>
                                     </Form.Item>
                                 </Col>
