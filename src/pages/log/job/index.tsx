@@ -41,8 +41,8 @@ const Login: React.FC<{}> = () => {
             width: 200,
             dataIndex: 'status',
             valueEnum: {
-                0: { text: '失败', status: 'error' },
-                1: { text: '成功', status: 'success' },
+                "0": { text: '成功', status: 'success' },
+                "1": { text: '失败', status: 'error' },
             },
         },
         {

@@ -55,8 +55,8 @@ const Post: React.FC<{}> = () => {
             width: 80,
             dataIndex: 'status',
             valueEnum: {
-                "1": { text: '正常', status: 'success' },
-                "0": { text: '停用', status: 'error' },
+                "0": { text: '正常', status: 'success' },
+                "1": { text: '停用', status: 'error' },
             },
         },
         {

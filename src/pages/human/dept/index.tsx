@@ -47,8 +47,8 @@ const Dept: React.FC<{}> = () => {
             ellipsis: false,
             dataIndex: 'status',
             valueEnum: {
-                "1": { text: '正常', status: 'success' },
-                "0": { text: '停用', status: 'error' },
+                "0": { text: '正常', status: 'success' },
+                "1": { text: '停用', status: 'error' },
             },
         },
         {

@@ -66,8 +66,8 @@ const Job: React.FC<{}> = () => {
             ellipsis: false,
             dataIndex: 'status',
             valueEnum: {
-                0: { text: '成功', status: 'success' },
-                1: { text: '失败', status: 'error' },
+                "0": { text: '成功', status: 'success' },
+                "1": { text: '失败', status: 'error' },
             },
             render: (_: string, row: { [key: string]: string }) => [
                 <JobStatus row={row} />
@@ -430,8 +430,8 @@ const Job: React.FC<{}> = () => {
                                     optionType="button"
                                     buttonStyle="solid"
                                 >
-                                    <Radio.Button value={1}>允许</Radio.Button>
-                                    <Radio.Button value={0}>禁止</Radio.Button>
+                                    <Radio.Button value={'0'}>允许</Radio.Button>
+                                    <Radio.Button value={'1'}>禁止</Radio.Button>
                                 </Radio.Group>
                             </Form.Item>
                         </Col>
@@ -456,9 +456,9 @@ const Job: React.FC<{}> = () => {
                             optionType="button"
                             buttonStyle="solid"
                         >
-                            <Radio.Button value={1}>立即执行</Radio.Button>
-                            <Radio.Button value={2}>执行一次</Radio.Button>
-                            <Radio.Button value={3}>放弃执行</Radio.Button>
+                            <Radio.Button value={'1'}>立即执行</Radio.Button>
+                            <Radio.Button value={'2'}>执行一次</Radio.Button>
+                            <Radio.Button value={'3'}>放弃执行</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
 
@@ -479,9 +479,10 @@ const Job: React.FC<{}> = () => {
                     >
                         <Radio.Group
                             optionType="button"
+                            buttonStyle="solid"
                         >
-                            <Radio value={1}>正常</Radio>
-                            <Radio value={0}>暂停</Radio>
+                            <Radio value={'0'}>正常</Radio>
+                            <Radio value={'1'}>暂停</Radio>
                         </Radio.Group>
                     </Form.Item>
 

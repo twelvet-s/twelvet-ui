@@ -73,12 +73,12 @@ const Details: React.FC<{
                 </Descriptions.Item>
 
                 <Descriptions.Item label="任务状态">
-                    {descriptions.status == 1 && '正常'}
-                    {descriptions.status == 0 && '停止'}
+                    {descriptions.status == 0 && '正常'}
+                    {descriptions.status == 1 && '停止'}
                 </Descriptions.Item>
 
                 <Descriptions.Item label="是否并发">
-                    {descriptions.concurrent == "1" ? '允许' : '禁止'}
+                    {descriptions.concurrent == "0" ? '允许' : '禁止'}
                 </Descriptions.Item>
 
                 <Descriptions.Item label="执行策略">
