@@ -9,7 +9,7 @@ import DpetSearch from './components/dpetSearch/Index'
 import ImportStaff from './components/importStaff/Index'
 import StaffStatusSwitch from './components/staffStatusSwitch/Index'
 import { pageQuery, remove, exportExcel, getByStaffId, getByStaff, insert, update, treeSelect } from './service'
-import { system ,auth} from '@/utils/twelvet'
+import { system, auth } from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import moment, { Moment } from 'moment'
 import { useAccess, Access } from 'umi';
@@ -25,7 +25,7 @@ const Staff: React.FC<{}> = () => {
     const [modal, setModal] = useState<{ title: string, visible: boolean, modelType: string }>({ title: ``, visible: false, modelType: '' })
 
 
-    const [resetPassword,setResetPassword] = useState<{ title: string, visible: boolean, modelType: string }>({ title: ``, visible: false, modelType: ''})
+    const [resetPassword, setResetPassword] = useState<{ title: string, visible: boolean, modelType: string }>({ title: ``, visible: false, modelType: '' })
 
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false)
@@ -116,7 +116,7 @@ const Staff: React.FC<{}> = () => {
             title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
                 return (
                     <>
-                        <a onClick={() => refPut(row)}  hidden={auth('system:dict:update')}>
+                        <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined />
                                 修改
@@ -136,8 +136,8 @@ const Staff: React.FC<{}> = () => {
                         </Popconfirm>
                         <Access accessible={access.hasAuthority('system:user:resetPwd')} >
                             <Divider type="vertical" />
-                            <a onClick={()=>changPassword(row.userId)}>
-                            <Space>
+                            <a onClick={() => changPassword(row.userId)}>
+                                <Space>
                                     <EditOutlined />
                                     重置密码
                                 </Space>
@@ -200,8 +200,8 @@ const Staff: React.FC<{}> = () => {
 
 
 
-    const changPassword = async (userId: (string | number)[] | string | undefined) =>{
-        prform.setFieldsValue({userId:userId})
+    const changPassword = async (userId: (string | number)[] | string | undefined) => {
+        prform.setFieldsValue({ userId: userId })
         // 设置Modal状态
         setResetPassword({ title: "重置密码", visible: true, modelType: 'PUT' })
     }
@@ -223,7 +223,7 @@ const Staff: React.FC<{}> = () => {
 
             staff.postIds = postIds
             staff.roleIds = roleIds
-                
+
             // 赋值表单数据
             form.setFieldsValue(staff)
 
@@ -369,7 +369,7 @@ const Staff: React.FC<{}> = () => {
      * 保存数据
      */
     const resetPasswordHandler = () => {
-        
+
         prform.validateFields()
             .then(
                 async (fields) => {
@@ -402,7 +402,7 @@ const Staff: React.FC<{}> = () => {
         <>
             <ProTable
                 {
-                    ...proTableConfigs
+                ...proTableConfigs
                 }
                 actionRef={acForm}
                 formRef={formRef}
@@ -410,7 +410,7 @@ const Staff: React.FC<{}> = () => {
                 columns={columns}
                 request={async (params, sorter, filter) => {
                     const { data } = await pageQuery(params)
-                    const {records, total} = data
+                    const { records, total } = data
                     return Promise.resolve({
                         data: records,
                         success: true,
@@ -473,40 +473,40 @@ const Staff: React.FC<{}> = () => {
             />
 
             <Modal
-                            title={`${resetPassword.title}`}
-                            visible={resetPassword.visible}
-                            width={500}
-                            okText={`${resetPassword.title}`}
-                            confirmLoading={loadingModal}
-                            onOk={resetPasswordHandler}
-                            onCancel={rehandleCancelHandler}
-                        >
-                             <Form
-                                name="resetPassword"
-                                form={prform}
+                title={`${resetPassword.title}`}
+                visible={resetPassword.visible}
+                width={500}
+                okText={`${resetPassword.title}`}
+                confirmLoading={loadingModal}
+                onOk={resetPasswordHandler}
+                onCancel={rehandleCancelHandler}
+            >
+                <Form
+                    name="resetPassword"
+                    form={prform}
+                >
+                    <Row>
+                        <Col span={24}>
+                            <Form.Item
+                                label="新密码"
+                                name="password"
+                                rules={[{ required: true, message: '密码不能为空' }]}
                             >
-                            <Row>
-                            <Col span={24}>
-                                    <Form.Item
-                                        label="新密码"
-                                        name="password"
-                                        rules={[{ required: true, message: '密码不能为空' }]}
-                                    >
-                                        <Input placeholder="输入新密码" />
-                                        
-                                    </Form.Item>
-                                    <Form.Item 
-                                        hidden
-                                        label="用户ID"
-                                        name="userId"
-                                        initialValue={0}
-                                    >
-                                        <Input />
-                                    </Form.Item>
+                                <Input placeholder="输入新密码" />
 
-                                </Col>
-                            </Row>
-                            </Form>
+                            </Form.Item>
+                            <Form.Item
+                                hidden
+                                label="用户ID"
+                                name="userId"
+                                initialValue={0}
+                            >
+                                <Input />
+                            </Form.Item>
+
+                        </Col>
+                    </Row>
+                </Form>
             </Modal>
 
             <Modal
@@ -531,6 +531,23 @@ const Staff: React.FC<{}> = () => {
                         initialValue={0}
                     >
                         <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        hidden
+                        {...{
+                            labelCol: {
+                                sm: { span: 8 },
+                            },
+                            wrapperCol: {
+                                sm: { span: 16 },
+                            },
+                        }}
+                        label="用户账号"
+                        name="username"
+                        rules={[{ required: true, message: '用户账号不能为空' }]}
+                    >
+                        <Input placeholder="用户账号" />
                     </Form.Item>
 
                     <Row>
@@ -692,11 +709,11 @@ const Staff: React.FC<{}> = () => {
                                 }}
                                 label="状态"
                                 name="status"
-                                initialValue={1}
+                                initialValue={'0'}
                             >
                                 <Radio.Group>
-                                    <Radio value={1}>正常</Radio>
-                                    <Radio value={0}>冻结</Radio>
+                                    <Radio value={'0'}>正常</Radio>
+                                    <Radio value={'1'}>冻结</Radio>
                                 </Radio.Group>
                             </Form.Item>
                         </Col>

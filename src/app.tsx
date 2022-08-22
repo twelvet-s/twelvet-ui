@@ -218,7 +218,13 @@ const responseHeaderInterceptor = async (response: Response, options: RequestOpt
 
     }
 
-    if (jsonData && jsonData.code === 403) {
+    if (jsonData && jsonData.code === 500) {
+        notification.error({
+            message: jsonData.msg,
+        });
+        // 跳转到登陆页
+        // return router.replace('/user/login');
+    } else if  (jsonData && jsonData.code === 403) {
         notification.error({
             message: jsonData.msg,
         });

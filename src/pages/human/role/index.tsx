@@ -526,11 +526,11 @@ const Role: React.FC<{}> = () => {
                                 }}
                                 label="角色状态"
                                 name="status"
-                                initialValue={1}
+                                initialValue={'0'}
                             >
                                 <Radio.Group>
-                                    <Radio value={1}>正常</Radio>
-                                    <Radio value={0}>停用</Radio>
+                                    <Radio value={'0'}>正常</Radio>
+                                    <Radio value={'1'}>停用</Radio>
                                 </Radio.Group>
                             </Form.Item>
                         </Col>
