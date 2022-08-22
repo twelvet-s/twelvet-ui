@@ -30,9 +30,9 @@ class UploadTWT extends Component<UploadType> {
                     fileList: [
                         {
                             uid: '-1',
-                            name: value,
+                            name: `${TWT.static}${value}`,
                             status: 'done',
-                            url: value,
+                            url: `${TWT.static}${value}`,
                         },
                     ]
                 })
@@ -40,9 +40,9 @@ class UploadTWT extends Component<UploadType> {
                 const fileList = value.map((file: string) => {
                     return {
                         uid: '-1',
-                        name: file,
+                        name: `${TWT.static}${file}`,
                         status: 'done',
-                        url: file,
+                        url: `${TWT.static}${file}`,
                     }
                 })
                 this.setState(fileList)
@@ -228,7 +228,7 @@ class UploadTWT extends Component<UploadType> {
                         this.setState({ previewVisible: false })
                     }}
                 >
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                    <img alt="example" style={{ width: '100%' }} src={previewImage.indexOf("http") != -1 ? previewImage : `${TWT.static}${previewImage}`} />
                 </Modal>
             </>
         )
