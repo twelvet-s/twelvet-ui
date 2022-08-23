@@ -4,14 +4,15 @@ import ProTable from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, Radio, Row, Col, Select, TreeSelect, DatePicker, Space, Divider } from 'antd'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import DpetSearch from './components/dpetSearch/Index'
 import ImportStaff from './components/importStaff/Index'
 import StaffStatusSwitch from './components/staffStatusSwitch/Index'
 import { pageQuery, remove, exportExcel, getByStaffId, getByStaff, insert, update, treeSelect } from './service'
 import { system, auth } from '@/utils/twelvet'
 import { isArray } from 'lodash'
-import moment, { Moment } from 'moment'
+import type { Moment } from 'moment';
+import moment from 'moment'
 import { useAccess, Access } from 'umi';
 
 /**
@@ -41,13 +42,13 @@ const Staff: React.FC<{}> = () => {
     const [prform] = Form.useForm<FormInstance>()
 
     // 部门数据
-    const [DEPTS, setDEPTS] = useState<Array<{ [key: string]: any }>>([])
+    const [DEPTS, setDEPTS] = useState<Record<string, any>[]>([])
 
     // 岗位数据
-    const [POSTS, setPOSTS] = useState<Array<{ [key: string]: any }>>([])
+    const [POSTS, setPOSTS] = useState<Record<string, any>[]>([])
 
     // 角色数据
-    const [ROLES, setROLES] = useState<Array<{ [key: string]: any }>>([])
+    const [ROLES, setROLES] = useState<Record<string, any>[]>([])
 
     const { TextArea } = Input
 
@@ -93,7 +94,7 @@ const Staff: React.FC<{}> = () => {
             ellipsis: false,
             width: 80,
             dataIndex: 'status',
-            render: (_: string, row: { [key: string]: string }) => (
+            render: (_: string, row: Record<string, string>) => (
                 <StaffStatusSwitch row={row} />
             )
         },
@@ -113,7 +114,7 @@ const Staff: React.FC<{}> = () => {
             )
         },
         {
-            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 return (
                     <>
                         <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
@@ -163,7 +164,7 @@ const Staff: React.FC<{}> = () => {
 
         const { posts, roles } = data
 
-        let POSTS: Array<{ [key: string]: any }> = new Array<{ [key: string]: any }>()
+        const POSTS: Record<string, any>[] = new Array<Record<string, any>>()
         // 制作岗位数据
         posts.filter((item: {
             postName: string,
@@ -179,7 +180,7 @@ const Staff: React.FC<{}> = () => {
 
         setPOSTS(POSTS)
 
-        let ROLES: Array<{ [key: string]: any }> = new Array<{ [key: string]: any }>()
+        const ROLES: Record<string, any>[] = new Array<Record<string, any>>()
         // 制作岗位数据
         roles.filter((item: {
             roleName: string,
@@ -212,7 +213,7 @@ const Staff: React.FC<{}> = () => {
      * 获取修改职员信息
      * @param row row
      */
-    const refPut = async (row: { [key: string]: any }) => {
+    const refPut = async (row: Record<string, any>) => {
         try {
             const { code, msg, data } = await getByStaffId(row.userId)
             if (code != 200) {
@@ -227,7 +228,7 @@ const Staff: React.FC<{}> = () => {
             // 赋值表单数据
             form.setFieldsValue(staff)
 
-            let POSTS: Array<{ [key: string]: any }> = new Array<{ [key: string]: any }>()
+            const POSTS: Record<string, any>[] = new Array<Record<string, any>>()
             // 制作岗位数据
             posts.filter((item: {
                 postName: string,
@@ -243,7 +244,7 @@ const Staff: React.FC<{}> = () => {
 
             setPOSTS(POSTS)
 
-            let ROLES: Array<{ [key: string]: any }> = new Array<{ [key: string]: any }>()
+            const ROLES: Record<string, any>[] = new Array<Record<string, any>>()
             // 制作岗位数据
             roles.filter((item: {
                 roleName: string,
@@ -686,12 +687,12 @@ const Staff: React.FC<{}> = () => {
                                 }}
                                 label="用户性别"
                                 name="sex"
-                                initialValue={0}
+                                initialValue={'0'}
                                 rules={[{ required: true, message: '请选择用户性别' }]}
                             >
                                 <Select >
-                                    <Select.Option value={0}>男</Select.Option>
-                                    <Select.Option value={1}>女</Select.Option>
+                                    <Select.Option value={'0'}>男</Select.Option>
+                                    <Select.Option value={'1'}>女</Select.Option>
                                     <Select.Option value={2}>保密</Select.Option>
                                 </Select >
                             </Form.Item>

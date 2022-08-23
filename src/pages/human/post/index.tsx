@@ -4,7 +4,7 @@ import ProTable from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Radio, Space, Divider } from 'antd'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getByPostId, insert, update } from './service'
 import {system, aotu, auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
@@ -63,7 +63,7 @@ const Post: React.FC<{}> = () => {
             title: '创建时间', search: false, width: 200, valueType: "dateTime", dataIndex: 'createTime'
         },
         {
-            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 return (
                     <>
                         <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
@@ -102,7 +102,7 @@ const Post: React.FC<{}> = () => {
      * 获取修改岗位信息
      * @param row row
      */
-    const refPut = async (row: { [key: string]: any }) => {
+    const refPut = async (row: Record<string, any>) => {
         try {
             const { code, msg, data } = await getByPostId(row.postId)
             if (code != 200) {
@@ -318,11 +318,11 @@ const Post: React.FC<{}> = () => {
                         {...formItemLayout}
                         label="岗位状态"
                         name="status"
-                        initialValue="1"
+                        initialValue="0"
                     >
                         <Radio.Group>
-                            <Radio value="1">正常</Radio>
-                            <Radio value="0">停用</Radio>
+                            <Radio value="0">正常</Radio>
+                            <Radio value="1">停用</Radio>
                         </Radio.Group>
                     </Form.Item>
 
