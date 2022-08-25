@@ -14,7 +14,7 @@ const Settings: LayoutSettings & {
   colorWeak: false,
   title: 'TwelveT',
   pwa: false,
-  logo: '/logo.svg',
+  logo: 'http://static.twelvet.cn/logo.svg',
   iconfontUrl: '/assets/js/icon.js',
 };
 

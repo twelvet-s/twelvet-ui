@@ -15,7 +15,7 @@ export default [
         component: './login/_layout',
         routes: [
             {
-                title: '首页',
+                title: '登录',
                 name: 'login',
                 path: '/login',
                 component: './login',

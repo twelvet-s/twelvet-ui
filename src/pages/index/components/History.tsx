@@ -7,7 +7,7 @@ import styles from './styles.less'
 const History = () => {
     return (
         <Collapse defaultActiveKey={9} className={styles.historyOl}>
-            <Collapse.Panel header="v2.5.0 - 2022-7-28" key={9}>
+            <Collapse.Panel header="v2.6.0 - 2022-7-28" key={9}>
                 <ol>
                     <li>替换OAuth2最新依赖OAuth2 Authorization Server</li>
                     <li>升级Srping Boot2.7，做好jdk17大版本升级</li>
