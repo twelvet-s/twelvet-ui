@@ -320,7 +320,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         // 渲染菜单数据
         menuDataRender: () => initialState?.currentUser?.menus,
         // 分割菜单（改为false兼容约定路由）
-        splitMenus: true,
+        splitMenus: false,
         menu: {
             defaultOpenAll: false,
             // 关闭菜单多语言

@@ -40,7 +40,7 @@ export default defineConfig({
     },
     // umi routes: https://umijs.org/docs/routing
     // 注释此处开启约定路由
-    routes,
+    //routes,
     // Theme for antd: https://ant.design/docs/react/customize-theme-cn
     theme: {
         'primary-color': defaultSettings.primaryColor,
