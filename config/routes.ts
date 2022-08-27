@@ -23,19 +23,19 @@ export default [
         ],
     },
     // 跳转
-    {
-        path: '/system',
-        redirect: '/index',
-    },
-    // 跳转
-    {
-        path: '/',
-        redirect: '/index',
-    },
+    // {
+    //     path: '/system',
+    //     redirect: '/index',
+    // },
+    // // 跳转
+    // {
+    //     path: '/',
+    //     redirect: '/index',
+    // },
     {
         title: '首页',
         name: 'home',
-        path: '/index',
+        path: '/',
         icon: 'icon-home',
         component: './index',
     },
