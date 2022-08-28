@@ -10,7 +10,7 @@ import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { message } from 'antd';
 import TWT from './setting';
-import { getCurrentUser, refreshToken as refreshTokenService } from './pages/Login/service';
+import { getCurrentUser } from './pages/Login/service';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';

@@ -86,7 +86,7 @@ const Login: React.FC = () => {
 
       message.error(data.msg);
       // 如果失败去设置用户错误信息
-      setUserLoginState(data);
+      setUserLoginState(data.msg);
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
