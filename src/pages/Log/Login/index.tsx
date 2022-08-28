@@ -1,0 +1,185 @@
+import React, { useRef, useState } from 'react';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { DeleteOutlined, FundProjectionScreenOutlined } from '@ant-design/icons';
+import { Popconfirm, Button, message, FormInstance } from 'antd';
+import { proTableConfigs } from '@/setting';
+import { exportExcel, pageQuery, remove } from './service';
+import { system } from '@/utils/twelvet';
+
+/**
+ * 登录日志
+ * @returns
+ */
+const LogLogin: React.FC = () => {
+  const actionRef = useRef<ActionType>();
+
+  const formRef = useRef<FormInstance>();
+
+  const [state, setState] = useState<LogLogin.State>({
+    pageSize: 10,
+    exportExcelLoading: false,
+    deleteLoading: false,
+  });
+
+  // Form参数
+  const columns: ProColumns<LogLogin.PageParams>[] = [
+    {
+      title: '用户名称',
+      ellipsis: true,
+      width: 200,
+      valueType: 'text',
+      dataIndex: 'userName',
+    },
+    {
+      title: 'IP',
+      width: 200,
+      valueType: 'text',
+      dataIndex: 'ipaddr',
+    },
+    {
+      title: '搜索日期',
+      key: 'between',
+      hideInTable: true,
+      valueType: 'dateRange',
+      search: {
+        transform: (value) => {
+          return {
+            beginTime: value[0],
+            endTime: value[1],
+          };
+        },
+      },
+    },
+    {
+      title: '状态',
+      ellipsis: false,
+      dataIndex: 'status',
+      width: 200,
+      valueEnum: {
+        0: { text: '登录成功', status: 'success' },
+        2: { text: '退出成功', status: 'success' },
+        1: { text: '登录失败', status: 'error' },
+      },
+    },
+    {
+      title: '登录信息',
+      width: 200,
+      valueType: 'text',
+      search: false,
+      dataIndex: 'msg',
+    },
+    {
+      title: '登录时间',
+      width: 200,
+      valueType: 'dateTime',
+      search: false,
+      dataIndex: 'accessTime',
+    },
+  ];
+
+  /**
+   * 移除日志
+   * @param row infoIds
+   */
+  const refRemove = async (
+    action: ActionType | undefined,
+    infoIds: (string | number)[] | undefined,
+  ) => {
+    try {
+      if (!infoIds) {
+        return true;
+      }
+      const { code, msg } = await remove(infoIds.join(','));
+      if (code != 200) {
+        return message.error(msg);
+      }
+
+      message.success(msg);
+
+      // 重写加载并清空选择
+      action?.reload();
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  return (
+    <ProTable<LogLogin.PageListItem, LogLogin.PageParams>
+      {...proTableConfigs}
+      pagination={{
+        // 是否允许每页大小更改
+        showSizeChanger: true,
+        // 每页显示条数
+        pageSize: state.pageSize,
+        // 改变当前页数
+        onShowSizeChange(current, pageSize) {
+          setState({
+            ...state,
+            pageSize,
+          });
+        },
+      }}
+      actionRef={actionRef}
+      formRef={formRef}
+      rowKey="infoId"
+      columns={columns}
+      rowSelection={{}}
+      request={async (params) => {
+        const { data } = await pageQuery(params);
+        const { records, total } = data;
+        return Promise.resolve({
+          data: records,
+          success: true,
+          total,
+        });
+      }}
+      toolBarRender={(action, { selectedRowKeys }) => [
+        <Popconfirm
+          disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
+          onConfirm={() => refRemove(action, selectedRowKeys)}
+          title="是否删除选中数据"
+        >
+          <Button
+            disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
+            type="primary"
+            danger
+          >
+            <DeleteOutlined />
+            批量删除
+          </Button>
+        </Popconfirm>,
+        <Popconfirm
+          disabled={state.exportExcelLoading}
+          title="是否导出数据"
+          onConfirm={() => {
+            try {
+              setState({
+                ...state,
+                exportExcelLoading: true,
+              });
+              exportExcel({
+                ...formRef.current?.getFieldsValue(),
+              });
+            } finally {
+              setState({
+                ...state,
+                exportExcelLoading: false,
+              });
+            }
+          }}
+        >
+          <Button
+            type="default"
+            loading={state.exportExcelLoading}
+            disabled={state.exportExcelLoading}
+          >
+            <FundProjectionScreenOutlined />
+            导出数据
+          </Button>
+        </Popconfirm>,
+      ]}
+    />
+  );
+};
+
+export default LogLogin;
