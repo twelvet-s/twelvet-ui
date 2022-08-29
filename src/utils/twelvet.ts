@@ -1,6 +1,6 @@
 import TWT from '@/setting';
-import {isArray} from 'lodash';
-import {request} from '@umijs/max';
+import { isArray } from 'lodash';
+import { request } from '@umijs/max';
 
 /**
  * 系统日志输出
