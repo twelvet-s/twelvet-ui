@@ -1,7 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import { DeleteOutlined, FundProjectionScreenOutlined } from '@ant-design/icons';
-import { Popconfirm, Button, message, FormInstance } from 'antd';
+import type { FormInstance } from 'antd';
+import { Popconfirm, Button, message } from 'antd';
 import { proTableConfigs } from '@/setting';
 import { exportExcel, pageQuery, remove } from './service';
 import { system } from '@/utils/twelvet';
@@ -79,7 +81,8 @@ const LogLogin: React.FC = () => {
 
   /**
    * 移除日志
-   * @param row infoIds
+   * @param action
+   * @param infoIds
    */
   const refRemove = async (
     action: ActionType | undefined,
@@ -111,13 +114,6 @@ const LogLogin: React.FC = () => {
         showSizeChanger: true,
         // 每页显示条数
         pageSize: state.pageSize,
-        // 改变当前页数
-        onShowSizeChange(current, pageSize) {
-          setState({
-            ...state,
-            pageSize,
-          });
-        },
       }}
       actionRef={actionRef}
       formRef={formRef}
@@ -135,12 +131,13 @@ const LogLogin: React.FC = () => {
       }}
       toolBarRender={(action, { selectedRowKeys }) => [
         <Popconfirm
-          disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
+          key={'deleteSelect'}
+          disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
           onConfirm={() => refRemove(action, selectedRowKeys)}
           title="是否删除选中数据"
         >
           <Button
-            disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
+            disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             type="primary"
             danger
           >
@@ -149,6 +146,7 @@ const LogLogin: React.FC = () => {
           </Button>
         </Popconfirm>,
         <Popconfirm
+          key={'exportExcel'}
           disabled={state.exportExcelLoading}
           title="是否导出数据"
           onConfirm={() => {
@@ -159,6 +157,8 @@ const LogLogin: React.FC = () => {
               });
               exportExcel({
                 ...formRef.current?.getFieldsValue(),
+              }).then(() => {
+                system.log("导出成功")
               });
             } finally {
               setState({
