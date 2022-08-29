@@ -7,7 +7,7 @@ const controller = "/system/client";
  * 新增终端
  * @param params 搜索参数
  */
-export async function insert(params: { [key: string]: any }) {
+export async function insert(params: Record<string, any>) {
     return request(`${controller}`, {
         method: 'POST',
         data: {
@@ -30,7 +30,7 @@ export async function remove(clinets: (string | number)[] | string) {
  * 修改菜单
  * @param params 搜索参数
  */
-export async function update(params: { [key: string]: any }) {
+export async function update(params: Record<string, any>) {
     return request(`${controller}`, {
         method: 'PUT',
         data: {
@@ -43,7 +43,7 @@ export async function update(params: { [key: string]: any }) {
  * 获取分页 Data
  * @param params 搜索参数
  */
-export async function pageQuery(params: { [key: string]: any }) {
+export async function pageQuery(params: Record<string, any>) {
     return request(`${controller}/pageQuery`, {
         method: 'GET',
         params: {

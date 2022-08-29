@@ -4,7 +4,7 @@ import ProTable from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined, SettingOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, Radio, Space, Divider } from 'antd'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getBydictId, insert, update, clearCache } from './service'
 import { system, auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
@@ -73,7 +73,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
             title: '创建时间', search: false, width: 200, valueType: "dateTime", dataIndex: 'createTime'
         },
         {
-            title: '操作', fixed: 'right', width: 320, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 320, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 return (
                     <>
                         <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
@@ -128,7 +128,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
      * 获取修改字典信息
      * @param row row
      */
-    const refPut = async (row: { [key: string]: any }) => {
+    const refPut = async (row: Record<string, any>) => {
         try {
             const { code, msg, data } = await getBydictId(row.dictId)
             if (code != 200) {

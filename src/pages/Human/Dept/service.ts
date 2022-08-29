@@ -7,7 +7,7 @@ const controller = "/system/dept";
  * 新增部门
  * @param params 搜索参数
  */
-export async function insert(params: { [key: string]: any }) {
+export async function insert(params: Record<string, any>) {
     return request(`${controller}`, {
         method: 'POST',
         data: {
@@ -30,7 +30,7 @@ export async function remove(menuId: number) {
  * 修改部门
  * @param params 搜索参数
  */
-export async function update(params: { [key: string]: any }) {
+export async function update(params: Record<string, any>) {
     return request(`${controller}`, {
         method: 'PUT',
         data: {
@@ -43,7 +43,7 @@ export async function update(params: { [key: string]: any }) {
  * 获取部门List Data
  * @param params 搜索参数
  */
-export async function list(params: { [key: string]: any }) {
+export async function list(params: Record<string, any>) {
     return request(`${controller}/list`, {
         method: 'GET',
         params: {

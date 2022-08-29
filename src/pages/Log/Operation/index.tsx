@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
 
-import ProTable, { ActionType } from '@ant-design/pro-table'
+import type { ActionType } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined } from '@ant-design/icons'
 import ProDescriptions from '@ant-design/pro-descriptions'
-import { Popconfirm, Button, message, Modal, DatePicker, Space, FormInstance } from 'antd'
-import moment, { Moment } from 'moment'
+import type { FormInstance } from 'antd';
+import { Popconfirm, Button, message, Modal, DatePicker, Space } from 'antd'
+import type { Moment } from 'moment';
+import moment from 'moment'
 import { pageQuery, remove, exportExcel, getDictionariesType } from './service'
 import {system, auth} from '@/utils/twelvet'
 
@@ -15,7 +18,7 @@ import {system, auth} from '@/utils/twelvet'
  */
 const Operation: React.FC<{}> = () => {
 
-    const [descriptions, setDescriptions] = useState<{ [key: string]: String | number }>()
+    const [descriptions, setDescriptions] = useState<Record<string, string | number>>()
 
     // 显示Modal
     const [modal, setModal] = useState<{ title: string, visible: boolean }>({ title: ``, visible: false })
@@ -50,7 +53,7 @@ const Operation: React.FC<{}> = () => {
                 message.error(msg)
             }
 
-            let res: { key: string } = {}
+            const res: { key: string } = {}
 
             data.map((item: {
                 dictValue: string
@@ -106,7 +109,7 @@ const Operation: React.FC<{}> = () => {
             title: '操作时间', width: 200, valueType: "dateTime", search: false, dataIndex: 'operTime'
         },
         {
-            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 return (
                     <a onClick={() => handleView(row)}>
                         <Space>
@@ -123,7 +126,7 @@ const Operation: React.FC<{}> = () => {
      * 查看详情
      * @param row row
      */
-    const handleView = (row: { [key: string]: String | number }) => {
+    const handleView = (row: Record<string, string | number>) => {
         // 设置描述数据
         setDescriptions(row)
 

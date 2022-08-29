@@ -3,7 +3,7 @@ import { message, Upload, Modal, Checkbox, Button } from 'antd'
 import { system } from '@/utils/twelvet'
 import { InboxOutlined } from '@ant-design/icons'
 import styles from './index.less'
-import { RcFile } from 'antd/lib/upload'
+import type { RcFile } from 'antd/lib/upload'
 import { importData, exportTemplate } from './../../service'
 
 const DeptSearch: React.FC<{
@@ -101,7 +101,7 @@ const DeptSearch: React.FC<{
                     // 文件列表
                     fileList={excelFiles}
                     onChange={(info: any) => {
-                        const fileList:Array<any> = info.fileList
+                        const fileList: any[] = info.fileList
 
                         const files: RcFile[] = []
 

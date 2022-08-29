@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react'
 
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table'
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { createFromIconfontCN, PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 import { Row, Col, Button, message, Space, Popconfirm, Modal, Form, Input, InputNumber, Radio, TreeSelect, Divider } from 'antd'
 import { list, getInfo, remove, insert, update } from './service'
 import { system, makeTree, auth } from '@/utils/twelvet'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 
 /**
  * 菜单模块
@@ -17,7 +18,7 @@ const Menu: React.FC<{}> = () => {
     const [loadingModal, setLoadingModal] = useState<boolean>(false)
 
     // 菜单数据源
-    const [dataSource, setDataSource] = useState<Array<{ [key: string]: any }>>([])
+    const [dataSource, setDataSource] = useState<Record<string, any>[]>([])
 
     // 显示Modal
     const [modal, setModal] = useState<{ title: string, visible: boolean }>({ title: ``, visible: false })
@@ -72,7 +73,7 @@ const Menu: React.FC<{}> = () => {
             title: '创建时间', width: 150, valueType: "dateTime", search: false, dataIndex: 'createTime'
         },
         {
-            title: '操作', fixed: 'right', width: 280, search: false, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 280, search: false, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 return (
                     <>
                         {
@@ -118,11 +119,11 @@ const Menu: React.FC<{}> = () => {
      * 获取新增菜单信息
      * @param row row
      */
-    const refPost = async (row: { [key: string]: any }) => {
+    const refPost = async (row: Record<string, any>) => {
         // 更新数据
         putData()
 
-        const field: { [key: string]: any } = { parentId: row.menuId }
+        const field: Record<string, any> = { parentId: row.menuId }
         // 设置表单数据
         form.setFieldsValue(field)
 
@@ -133,7 +134,7 @@ const Menu: React.FC<{}> = () => {
      * 获取修改菜单信息
      * @param row row
      */
-    const refPut = async (row: { [key: string]: any }) => {
+    const refPut = async (row: Record<string, any>) => {
         try {
             // 更新菜单数据
             putData()
@@ -192,7 +193,7 @@ const Menu: React.FC<{}> = () => {
      * 移除菜单
      * @param row row
      */
-    const refRemove = async (row: { [key: string]: any }) => {
+    const refRemove = async (row: Record<string, any>) => {
         try {
             const { code, msg } = await remove(row.menuId)
             if (code != 200) {

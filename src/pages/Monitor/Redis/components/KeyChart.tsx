@@ -124,8 +124,7 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
             <div
                 ref={(ref: HTMLDivElement) => { lineChartRef = ref }}
                 className={styles.lineChart}
-            >
-            </div>
+             />
         </Card>
     )
 

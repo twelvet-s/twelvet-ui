@@ -8,7 +8,7 @@ import { changeStatus } from './../../service'
  * @param props row 参数
  */
 const RoleSwitch: React.FC<{
-    row: { [key: string]: any }
+    row: Record<string, any>
 }> = (props) => {
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -17,7 +17,7 @@ const RoleSwitch: React.FC<{
     const toggle = async () => {
         try {
             setLoading(true);
-            let params: { [key: string]: any } = {}
+            const params: Record<string, any> = {}
             params.jobId = props.row.jobId;
             params.status = checked == '1' ? '0' : '1'
             const { code, msg } = await changeStatus(params);

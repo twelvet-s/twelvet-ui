@@ -1,5 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
-import { RequestConfig, request as httpRequest } from '@umijs/max';
+import type { RequestConfig} from '@umijs/max';
+import { request as httpRequest } from '@umijs/max';
 import { message, notification } from 'antd';
 import { getCurrentUser, refreshToken as refreshTokenService } from './pages/Login/service'
 import TWT from './setting';

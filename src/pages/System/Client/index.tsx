@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react'
 
-import ProTable, { ActionType } from '@ant-design/pro-table'
+import type { ActionType } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { DeleteOutlined, PlusOutlined, EditOutlined, CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Tooltip, Divider, Space } from 'antd'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, getByClientId, insert, update } from './service'
 import { system,auth} from '@/utils/twelvet'
 import { isArray } from 'lodash'
@@ -55,7 +56,7 @@ const Post: React.FC<{}> = () => {
             title: '刷新令牌有效期', width: 200, valueType: "text", search: false, dataIndex: 'refreshTokenValidity'
         },
         {
-            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 return (
                     <>
                         <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
@@ -94,7 +95,7 @@ const Post: React.FC<{}> = () => {
      * 获取修改终端信息
      * @param row row
      */
-    const refPut = async (row: { [key: string]: any }) => {
+    const refPut = async (row: Record<string, any>) => {
         try {
             const { code, msg, data } = await getByClientId(row.clientId)
             if (code != 200) {

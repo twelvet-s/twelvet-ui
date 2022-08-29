@@ -15,7 +15,7 @@ const Details: React.FC<{
     onCancel: () => void
 }> = (props) => {
 
-    const [descriptions, setDescriptions] = useState<{ [key: string]: string }>({})
+    const [descriptions, setDescriptions] = useState<Record<string, string>>({})
 
     useEffect(() => {
         getData()

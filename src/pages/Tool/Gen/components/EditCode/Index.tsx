@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { ActionType } from '@ant-design/pro-table'
+import type { ActionType } from '@ant-design/pro-table'
 import { Button, Cascader, Col, Divider, Drawer, Input, message, Row, Select, Tabs, TreeSelect } from 'antd'
-import Form, { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form';
+import Form from 'antd/lib/form'
 import { getInfo, getMenus, getOptionselect, putGen } from './service'
 import { makeTree, system } from '@/utils/twelvet'
 import { EditableProTable } from '@ant-design/pro-table'
@@ -48,7 +49,7 @@ const EditCode: React.FC<{
     const [tablesInfo, setTablesInfo] = useState<{}>({})
 
     // 菜单数据源
-    const [menuTree, setMenuTree] = useState<Array<{ [key: string]: any }>>([])
+    const [menuTree, setMenuTree] = useState<Record<string, any>[]>([])
 
     /**
      * 表单其他信息
@@ -56,11 +57,11 @@ const EditCode: React.FC<{
     const [formInfo, setFormInfo] = useState<[]>([])
 
     // 关联表信息
-    const [formTables, setFormTables] = useState<Array<{
+    const [formTables, setFormTables] = useState<{
         value: string
         label: string
         children: []
-    }>>([{
+    }[]>([{
         value: '',
         label: '',
         children: []
@@ -249,11 +250,11 @@ const EditCode: React.FC<{
                             return message.error(msg)
                         }
 
-                        let infos = {}
+                        const infos = {}
                         data.map((item: {
                             dictName: string
                         }) => {
-                            const dictType = item['dictType']
+                            const dictType = item.dictType
                             infos[dictType] = { text: `${item.dictName}：${dictType}`, status: 'Default' }
                         })
                         setTablesInfo(infos)
@@ -350,41 +351,41 @@ const EditCode: React.FC<{
                                 isQuery: [] | {}
                                 isRequired: [] | {}
                             }) => {
-                                item['isEdit'] = item.isEdit ? item.isEdit[0] : null
-                                item['isInsert'] = item.isInsert ? item.isInsert[0] : null
-                                item['isList'] = item.isList ? item.isList[0] : null
-                                item['isQuery'] = item.isQuery ? item.isQuery[0] : null
-                                item['isRequired'] = item.isRequired ? item.isRequired[0] : null
+                                item.isEdit = item.isEdit ? item.isEdit[0] : null
+                                item.isInsert = item.isInsert ? item.isInsert[0] : null
+                                item.isList = item.isList ? item.isList[0] : null
+                                item.isQuery = item.isQuery ? item.isQuery[0] : null
+                                item.isRequired = item.isRequired ? item.isRequired[0] : null
                             })
 
                             // 配置参数
-                            params['columns'] = dataSource
-                            params['tableId'] = info.tableId
-                            params['params'] = {}
+                            params.columns = dataSource
+                            params.tableId = info.tableId
+                            params.params = {}
 
 
-                            if (params['parentMenuId']) {
-                                params['params']['parentMenuId'] = params['parentMenuId']
+                            if (params.parentMenuId) {
+                                params.params.parentMenuId = params.parentMenuId
                             }
 
 
                             // 树表查询
-                            if (params['tplCategory'] == 'tree') {
+                            if (params.tplCategory == 'tree') {
 
-                                params['params'] = {
-                                    treeCode: params['treeCode'],
-                                    treeName: params['treeName'],
-                                    treeParentCode: params['treeParentCode']
+                                params.params = {
+                                    treeCode: params.treeCode,
+                                    treeName: params.treeName,
+                                    treeParentCode: params.treeParentCode
                                 }
 
                             }
 
-                            if (params['tplCategory'] == 'sub') {
-                                const subTable = params['subTable']
-                                params['subTableName'] = subTable[0]
-                                params['subTableFkName'] = subTable[1]
+                            if (params.tplCategory == 'sub') {
+                                const subTable = params.subTable
+                                params.subTableName = subTable[0]
+                                params.subTableFkName = subTable[1]
 
-                                params['subTable'] = undefined
+                                params.subTable = undefined
                             }
 
                             const { code, msg } = await putGen(params)

@@ -153,8 +153,7 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
             <div
                 ref={(ref: HTMLDivElement) => { lineChartRef = ref }}
                 className={styles.lineChart}
-            >
-            </div>
+             />
         </Card>
     )
 

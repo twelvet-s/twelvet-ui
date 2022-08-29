@@ -10,7 +10,7 @@ const DrawerInfo: React.FC<{}> = (props) => {
 
     const { Option } = Select
 
-    const [treeData, setTreeData] = useState<Array<React.ReactNode>>([])
+    const [treeData, setTreeData] = useState<React.ReactNode[]>([])
 
     useEffect(() => {
         makeTree()
@@ -24,7 +24,7 @@ const DrawerInfo: React.FC<{}> = (props) => {
             }
 
             // 制作数据
-            let tree: Array<React.ReactNode> = []
+            const tree: React.ReactNode[] = []
             data.map((item: {
                 dictId: number
                 dictType: string

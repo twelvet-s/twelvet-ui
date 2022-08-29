@@ -8,7 +8,7 @@ import { pageQuery, remove, exportExcel, run, insert, update, getByJobId } from 
 import {system, auth} from '@/utils/twelvet'
 import JobStatus from './components/jobStatusSwitch/Index'
 import Details from './components/details/Index'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import { isArray } from 'lodash'
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index'
 
@@ -69,14 +69,14 @@ const Job: React.FC<{}> = () => {
                 "0": { text: '成功', status: 'success' },
                 "1": { text: '失败', status: 'error' },
             },
-            render: (_: string, row: { [key: string]: string }) => [
+            render: (_: string, row: Record<string, string>) => [
                 <JobStatus row={row} />
             ]
         },
         {
             title: '操作', fixed: 'right', width: 380, valueType: "option", search: false, dataIndex: 'operation', render: (
                 _: string,
-                row: { [key: string]: string }) => {
+                row: Record<string, string>) => {
                 return (
                     <>
                         <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
@@ -138,7 +138,7 @@ const Job: React.FC<{}> = () => {
      * 获取修改菜单信息
      * @param row row
      */
-    const refPut = async (row: { [key: string]: any }) => {
+    const refPut = async (row: Record<string, any>) => {
         try {
             const { code, msg, data } = await getByJobId(row.jobId)
             if (code != 200) {
@@ -159,7 +159,7 @@ const Job: React.FC<{}> = () => {
      * 执行任务
      * @param row
      */
-    const runJob = async (row: { [key: string]: any }) => {
+    const runJob = async (row: Record<string, any>) => {
         try {
             // 参数
             const params = {

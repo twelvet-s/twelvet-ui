@@ -6,9 +6,10 @@ import { DeleteOutlined, EyeOutlined, FundProjectionScreenOutlined } from '@ant-
 import { Popconfirm, Button, message, DatePicker, Space } from 'antd'
 import { pageQuery, remove, exportExcel } from './service'
 import {system, auth} from '@/utils/twelvet'
-import { RequestData } from '@ant-design/pro-table'
-import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData'
-import moment, { Moment } from 'moment'
+import type { RequestData } from '@ant-design/pro-table'
+import type { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData'
+import type { Moment } from 'moment';
+import moment from 'moment'
 
 /**
  * 登录日志

@@ -6,7 +6,7 @@ import { system } from '@/utils/twelvet'
 const DeptSearch: React.FC<{}> = props => {
 
     // 部门数据
-    const [DEPTS, setDEPTS] = useState<Array<{ [key: string]: any }>>([{}])
+    const [DEPTS, setDEPTS] = useState<Record<string, any>[]>([{}])
 
     useEffect(() => {
         makeDept()

@@ -58,8 +58,7 @@ const CommandStatsChart: React.FC<{ commandStats: {} | undefined }> = (props) =>
             <div
                 ref={(ref: HTMLDivElement) => commandStatsChart = ref}
                 className={styles.commandStatsChart}
-            >
-            </div>
+             />
         </Card>
 
     )

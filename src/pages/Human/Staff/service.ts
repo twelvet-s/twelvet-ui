@@ -8,7 +8,7 @@ const controller = "/system/user";
  * 新增职员
  * @param params 搜索参数
  */
-export async function insert(params: { [key: string]: any }) {
+export async function insert(params: Record<string, any>) {
     return request(`${controller}`, {
         method: 'POST',
         data: {
@@ -31,7 +31,7 @@ export async function remove(userIds: (string | number)[] | string) {
  * 修改菜单
  * @param params 搜索参数
  */
-export async function update(params: { [key: string]: any }) {
+export async function update(params: Record<string, any>) {
     return request(`${controller}`, {
         method: 'PUT',
         data: {
@@ -43,7 +43,7 @@ export async function update(params: { [key: string]: any }) {
  * 修改密码
  * @param params 修改密码
  */
-export async function updatePassword(params: { [key: string]: any }) {
+export async function updatePassword(params: Record<string, any>) {
     debugger
     return request(`${controller}/resetPwd`, {
         method: 'PUT',
@@ -57,7 +57,7 @@ export async function updatePassword(params: { [key: string]: any }) {
  * 获取分页 Data
  * @param params 搜索参数
  */
-export async function pageQuery(params: { [key: string]: any }) {
+export async function pageQuery(params: Record<string, any>) {
     return request(`${controller}/pageQuery`, {
         method: 'GET',
         params: {
@@ -70,7 +70,7 @@ export async function pageQuery(params: { [key: string]: any }) {
  * 
  * @param params 
  */
-export async function changeStatus(params: { [key: string]: any }) {
+export async function changeStatus(params: Record<string, any>) {
     return request(`${controller}/changeStatus`, {
         method: 'PUT',
         data: {
@@ -103,7 +103,7 @@ export async function getByStaff() {
  * 导出Excel
  * @param params
  */
-export async function exportExcel(params?: { [key: string]: any }) {
+export async function exportExcel(params?: Record<string, any>) {
     return download(`${controller}/export`, params);
 }
 
@@ -121,7 +121,7 @@ export async function treeSelect() {
  * 下载模板
  * @param params
  */
-export async function exportTemplate(params?: { [key: string]: any }) {
+export async function exportTemplate(params?: Record<string, any>) {
     return download(`${controller}/exportTemplate`, params);
 }
 

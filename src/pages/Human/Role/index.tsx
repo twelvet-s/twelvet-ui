@@ -5,12 +5,12 @@ import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import RoleStatusSwitch from './components/Switch'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Radio, Tree, TreeSelect, Row, Col, Space, Divider } from 'antd'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getByroleId, insert, update, roleMenuTreeSelectByMenuId, roleMenuTreeSelect, roleDeptTreeSelectByDeptId, roleDeptTreeSelect } from './service'
 import { system, auth } from '@/utils/twelvet'
 import { isArray } from 'lodash'
-import { DataNode } from 'antd/lib/tree'
-import { Key } from 'antd/lib/table/interface'
+import type { DataNode } from 'antd/lib/tree'
+import type { Key } from 'antd/lib/table/interface'
 import { useAccess, Access } from 'umi';
 
 /**
@@ -103,7 +103,7 @@ const Role: React.FC<{}> = () => {
                 "0": { text: '正常', status: 'success' },
                 "1": { text: '停用', status: 'error' },
             },
-            render: (_: string, row: { [key: string]: string }) => [
+            render: (_: string, row: Record<string, string>) => [
                 <RoleStatusSwitch row={row} key={row.roleId} />
             ]
         },
@@ -111,7 +111,7 @@ const Role: React.FC<{}> = () => {
             title: '创建时间', search: false, width: 200, valueType: "dateTime", dataIndex: 'createTime'
         },
         {
-            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 // 不允许操作admin
                 return row.roleKey != 'admin' && (
                     <>
@@ -156,7 +156,7 @@ const Role: React.FC<{}> = () => {
      * 获取修改角色信息
      * @param row row
      */
-    const refPut = async (row: { [key: string]: any }) => {
+    const refPut = async (row: Record<string, any>) => {
         try {
             // 获取权限数据
             getMenuDataById(row.roleId)
@@ -192,15 +192,15 @@ const Role: React.FC<{}> = () => {
             const { checkedMenus, menus } = data
 
             // 显示数据
-            let keys: Key[] = []
+            const keys: Key[] = []
 
             // 最终提交数据
-            let finalkeys: Key[] = []
+            const finalkeys: Key[] = []
 
             // 初始化选中菜单数据
             checkedMenus.map((menu: {
                 menuId: number
-                menuType: String
+                menuType: string
             }) => {
                 // 显示数据只需要C类型权限
                 if (menu.menuType == 'F') {

@@ -8,7 +8,7 @@ const controller = "/gen";
  * 获取分页 Data
  * @param params 搜索参数
  */
-export async function pageQuery(params: { [key: string]: any }) {
+export async function pageQuery(params: Record<string, any>) {
     return request(`${controller}/pageQuery`, {
         method: 'GET',
         params: {

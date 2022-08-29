@@ -3,10 +3,10 @@ import React, { useRef, useState } from 'react'
 import ProTable from '@ant-design/pro-table'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { Button, Divider, Drawer, message } from 'antd'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import { pageQuery, importTable } from './service'
 import { system } from '@/utils/twelvet'
-import { Key } from 'antd/lib/table/interface'
+import type { Key } from 'antd/lib/table/interface'
 
 /**
  * 数据导入

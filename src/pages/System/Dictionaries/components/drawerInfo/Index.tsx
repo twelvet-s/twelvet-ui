@@ -5,7 +5,7 @@ import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import SelectType from './components/selectType/Index'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, Radio, Drawer, InputNumber, Divider, Space } from 'antd'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getBydictCode, insert, update } from './service'
 import { system } from '@/utils/twelvet'
 import { isArray } from 'lodash'
@@ -84,7 +84,7 @@ const DrawerInfo: React.FC<{
             title: '创建时间', search: false, width: 200, valueType: "dateTime", dataIndex: 'createTime'
         },
         {
-            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: { [key: string]: string }) => {
+            title: '操作', fixed: 'right', width: 200, valueType: "option", dataIndex: 'operation', render: (_: string, row: Record<string, string>) => {
                 return (
                     <>
                         <a onClick={() => refPut(row)}>
@@ -126,7 +126,7 @@ const DrawerInfo: React.FC<{
      * 获取修改字典信息
      * @param row row
      */
-    const refPut = async (row: { [key: string]: any }) => {
+    const refPut = async (row: Record<string, any>) => {
         try {
             const { code, msg, data } = await getBydictCode(row.dictCode)
             if (code != 200) {
