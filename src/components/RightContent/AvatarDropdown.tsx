@@ -1,7 +1,7 @@
 import { outLogin } from '@/services/ant-design-pro/api';
 import TWT from '@/setting';
 import { logout } from '@/utils/twelvet';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
 import { Avatar, Menu, Spin } from 'antd';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';

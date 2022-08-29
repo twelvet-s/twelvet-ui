@@ -32,5 +32,5 @@ export async function remove(infoIds: string) {
  * @param params
  */
 export async function exportExcel(params?: Record<string, any>) {
-  return download(`${controller}/export`, params);
+  download(`${controller}/export`, params);
 }
