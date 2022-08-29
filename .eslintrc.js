@@ -5,4 +5,24 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  rules: {
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    'react/no-unescaped-entities': 'off',
+    'react/prop-types': 'off',
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        extendDefaults: true,
+        types: {
+          '{}': false,
+        },
+      },
+    ],
+    'react/jsx-uses-react': 2,
+    'react/no-children-prop': 0,
+  },
 };
