@@ -1,6 +1,6 @@
 import TWT from '@/setting';
 import { isArray } from 'lodash';
-import { request } from '@umijs/max';
+import { request, history } from '@umijs/max';
 
 /**
  * 系统日志输出
@@ -122,7 +122,10 @@ export const makeTree = (params: {
  * 统一退出登录操作
  */
 export const logout = () => {
+  // 移除授权token
   removeAuthority();
+  // 跳转登录
+  history.push('/login');
 };
 
 /**

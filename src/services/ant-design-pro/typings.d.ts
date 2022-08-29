@@ -59,7 +59,7 @@ declare namespace API {
        */
       tooltip?: string;
       [key: string]: any;
-    }
+    }[]
   };
 
   type LoginResult = {

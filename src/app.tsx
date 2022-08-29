@@ -26,7 +26,7 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const { user = {}, menus = {}, roles, permissions, code, msg } = await getCurrentUser()
+      const { user = {}, menus, roles, permissions, code, msg } = await getCurrentUser()
       if (code != 200) {
         return message.error(msg)
       }
@@ -129,4 +129,4 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  */
 export const request = {
   ...errorConfig,
-};  
+};
