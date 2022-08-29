@@ -1,10 +1,9 @@
-﻿import type { RequestOptions } from '@@/plugin-request/request';
-import type { RequestConfig} from '@umijs/max';
-import { request as httpRequest } from '@umijs/max';
-import { message, notification } from 'antd';
-import { getCurrentUser, refreshToken as refreshTokenService } from './pages/Login/service'
+﻿import type {RequestOptions} from '@@/plugin-request/request';
+import {RequestConfig, request as httpRequest} from '@umijs/max';
+import {message, notification} from 'antd';
+import {refreshToken as refreshTokenService} from './pages/Login/service'
 import TWT from './setting';
-import { logout, setAuthority } from './utils/twelvet';
+import {logout, setAuthority} from './utils/twelvet';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -14,6 +13,7 @@ enum ErrorShowType {
   NOTIFICATION = 3,
   REDIRECT = 9,
 }
+
 // 与后端约定的响应数据格式
 interface ResponseStructure {
   success: boolean;
@@ -28,16 +28,17 @@ interface ResponseStructure {
  * @param url 访问URL（成功刷新后重新请求地址）
  * @param method 请求方式
  * @param responseType 请求类型
+ * @param data
  * @param params body
  * @param params query
- * @returns 
+ * @returns
  */
 const refreshToken: Response = async (
   url: string,
   method: string,
   responseType: string,
-  data: {},
-  params: {}
+  data: any,
+  params: any
 ) => {
 
   let response
@@ -64,15 +65,31 @@ const refreshToken: Response = async (
       parseResponse: false,
       data,
       params
-    }).then((res: any) => {
-      response = res
+    }).then((newRes: any) => {
+      response = newRes
     })
   }
 
   // 返回响应
   return response
+}
 
-
+const codeMessage = {
+  200: '服务器成功返回请求的数据。',
+  201: '新建或修改数据成功。',
+  202: '一个请求已经进入后台排队（异步任务）。',
+  204: '删除数据成功。',
+  400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
+  401: '用户没有权限（令牌、用户名、密码错误/失效）。',
+  403: '用户权限不足。',
+  404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
+  406: '请求的格式不可得。',
+  410: '请求的资源被永久删除，且不会再得到的。',
+  422: '当创建一个对象时，发生一个验证错误。',
+  500: '服务器发生错误，请检查服务器。',
+  502: '网关错误。',
+  503: '服务不可用，服务器暂时过载或维护。',
+  504: '网关超时。',
 }
 
 /**
@@ -85,12 +102,12 @@ export const errorConfig: RequestConfig = {
   errorConfig: {
     // 错误抛出
     errorThrower: (res) => {
-      const { success, data, errorCode, errorMessage, showType } =
+      const {success, data, errorCode, errorMessage, showType} =
         res as unknown as ResponseStructure;
       if (!success) {
         const error: any = new Error(errorMessage);
         error.name = 'BizError';
-        error.info = { errorCode, errorMessage, showType, data };
+        error.info = {errorCode, errorMessage, showType, data};
         throw error; // 抛出自制的错误
       }
     },
@@ -101,7 +118,7 @@ export const errorConfig: RequestConfig = {
       if (error.name === 'BizError') {
         const errorInfo: ResponseStructure | undefined = error.info;
         if (errorInfo) {
-          const { errorMessage, errorCode } = errorInfo;
+          const {errorMessage, errorCode} = errorInfo;
           switch (errorInfo.showType) {
             case ErrorShowType.SILENT:
               // do nothing
@@ -146,11 +163,11 @@ export const errorConfig: RequestConfig = {
     (config: RequestOptions) => {
       const local = localStorage.getItem(TWT.accessToken)
 
-      const { access_token } = local ? JSON.parse(local) : { access_token: '', expires_in: 0 }
+      const {access_token} = local ? JSON.parse(local) : {access_token: ''}
 
       let authHeader;
       if (!config.headers?.Authorization) {
-        authHeader = { ...config.headers, Authorization: `Bearer ${access_token}` }
+        authHeader = {...config.headers, Authorization: `Bearer ${access_token}`}
       } else {
         authHeader = {
           ...config.headers,
