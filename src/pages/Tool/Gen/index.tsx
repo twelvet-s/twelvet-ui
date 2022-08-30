@@ -1,16 +1,15 @@
 import React, { useRef, useState } from 'react'
-
-import ProTable from '@ant-design/pro-table'
+import { ProTable } from '@ant-design/pro-components'
+import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
 import { CloseOutlined, CloudSyncOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FileZipOutlined, SyncOutlined } from '@ant-design/icons'
-import type { FormInstance } from 'antd';
+import type { FormInstance } from 'antd'
 import { Popconfirm, Button, message, Space, Divider } from 'antd'
 import { batchGenCode, pageQuery, remove, synchDb } from './service'
 import {system} from '@/utils/twelvet'
 import DrawerInfo from './components/DrawerInfo/Index'
 import PreviewCode from './components/PreviewCode/Index'
 import EditCode from './components/EditCode/Index'
-import {ActionType} from "@ant-design/pro-components";
 
 /**
  * 代码生成器
@@ -40,7 +39,7 @@ const Gen: React.FC<{}> = () => {
     })
 
     // Form参数
-    const columns: ProColumns = [
+    const columns: ProColumns<Gen.PageParams> = [
         {
             title: '表名称', ellipsis: true, width: 200, valueType: "text", dataIndex: 'tableName',
         },
@@ -84,7 +83,7 @@ const Gen: React.FC<{}> = () => {
                             onConfirm={() => refRemove(row.tableId)}
                             title="确定删除吗"
                         >
-                            <a href='#' hidden={auth('system:dict:remove')}>
+                            <a href='#'>
                                 <Space>
                                     <CloseOutlined />
                                     删除
@@ -180,7 +179,7 @@ const Gen: React.FC<{}> = () => {
                         data: records,
                         success: true,
                         total,
-                    });
+                    })
                 }}
                 rowSelection={{}}
                 beforeSearchSubmit={(params) => {
@@ -197,7 +196,7 @@ const Gen: React.FC<{}> = () => {
                     return params
                 }}
                 toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
-                    <Button hidden={auth('system:dict:import')}
+                    <Button
                         type="primary"
                         onClick={() => {
                             setDrawerInfoVisible(true)

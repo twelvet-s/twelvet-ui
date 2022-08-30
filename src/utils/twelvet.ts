@@ -255,3 +255,21 @@ export const upload = (url: string, formData: FormData) => {
     data: formData,
   });
 };
+
+/**
+ * 校验是否存在权限数据
+ * @param authStr 需要的权限
+ * @returns 具备：false，不具备：true
+ */
+export const auth = (authStr: string) => {
+  const auths = localStorage.getItem(TWT.preAuthorize)
+  if (!auths) {
+    return true
+  }
+  const authArr = JSON.parse(auths);
+  if (authArr.includes('*:*:*')) {
+    return false
+  }
+
+  return !authArr.includes(authStr)
+}
