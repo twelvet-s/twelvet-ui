@@ -19,7 +19,7 @@ export async function pageQuery(params: Record<string, any>) {
 
 /**
  * 删除表数据
- * @param params 表ID
+ * @param tableIds
  */
 export async function remove(tableIds: []) {
     return request(`${controller}/${tableIds}`, {

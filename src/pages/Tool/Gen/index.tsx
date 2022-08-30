@@ -6,10 +6,11 @@ import { CloseOutlined, CloudSyncOutlined, DeleteOutlined, EditOutlined, EyeOutl
 import type { FormInstance } from 'antd';
 import { Popconfirm, Button, message, Space, Divider } from 'antd'
 import { batchGenCode, pageQuery, remove, synchDb } from './service'
-import {auth, system} from '@/utils/twelvet'
+import {system} from '@/utils/twelvet'
 import DrawerInfo from './components/DrawerInfo/Index'
 import PreviewCode from './components/PreviewCode/Index'
 import EditCode from './components/EditCode/Index'
+import {ActionType} from "@ant-design/pro-components";
 
 /**
  * 代码生成器
@@ -122,7 +123,7 @@ const Gen: React.FC<{}> = () => {
 
     /**
      * 移除
-     * @param row tableIds
+     * @param tableIds
      */
     const refRemove = async (tableIds: number[] | undefined) => {
         try {

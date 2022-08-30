@@ -1,4 +1,4 @@
-declare namespace LogLogin {
+declare namespace Gen {
   /**
    * 状态参数
    */

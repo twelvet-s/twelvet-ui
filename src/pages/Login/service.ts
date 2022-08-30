@@ -9,7 +9,7 @@ const auth = 'Basic ' + window.btoa("twelvet:123456")
 /**
  * 登录
  * @param params 登录参数
- * @returns 
+ * @returns
  */
 export async function login(params: Record<string, any>) {
     return request(`${controller}/oauth2/token`, {
@@ -30,7 +30,7 @@ export async function login(params: Record<string, any>) {
 
 /**
  * 获取当前用户登录信息
- * @returns 
+ * @returns
  */
 export async function getCurrentUser(): Promise<any> {
     return request(`system/user/getInfo`, {
@@ -40,7 +40,6 @@ export async function getCurrentUser(): Promise<any> {
 
 /**
  * 刷新令牌
- * @param params 登录参数
  */
 export async function refreshToken() {
 

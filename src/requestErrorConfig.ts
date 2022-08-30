@@ -1,7 +1,6 @@
 ﻿import type {RequestOptions} from '@@/plugin-request/request';
 import type {RequestConfig} from '@umijs/max';
 import {request} from '@umijs/max';
-import type {AxiosResponse} from "axios";
 import {message, notification} from 'antd';
 import {refreshToken as refreshTokenService} from './pages/Login/service'
 import TWT from './setting';
@@ -64,23 +63,26 @@ const refreshToken = async (
  * 响应处理器
  * @param response Response
  */
-const responseHeaderInterceptor = async (response: AxiosResponse) => {
+const responseHeaderInterceptor = (response: any) => {
   const {data: {code}, config} = response
+
+  let newResponse = response
 
   // 处理401状态
   if (code === 401) {
     const {data, params, method, url, responseType} = config
     // 执行刷新token
-    return await refreshToken(
+    newResponse = refreshToken(
       url,
       method,
       responseType,
       data,
       params
     )
+    return  newResponse
+  } else {
+    return newResponse;
   }
-
-  return response;
 }
 
 /**
@@ -108,7 +110,7 @@ export const errorConfig: RequestConfig = {
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
         //message.error('Response status:', error.response.status);
-        const {info: {msg}} = error
+        const {data: {msg}} = error.response
         message.error(msg);
       } else if (error.request) {
         // 请求已经成功发起，但没有收到响应
@@ -117,7 +119,6 @@ export const errorConfig: RequestConfig = {
         message.error('None response! Please retry.');
       } else {
         // 发送请求时出了点问题
-        message.error('Request error, please retry.');
       }
     },
   },
@@ -153,7 +154,7 @@ export const errorConfig: RequestConfig = {
 
   // 响应拦截器
   responseInterceptors: [
-    (response: AxiosResponse) => {
+    response => {
       return responseHeaderInterceptor(response)
     }
   ],
