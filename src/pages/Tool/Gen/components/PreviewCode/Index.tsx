@@ -44,7 +44,7 @@ const PreviewCode: React.FC<{
    */
   useEffect(() => {
     if (info.tableId != 0) {
-      refGetInfo().then()
+      refGetInfo()
     }
   }, [info.tableId])
 

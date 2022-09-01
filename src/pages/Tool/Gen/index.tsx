@@ -23,7 +23,7 @@ import EditCode from './components/EditCode/Index'
 /**
  * 代码生成器
  */
-const Gen: React.FC<{}> = () => {
+const Gen: React.FC = () => {
 
   const acForm = useRef<ActionType>()
 
@@ -201,6 +201,7 @@ const Gen: React.FC<{}> = () => {
         rowSelection={{}}
         toolBarRender={(action, {selectedRowKeys, selectedRows}) => [
           <Button
+            key={'importTool'}
             type="primary"
             onClick={() => {
               setDrawerInfoVisible(true)
@@ -210,6 +211,7 @@ const Gen: React.FC<{}> = () => {
             导入数据
           </Button>,
           <Popconfirm
+            key={'generateTool'}
             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             onConfirm={() => {
               const tableNames = selectedRows?.map(item => {
@@ -230,6 +232,7 @@ const Gen: React.FC<{}> = () => {
             </Button>
           </Popconfirm>,
           <Popconfirm
+            key={'deleteTool'}
             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             onConfirm={() => refRemove(selectedRowKeys)}
             title="是否删除选中数据"
@@ -257,21 +260,21 @@ const Gen: React.FC<{}> = () => {
 
       {/* 数据导入 */}
       <DrawerInfo
-        reloadForm={acForm}
         onClose={() => {
           setDrawerInfoVisible(false)
+          acForm.current?.reload()
         }}
         visible={drawerInfoVisible}
       />
 
       {/* 代码生成结构编辑 */}
       <EditCode
-        reloadForm={acForm}
         onClose={() => {
           setEditCodeVisible({
             tableId: 0,
             visible: false
           })
+          acForm.current?.reload()
         }}
         info={editCodeVisible}
       />
