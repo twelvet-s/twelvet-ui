@@ -67,9 +67,10 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
     menuDataRender: () => initialState?.currentUser?.menus ? initialState?.currentUser?.menus : [],
     rightContentRender: () => <RightContent/>,
     disableContentMargin: false,
-    waterMarkProps: {
+    // 水印设置
+    /*waterMarkProps: {
       content: initialState?.currentUser?.user?.username,
-    },
+    },*/
     footerRender: () => <Footer/>,
     onPageChange: () => {
       const {location} = history;

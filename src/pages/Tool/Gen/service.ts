@@ -1,5 +1,5 @@
-import { request } from '@umijs/max'
-import { download } from '@/utils/twelvet'
+import {request} from '@umijs/max'
+import {download} from '@/utils/twelvet'
 
 // 请求的控制器名称
 const controller = "/gen";
@@ -9,22 +9,22 @@ const controller = "/gen";
  * @param params 搜索参数
  */
 export async function pageQuery(params: Record<string, any>) {
-    return request(`${controller}/pageQuery`, {
-        method: 'GET',
-        params: {
-            ...params
-        },
-    });
+  return request(`${controller}/pageQuery`, {
+    method: 'GET',
+    params: {
+      ...params
+    },
+  });
 }
 
 /**
  * 删除表数据
  * @param tableIds
  */
-export async function remove(tableIds: []) {
-    return request(`${controller}/${tableIds}`, {
-        method: 'DELETE',
-    });
+export async function remove(tableIds: (string | number)[]) {
+  return request(`${controller}/${tableIds}`, {
+    method: 'DELETE',
+  });
 }
 
 /**
@@ -32,9 +32,9 @@ export async function remove(tableIds: []) {
  * @param tableName 表ID
  */
 export async function synchDb(tableName: string) {
-    return request(`${controller}/synchDb/${tableName}`, {
-        method: 'GET',
-    });
+  return request(`${controller}/synchDb/${tableName}`, {
+    method: 'GET',
+  });
 }
 
 /**
@@ -42,5 +42,5 @@ export async function synchDb(tableName: string) {
  * @param tableNames 表名称
  */
 export async function batchGenCode(tableNames: string[]) {
-    return download(`${controller}/batchGenCode?tables=${tableNames}`);
+  return download(`${controller}/batchGenCode?tables=${tableNames}`);
 }

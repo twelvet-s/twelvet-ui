@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react'
 
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import type {ActionType, ProColumns} from '@ant-design/pro-components'
+import {proTableConfigs} from '@/setting'
 import { Button, Divider, Drawer, message } from 'antd'
 import type { FormInstance } from 'antd/lib/form'
 import { pageQuery, importTable } from './service'

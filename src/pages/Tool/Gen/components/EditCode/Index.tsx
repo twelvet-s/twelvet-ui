@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import type { ActionType } from '@ant-design/pro-table'
 import { Button, Cascader, Col, Divider, Drawer, Input, message, Row, Select, Tabs, TreeSelect } from 'antd'
 import type { FormInstance } from 'antd/lib/form';
+import type {ActionType, ProColumns} from '@ant-design/pro-components'
 import Form from 'antd/lib/form'
 import { getInfo, getMenus, getOptionselect, putGen } from './service'
 import { makeTree, system } from '@/utils/twelvet'
@@ -276,8 +276,8 @@ const EditCode: React.FC<{
 
     /**
      * 制作链表数据
-     * @param tables 
-     * @returns 
+     * @param tables
+     * @returns
      */
     const cascaderTree = (tables: [{
         tableName: string

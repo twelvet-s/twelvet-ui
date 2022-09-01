@@ -1,12 +1,12 @@
-import React, { useRef, useState } from 'react';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
-import { DeleteOutlined, FundProjectionScreenOutlined } from '@ant-design/icons';
-import type { FormInstance } from 'antd';
-import { Popconfirm, Button, message } from 'antd';
-import { proTableConfigs } from '@/setting';
-import { exportExcel, pageQuery, remove } from './service';
-import { system } from '@/utils/twelvet';
+import React, {useRef, useState} from 'react';
+import type {ActionType, ProColumns} from '@ant-design/pro-components';
+import {ProTable, PageContainer} from '@ant-design/pro-components';
+import {DeleteOutlined, FundProjectionScreenOutlined} from '@ant-design/icons';
+import type {FormInstance} from 'antd';
+import {Popconfirm, Button, message} from 'antd';
+import {proTableConfigs} from '@/setting';
+import {exportExcel, pageQuery, remove} from './service';
+import {system} from '@/utils/twelvet';
 
 /**
  * 登录日志
@@ -24,7 +24,7 @@ const LogLogin: React.FC = () => {
   });
 
   // Form参数
-  const columns: ProColumns<LogLogin.PageParams>[] = [
+  const columns: ProColumns<LogLogin.PageListItem>[] = [
     {
       title: '用户名称',
       ellipsis: true,
@@ -58,9 +58,9 @@ const LogLogin: React.FC = () => {
       dataIndex: 'status',
       width: 200,
       valueEnum: {
-        0: { text: '登录成功', status: 'success' },
-        2: { text: '退出成功', status: 'success' },
-        1: { text: '登录失败', status: 'error' },
+        0: {text: '登录成功', status: 'success'},
+        2: {text: '退出成功', status: 'success'},
+        1: {text: '登录失败', status: 'error'},
       },
     },
     {
@@ -92,7 +92,7 @@ const LogLogin: React.FC = () => {
       if (!infoIds) {
         return true;
       }
-      const { code, msg } = await remove(infoIds.join(','));
+      const {code, msg} = await remove(infoIds.join(','));
       if (code != 200) {
         return message.error(msg);
       }
@@ -107,78 +107,80 @@ const LogLogin: React.FC = () => {
   };
 
   return (
-    <ProTable<LogLogin.PageListItem, LogLogin.PageParams>
-      {...proTableConfigs}
-      pagination={{
-        // 是否允许每页大小更改
-        showSizeChanger: true,
-        // 每页显示条数
-        pageSize: state.pageSize,
-      }}
-      actionRef={actionRef}
-      formRef={formRef}
-      rowKey="infoId"
-      columns={columns}
-      rowSelection={{}}
-      request={async (params) => {
-        const { data } = await pageQuery(params);
-        const { records, total } = data;
-        return Promise.resolve({
-          data: records,
-          success: true,
-          total,
-        });
-      }}
-      toolBarRender={(action, { selectedRowKeys }) => [
-        <Popconfirm
-          key={'deleteSelect'}
-          disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
-          onConfirm={() => refRemove(action, selectedRowKeys)}
-          title="是否删除选中数据"
-        >
-          <Button
+    <PageContainer>
+      <ProTable<LogLogin.PageListItem, LogLogin.PageParams>
+        {...proTableConfigs}
+        pagination={{
+          // 是否允许每页大小更改
+          showSizeChanger: true,
+          // 每页显示条数
+          pageSize: state.pageSize,
+        }}
+        actionRef={actionRef}
+        formRef={formRef}
+        rowKey="infoId"
+        columns={columns}
+        rowSelection={{}}
+        request={async (params) => {
+          const {data} = await pageQuery(params);
+          const {records, total} = data;
+          return Promise.resolve({
+            data: records,
+            success: true,
+            total,
+          });
+        }}
+        toolBarRender={(action, {selectedRowKeys}) => [
+          <Popconfirm
+            key={'deleteSelect'}
             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
-            type="primary"
-            danger
+            onConfirm={() => refRemove(action, selectedRowKeys)}
+            title="是否删除选中数据"
           >
-            <DeleteOutlined />
-            批量删除
-          </Button>
-        </Popconfirm>,
-        <Popconfirm
-          key={'exportExcel'}
-          disabled={state.exportExcelLoading}
-          title="是否导出数据"
-          onConfirm={() => {
-            try {
-              setState({
-                ...state,
-                exportExcelLoading: true,
-              });
-              exportExcel({
-                ...formRef.current?.getFieldsValue(),
-              }).then(() => {
-                system.log("导出成功")
-              });
-            } finally {
-              setState({
-                ...state,
-                exportExcelLoading: false,
-              });
-            }
-          }}
-        >
-          <Button
-            type="default"
-            loading={state.exportExcelLoading}
+            <Button
+              disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
+              type="primary"
+              danger
+            >
+              <DeleteOutlined/>
+              批量删除
+            </Button>
+          </Popconfirm>,
+          <Popconfirm
+            key={'exportExcel'}
             disabled={state.exportExcelLoading}
+            title="是否导出数据"
+            onConfirm={() => {
+              try {
+                setState({
+                  ...state,
+                  exportExcelLoading: true,
+                });
+                exportExcel({
+                  ...formRef.current?.getFieldsValue(),
+                }).then(() => {
+                  system.log("导出成功")
+                });
+              } finally {
+                setState({
+                  ...state,
+                  exportExcelLoading: false,
+                });
+              }
+            }}
           >
-            <FundProjectionScreenOutlined />
-            导出数据
-          </Button>
-        </Popconfirm>,
-      ]}
-    />
+            <Button
+              type="default"
+              loading={state.exportExcelLoading}
+              disabled={state.exportExcelLoading}
+            >
+              <FundProjectionScreenOutlined/>
+              导出数据
+            </Button>
+          </Popconfirm>,
+        ]}
+      />
+    </PageContainer>
   );
 };
 

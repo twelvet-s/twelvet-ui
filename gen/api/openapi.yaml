@@ -1,0 +1,546 @@
+openapi: 3.0.1
+info:
+  title: Ant Design Pro
+  version: 1.0.0
+servers:
+- url: http://localhost:8000/
+- url: https://localhost:8000/
+paths:
+  /api/currentUser:
+    get:
+      description: 获取当前的用户
+      operationId: currentUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+          description: Success
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Error
+      tags:
+      - api
+      x-accepts: application/json
+    x-swagger-router-controller: api
+  /api/login/captcha:
+    post:
+      description: 发送验证码
+      operationId: getFakeCaptcha
+      parameters:
+      - description: 手机号
+        explode: true
+        in: query
+        name: phone
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FakeCaptcha'
+          description: Success
+      tags:
+      - login
+      x-accepts: application/json
+  /api/login/outLogin:
+    post:
+      description: 登录接口
+      operationId: outLogin
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Success
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Error
+      tags:
+      - login
+      x-accepts: application/json
+    x-swagger-router-controller: api
+  /api/login/account:
+    post:
+      description: 登录接口
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginParams'
+        description: 登录系统
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResult'
+          description: Success
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Error
+      tags:
+      - login
+      x-codegen-request-body-name: body
+      x-contentType: application/json
+      x-accepts: application/json
+    x-swagger-router-controller: api
+  /api/notices:
+    description: NoticeIconItem
+    get:
+      operationId: getNotices
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeIconList'
+          description: Success
+      tags:
+      - api
+      x-accepts: application/json
+    summary: getNotices
+  /api/rule:
+    delete:
+      description: 删除规则
+      operationId: removeRule
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Success
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Error
+      tags:
+      - rule
+      x-accepts: application/json
+    get:
+      description: 获取规则列表
+      operationId: rule
+      parameters:
+      - description: 当前的页码
+        explode: true
+        in: query
+        name: current
+        required: false
+        schema:
+          type: number
+        style: form
+      - description: 页面的容量
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: number
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleList'
+          description: Success
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Error
+      tags:
+      - rule
+      x-accepts: application/json
+    post:
+      description: 新建规则
+      operationId: addRule
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleListItem'
+          description: Success
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Error
+      tags:
+      - rule
+      x-accepts: application/json
+    put:
+      description: 新建规则
+      operationId: updateRule
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleListItem'
+          description: Success
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Error
+      tags:
+      - rule
+      x-accepts: application/json
+    x-swagger-router-controller: api
+  /swagger:
+    x-swagger-pipe: swagger_raw
+components:
+  schemas:
+    CurrentUser:
+      example:
+        country: country
+        access: access
+        address: address
+        signature: signature
+        unreadCount: 6
+        avatar: avatar
+        title: title
+        userid: userid
+        tags:
+        - label: label
+          key: key
+        - label: label
+          key: key
+        notifyCount: 0
+        geographic:
+          province:
+            label: label
+            key: key
+          city:
+            label: label
+            key: key
+        phone: phone
+        name: name
+        email: email
+        group: group
+      properties:
+        name:
+          type: string
+        avatar:
+          type: string
+        userid:
+          type: string
+        email:
+          type: string
+        signature:
+          type: string
+        title:
+          type: string
+        group:
+          type: string
+        tags:
+          items:
+            $ref: '#/components/schemas/CurrentUser_tags'
+          type: array
+        notifyCount:
+          format: int32
+          type: integer
+        unreadCount:
+          format: int32
+          type: integer
+        country:
+          type: string
+        access:
+          type: string
+        geographic:
+          $ref: '#/components/schemas/CurrentUser_geographic'
+        address:
+          type: string
+        phone:
+          type: string
+      type: object
+    LoginResult:
+      example:
+        type: type
+        status: status
+        currentAuthority: currentAuthority
+      properties:
+        status:
+          type: string
+        type:
+          type: string
+        currentAuthority:
+          type: string
+      type: object
+    PageParams:
+      properties:
+        current:
+          type: number
+        pageSize:
+          type: number
+      type: object
+    RuleListItem:
+      example:
+        owner: owner
+        createdAt: createdAt
+        callNo: 6
+        name: name
+        progress: 5
+        disabled: true
+        href: href
+        avatar: avatar
+        key: 0
+        desc: desc
+        status: 1
+        updatedAt: updatedAt
+      properties:
+        key:
+          format: int32
+          type: integer
+        disabled:
+          type: boolean
+        href:
+          type: string
+        avatar:
+          type: string
+        name:
+          type: string
+        owner:
+          type: string
+        desc:
+          type: string
+        callNo:
+          format: int32
+          type: integer
+        status:
+          format: int32
+          type: integer
+        updatedAt:
+          format: datetime
+          type: string
+        createdAt:
+          format: datetime
+          type: string
+        progress:
+          format: int32
+          type: integer
+      type: object
+    RuleList:
+      example:
+        total: 5
+        data:
+        - owner: owner
+          createdAt: createdAt
+          callNo: 6
+          name: name
+          progress: 5
+          disabled: true
+          href: href
+          avatar: avatar
+          key: 0
+          desc: desc
+          status: 1
+          updatedAt: updatedAt
+        - owner: owner
+          createdAt: createdAt
+          callNo: 6
+          name: name
+          progress: 5
+          disabled: true
+          href: href
+          avatar: avatar
+          key: 0
+          desc: desc
+          status: 1
+          updatedAt: updatedAt
+        success: true
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/RuleListItem'
+          type: array
+        total:
+          description: 列表的内容总数
+          format: int32
+          type: integer
+        success:
+          type: boolean
+      type: object
+    FakeCaptcha:
+      example:
+        code: 0
+        status: status
+      properties:
+        code:
+          format: int32
+          type: integer
+        status:
+          type: string
+      type: object
+    LoginParams:
+      example:
+        password: password
+        type: type
+        autoLogin: true
+        username: username
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        autoLogin:
+          type: boolean
+        type:
+          type: string
+      type: object
+    ErrorResponse:
+      properties:
+        errorCode:
+          description: 业务约定的错误码
+          type: string
+        errorMessage:
+          description: 业务上的错误信息
+          type: string
+        success:
+          description: 业务上的请求是否成功
+          type: boolean
+      required:
+      - errorCode
+      type: object
+    NoticeIconList:
+      example:
+        total: 0
+        data:
+        - datetime: 2000-01-23
+          read: true
+          extra: extra
+          description: description
+          id: id
+          avatar: avatar
+          title: title
+          type: '{}'
+          key: key
+          status: status
+        - datetime: 2000-01-23
+          read: true
+          extra: extra
+          description: description
+          id: id
+          avatar: avatar
+          title: title
+          type: '{}'
+          key: key
+          status: status
+        success: true
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/NoticeIconItem'
+          type: array
+        total:
+          description: 列表的内容总数
+          format: int32
+          type: integer
+        success:
+          type: boolean
+      type: object
+    NoticeIconItemType:
+      description: 已读未读列表的枚举
+      enum:
+      - notification
+      - message
+      - event
+      example: '{}'
+      properties: {}
+      title: NoticeIconItemType
+      type: string
+    NoticeIconItem:
+      example:
+        datetime: 2000-01-23
+        read: true
+        extra: extra
+        description: description
+        id: id
+        avatar: avatar
+        title: title
+        type: '{}'
+        key: key
+        status: status
+      properties:
+        id:
+          type: string
+        extra:
+          format: any
+          type: string
+        key:
+          type: string
+        read:
+          type: boolean
+        avatar:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+        datetime:
+          format: date
+          type: string
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/NoticeIconItemType'
+      type: object
+    CurrentUser_tags:
+      example:
+        label: label
+        key: key
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+      type: object
+    CurrentUser_geographic_province:
+      example:
+        label: label
+        key: key
+      properties:
+        label:
+          type: string
+        key:
+          type: string
+      type: object
+    CurrentUser_geographic:
+      example:
+        province:
+          label: label
+          key: key
+        city:
+          label: label
+          key: key
+      properties:
+        province:
+          $ref: '#/components/schemas/CurrentUser_geographic_province'
+        city:
+          $ref: '#/components/schemas/CurrentUser_geographic_province'
+      type: object
+
