@@ -2,12 +2,13 @@ import React, { useState, useRef } from 'react'
 
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
 import { createFromIconfontCN, PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 import { Row, Col, Button, message, Space, Popconfirm, Modal, Form, Input, InputNumber, Radio, TreeSelect, Divider } from 'antd'
 import { list, getInfo, remove, insert, update } from './service'
 import { system, makeTree, auth } from '@/utils/twelvet'
 import type { FormInstance } from 'antd/lib/form'
+import {PageContainer} from '@ant-design/pro-components'
 
 /**
  * 菜单模块
@@ -258,7 +259,7 @@ const Menu: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                 ...proTableConfigs
@@ -489,7 +490,7 @@ const Menu: React.FC<{}> = () => {
                     }
                 </Form>
             </Modal>
-        </>
+        </PageContainer>
     )
 
 }

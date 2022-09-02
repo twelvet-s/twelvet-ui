@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import 'echarts/lib/chart/line'
-import 'echarts/theme/macarons'
 import ProDescriptions from '@ant-design/pro-descriptions'
 import { query } from './service'
 import { Card, Col, message, Row } from 'antd'
 import CommandStatsChart from './components/CommandStatsChart'
+import {PageContainer} from '@ant-design/pro-components'
 import RAMChart from './components/RAMChart'
 import KeyChart from './components/KeyChart'
 
@@ -41,6 +40,7 @@ const redis: React.FC<{}> = () => {
     }
 
     return (
+      <PageContainer>
         <Row gutter={[20, 20]}>
 
             <Col md={{ span: 16 }} xs={{ span: 24 }}>
@@ -118,6 +118,7 @@ const redis: React.FC<{}> = () => {
                 />
             </Col>
         </Row>
+      </PageContainer>
     )
 
 }

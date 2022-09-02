@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react'
 
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Radio, Space, Divider } from 'antd'
 import type { FormInstance } from 'antd/lib/form'
 import { pageQuery, remove, exportExcel, getByPostId, insert, update } from './service'
 import {system, aotu, auth} from '@/utils/twelvet'
+import {PageContainer} from '@ant-design/pro-components'
 import { isArray } from 'lodash'
 
 /**
@@ -196,7 +197,7 @@ const Post: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                     ...proTableConfigs
@@ -337,7 +338,7 @@ const Post: React.FC<{}> = () => {
                 </Form>
 
             </Modal>
-        </>
+        </PageContainer>
     )
 
 }

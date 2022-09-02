@@ -1,23 +1,24 @@
 import { useEffect, useState } from 'react';
-import * as echarts from 'echarts'
+import * as echarts from 'echarts';
 import styles from './styles.less';
 import React from 'react';
 import { Card } from 'antd';
 
+interface LineChartProps {
+    option: Record<string, any>
+}
+
 /**
  * 折线图
  */
-const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
+const LineChart: React.FC<LineChartProps> = props => {
 
     // 图表参数
-    const { dbSize, time } = props
-
-    const [timeData, setTimeData] = useState<string[]>([])
-    const [dbSizeData, setDbSizeData] = useState<number[]>([])
+    const { option } = props
 
     const config: Record<string, any> = {
         xAxis: {
-            data: [],
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             boundaryGap: false,
             axisTick: {
                 show: false
@@ -43,23 +44,41 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
             }
         },
         legend: {
+            data: ['expected', 'actual']
         },
         series: [{
-            name: 'key数量',
+            name: 'expected',
             itemStyle: {
                 color: '#FF005A',
                 lineStyle: {
                     color: '#FF005A',
                     width: 2
-                },
-
+                }
             },
             smooth: true,
             type: 'line',
             data: [],
             animationDuration: 2000,
-            animationEasing: 'cubicInOut',
+            animationEasing: 'cubicInOut'
         },
+        {
+            name: 'actual',
+            smooth: true,
+            type: 'line',
+            itemStyle: {
+                color: '#3888fa',
+                lineStyle: {
+                    color: '#3888fa',
+                    width: 2
+                },
+                areaStyle: {
+                    color: '#f3f8ff'
+                }
+            },
+            data: [],
+            animationDuration: 2000,
+            animationEasing: 'quadraticOut'
+        }
         ]
 
     }
@@ -75,42 +94,26 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
         // 设置参数
         setEcharts(instance)
         // 开启自适应
-        window.addEventListener('resize', instance.resize)
+
 
         // 设置到state
         setLineChart(instance)
-
     }, [])
 
     // 依赖props更新
     useEffect(() => {
         if (!lineChart) { return }
+        window.addEventListener('resize', lineChart.resize())
         setEcharts()
-    }, [props])
+    }, [option])
 
     // 设置echarts属性
     const setEcharts = (instance: any | undefined = undefined) => {
-        if (!dbSize) {
-            return
-        }
-
         const ctr = instance || lineChart
 
-        // 时间
-        if (timeData.length >= 6) {
-            timeData.shift();
-        }
-        const timeTemp = [...timeData, time]
-        config.xAxis.data.push(...timeTemp)
-        setTimeData(timeTemp)
+        config.series[0].data = option.expected
+        config.series[1].data = option.actual
 
-        // 分配内存
-        if (dbSizeData.length >= 6) {
-            dbSizeData.shift();
-        }
-        const dbSizeTemp = [...dbSizeData, dbSize]
-        config.series[0].data.push(...dbSizeTemp)
-        setDbSizeData(dbSizeTemp)
         // 设置数据
         ctr.setOption(config)
         ctr.hideLoading()
@@ -118,11 +121,12 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
     }
 
     return (
-        <Card title="key数量">
+        <Card title="实时数据">
             <div
                 ref={(ref: HTMLDivElement) => { lineChartRef = ref }}
                 className={styles.lineChart}
-             />
+            >
+            </div>
         </Card>
     )
 

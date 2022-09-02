@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, Radio, Row, Col, Select, TreeSelect, DatePicker, Space, Divider } from 'antd'
 import type { FormInstance } from 'antd/lib/form'
@@ -13,7 +13,8 @@ import { system, auth } from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import type { Moment } from 'moment';
 import moment from 'moment'
-import { useAccess, Access } from 'umi';
+import type {ActionType, ProColumns} from "@ant-design/pro-components";
+import {PageContainer} from '@ant-design/pro-components'
 
 /**
  * 职员模块
@@ -52,7 +53,6 @@ const Staff: React.FC<{}> = () => {
 
     const { TextArea } = Input
 
-    const access = useAccess();
     const formItemLayout = {
         labelCol: {
             xs: { span: 4 },
@@ -135,15 +135,13 @@ const Staff: React.FC<{}> = () => {
                                 </Space>
                             </a>
                         </Popconfirm>
-                        <Access accessible={access.hasAuthority('system:user:resetPwd')} >
-                            <Divider type="vertical" />
-                            <a onClick={() => changPassword(row.userId)}>
-                                <Space>
-                                    <EditOutlined />
-                                    重置密码
-                                </Space>
-                            </a>
-                        </Access>
+                      <Divider type="vertical" />
+                      <a onClick={() => changPassword(row.userId)}>
+                        <Space>
+                          <EditOutlined />
+                          重置密码
+                        </Space>
+                      </a>
                     </>
                 )
             }
@@ -400,7 +398,7 @@ const Staff: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                 ...proTableConfigs
@@ -786,7 +784,7 @@ const Staff: React.FC<{}> = () => {
                     acForm.current?.reload()
                 }}
             />
-        </>
+        </PageContainer>
     )
 
 }

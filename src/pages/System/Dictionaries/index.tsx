@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react'
 
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
+import {PageContainer} from '@ant-design/pro-components'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined, SettingOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, Radio, Space, Divider } from 'antd'
 import type { FormInstance } from 'antd/lib/form'
@@ -240,7 +241,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                     ...proTableConfigs
@@ -390,7 +391,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
                 }}
                 info={drawerInfo}
             />
-        </>
+        </PageContainer>
     )
 
 }

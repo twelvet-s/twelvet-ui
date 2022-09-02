@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
 import RoleStatusSwitch from './components/Switch'
 import { DeleteOutlined, FundProjectionScreenOutlined, PlusOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Radio, Tree, TreeSelect, Row, Col, Space, Divider } from 'antd'
@@ -11,7 +11,7 @@ import { system, auth } from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import type { DataNode } from 'antd/lib/tree'
 import type { Key } from 'antd/lib/table/interface'
-import { useAccess, Access } from 'umi';
+import {PageContainer} from '@ant-design/pro-components'
 
 /**
  * 角色模块
@@ -36,8 +36,6 @@ const Role: React.FC<{}> = () => {
 
     const [deptData, setDeptData] = useState<DataNode[]>()
     const [checkdDeptData, setCheckdDeptData] = useState<Key[]>([])
-
-    const access = useAccess();
 
     // 权限范围
     const [dataScope, setDataScope] = useState<string>()
@@ -365,7 +363,7 @@ const Role: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                 ...proTableConfigs
@@ -423,7 +421,7 @@ const Role: React.FC<{}> = () => {
                             })
                         }}
                     >
-                        <Button type="default" hidden={auth('system:dict:export')}>
+                        <Button type="default">
                             <FundProjectionScreenOutlined />
                             导出数据
                         </Button>
@@ -612,7 +610,7 @@ const Role: React.FC<{}> = () => {
                 </Form>
 
             </Modal>
-        </>
+        </PageContainer>
     )
 
 }

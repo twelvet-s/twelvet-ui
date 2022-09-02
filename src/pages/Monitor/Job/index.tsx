@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
 import { CaretRightOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FundProjectionScreenOutlined, PlusOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Space, Radio, Form, Modal, Input, Row, Col, Tooltip, Divider } from 'antd'
 import { pageQuery, remove, exportExcel, run, insert, update, getByJobId } from './service'
 import {system, auth} from '@/utils/twelvet'
 import JobStatus from './components/jobStatusSwitch/Index'
+import {PageContainer} from '@ant-design/pro-components'
 import Details from './components/details/Index'
 import type { FormInstance } from 'antd/lib/form'
 import { isArray } from 'lodash'
@@ -262,7 +263,7 @@ const Job: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                     ...proTableConfigs
@@ -499,7 +500,7 @@ const Job: React.FC<{}> = () => {
                     })
                 }}
             />
-        </>
+        </PageContainer>
     )
 
 }

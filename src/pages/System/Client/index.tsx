@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react'
 
 import type { ActionType } from '@ant-design/pro-table';
+import {PageContainer} from '@ant-design/pro-components'
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
 import { DeleteOutlined, PlusOutlined, EditOutlined, CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, Modal, Form, Input, InputNumber, Tooltip, Divider, Space } from 'antd'
 import type { FormInstance } from 'antd/lib/form'
@@ -197,7 +198,7 @@ const Post: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                     ...proTableConfigs
@@ -328,7 +329,7 @@ const Post: React.FC<{}> = () => {
                 </Form>
 
             </Modal>
-        </>
+        </PageContainer>
     )
 
 }

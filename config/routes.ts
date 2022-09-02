@@ -41,13 +41,13 @@ export default [
                     path: '/system/dictionaries',
                     component: './System/Dictionaries'
                 },
-                /*{
+                {
                     title: 'OAuth2终端',
                     icon: 'icon-client',
                     name: 'client',
                     path: '/system/client',
                     component: './System/Client'
-                },*/
+                },
                 {
                     title: '分布式文件管理',
                     icon: 'icon-dfs',
@@ -68,20 +68,20 @@ export default [
             name: 'monitor',
             path: '/monitor',
             routes: [
-                // {
-                //     title: '缓存监控',
-                //     icon: 'icon-job',
-                //     name: 'job',
-                //     path: '/monitor/redis',
-                //     component: './Monitor/Redis'
-                // },
-                // {
-                //     title: '定时任务',
-                //     icon: 'icon-job',
-                //     name: 'job',
-                //     path: '/monitor/job',
-                //     component: './Monitor/Job'
-                // },
+                {
+                    title: '缓存监控',
+                    icon: 'icon-job',
+                    name: 'job',
+                    path: '/monitor/redis',
+                    component: './Monitor/Redis'
+                },
+                {
+                    title: '定时任务',
+                    icon: 'icon-job',
+                    name: 'job',
+                    path: '/monitor/job',
+                    component: './Monitor/Job'
+                },
             ]
         },
         // 跳转

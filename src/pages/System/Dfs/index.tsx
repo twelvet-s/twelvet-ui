@@ -1,8 +1,8 @@
-//@ts-check
 import React, { useRef, useState } from 'react'
 
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {PageContainer} from '@ant-design/pro-components'
+import {proTableConfigs} from '@/setting'
 import { CloseOutlined, DeleteOutlined, DownloadOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Divider, message, Popconfirm, Space } from 'antd'
 import { downloadFile, pageQuery, remove } from './service'
@@ -107,7 +107,7 @@ const DFS: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                 ...proTableConfigs
@@ -173,7 +173,7 @@ const DFS: React.FC<{}> = () => {
                     acForm.current?.reload()
                 }}
             />
-        </>
+        </PageContainer>
     )
 
 }

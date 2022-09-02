@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import type { ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
 import { DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined } from '@ant-design/icons'
 import ProDescriptions from '@ant-design/pro-descriptions'
+import {PageContainer} from '@ant-design/pro-components'
 import type { FormInstance } from 'antd';
 import { Popconfirm, Button, message, Modal, DatePicker, Space } from 'antd'
 import type { Moment } from 'moment';
@@ -165,7 +166,7 @@ const Operation: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                     ...proTableConfigs
@@ -285,7 +286,7 @@ const Operation: React.FC<{}> = () => {
                 </ProDescriptions>
 
             </Modal>
-        </>
+        </PageContainer>
     )
 
 }

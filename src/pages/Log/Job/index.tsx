@@ -1,12 +1,13 @@
 import React, { useRef } from 'react'
 
 import ProTable from '@ant-design/pro-table'
-import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import {proTableConfigs} from '@/setting'
 import { DeleteOutlined, EyeOutlined, FundProjectionScreenOutlined } from '@ant-design/icons'
 import { Popconfirm, Button, message, DatePicker, Space } from 'antd'
 import { pageQuery, remove, exportExcel } from './service'
 import {system, auth} from '@/utils/twelvet'
 import type { RequestData } from '@ant-design/pro-table'
+import {PageContainer} from '@ant-design/pro-components'
 import type { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData'
 import type { Moment } from 'moment';
 import moment from 'moment'
@@ -88,7 +89,7 @@ const Login: React.FC<{}> = () => {
     }
 
     return (
-        <>
+        <PageContainer>
             <ProTable
                 {
                 ...proTableConfigs
@@ -161,7 +162,7 @@ const Login: React.FC<{}> = () => {
                 ]}
 
             />
-        </>
+        </PageContainer>
     )
 
 }
