@@ -6,7 +6,19 @@ import styles from './styles.less'
  */
 const History = () => {
     return (
-        <Collapse defaultActiveKey={9} className={styles.historyOl}>
+        <Collapse defaultActiveKey={10} className={styles.historyOl}>
+          <Collapse.Panel header="v3.0.0 - 2022-10-1" key={10}>
+            <ol>
+              <li>升级Spring Boot3</li>
+              <li>升级JDK最低要求17</li>
+              <li>全新UI Antd Pro V6</li>
+              <li>修正所有ts警告，全面拥抱ts</li>
+              <li>优化前端登录逻辑兼容</li>
+              <li>升级Nacos到最新版2.1.1</li>
+              <li>升级pom依赖</li>
+              <li>其他细节优化</li>
+            </ol>
+          </Collapse.Panel>
             <Collapse.Panel header="v2.6.0 - 2022-7-28" key={9}>
                 <ol>
                     <li>替换OAuth2最新依赖OAuth2 Authorization Server</li>

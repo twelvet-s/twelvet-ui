@@ -90,7 +90,7 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
           <QuestionCircleOutlined/>
           <span>官方文档</span>
         </a>,
-        <a key='openapi' href="http://127.0.0.1/doc.html/" target="_blank" rel="noreferrer">
+        <a key='openapi' href="http://127.0.0.1:8080/doc.html" target="_blank" rel="noreferrer">
           <span>Swagger</span>
         </a>
       ]
