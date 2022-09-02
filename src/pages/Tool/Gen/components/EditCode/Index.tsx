@@ -335,6 +335,7 @@ const EditCode: React.FC<{
         Double: {text: 'Double', status: 'Default'},
         BigDecimal: {text: 'BigDecimal', status: 'Default'},
         Date: {text: 'Date', status: 'Default'},
+        Boolean: {text: 'Boolean', status: 'Default'},
       }, formItemProps: {
         rules: [
           {
