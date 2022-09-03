@@ -1,4 +1,4 @@
-declare namespace LogLogin {
+declare namespace HumanPost {
   /**
    * 状态参数
    */
@@ -14,24 +14,19 @@ declare namespace LogLogin {
   type PageParams = {
     current?: number;
     pageSize?: number;
-    userName: ?string;
-    ipaddr: string;
+    postCode: string;
+    postName: string;
     status: string;
-    msg: string;
-    accessTime: Date;
-    between?: string;
-    beginTime?: string;
-    endTime?: string;
   };
 
   /**
    * 响应参数
    */
   type PageListItem = {
-    userName: ?string;
-    ipaddr: string;
+    postCode: string;
+    postName: string;
+    postSort: string;
     status: string;
-    msg: string;
-    accessTime: Date;
+    createTime: Date;
   };
 }

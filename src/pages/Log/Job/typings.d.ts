@@ -1,4 +1,4 @@
-declare namespace LogLogin {
+declare namespace LogJob {
   /**
    * 状态参数
    */
@@ -12,26 +12,22 @@ declare namespace LogLogin {
    * 搜索参数
    */
   type PageParams = {
-    current?: number;
-    pageSize?: number;
-    userName: ?string;
-    ipaddr: string;
+    current: number;
+    pageSize: number;
+    jobName: string;
+    jobGroup: string;
     status: string;
-    msg: string;
-    accessTime: Date;
-    between?: string;
-    beginTime?: string;
-    endTime?: string;
   };
 
   /**
    * 响应参数
    */
   type PageListItem = {
-    userName: ?string;
-    ipaddr: string;
+    jobName: string;
+    jobGroup: string;
+    invokeTarget: string;
+    jobMessage: string;
     status: string;
-    msg: string;
-    accessTime: Date;
+    createTime: date;
   };
 }

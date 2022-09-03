@@ -1,4 +1,4 @@
-declare namespace HumanRole {
+declare namespace SystemDictionariesDrawerinfo {
   /**
    * 状态参数
    */
@@ -14,8 +14,6 @@ declare namespace HumanRole {
   type PageParams = {
     current: number;
     pageSize: number;
-    roleName: string;
-    roleKey: string;
     status: string;
   };
 
@@ -23,10 +21,11 @@ declare namespace HumanRole {
    * 响应参数
    */
   type PageListItem = {
-    roleName: string;
-    roleKey: string;
-    roleSort: string;
+    dictName: string;
+    dictValue: string;
+    dictSort: string;
     status: string;
+    remark: string;
     createTime: Date;
   };
 }

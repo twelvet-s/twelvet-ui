@@ -1,4 +1,4 @@
-declare namespace LogLogin {
+declare namespace SystemClient {
   /**
    * 状态参数
    */
@@ -12,26 +12,19 @@ declare namespace LogLogin {
    * 搜索参数
    */
   type PageParams = {
-    current?: number;
-    pageSize?: number;
-    userName: ?string;
-    ipaddr: string;
-    status: string;
-    msg: string;
-    accessTime: Date;
-    between?: string;
-    beginTime?: string;
-    endTime?: string;
+    current: number;
+    pageSize: number;
+    clientId: string;
   };
 
   /**
    * 响应参数
    */
   type PageListItem = {
-    userName: ?string;
-    ipaddr: string;
-    status: string;
-    msg: string;
-    accessTime: Date;
+    clientId: string;
+    scope: string;
+    authorizedGrantTypes: string;
+    accessTokenValidity: string;
+    refreshTokenValidity: string;
   };
 }
