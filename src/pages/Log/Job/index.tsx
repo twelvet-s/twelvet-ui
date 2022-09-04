@@ -7,7 +7,8 @@ import { Popconfirm, Button, message, DatePicker, Space } from 'antd';
 import { pageQuery, remove, exportExcel } from './service';
 import { system, auth } from '@/utils/twelvet';
 import type { RequestData } from '@ant-design/pro-table';
-import { PageContainer, ProColumns } from '@ant-design/pro-components';
+import type { ProColumns } from '@ant-design/pro-components';
+import { PageContainer} from '@ant-design/pro-components';
 import type { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
 
 /**

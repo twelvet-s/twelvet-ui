@@ -43,7 +43,8 @@ import { system, auth } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import type { DataNode } from 'antd/lib/tree';
 import type { Key } from 'antd/lib/table/interface';
-import { PageContainer, ProColumns } from '@ant-design/pro-components';
+import type {ProColumns} from '@ant-design/pro-components'
+import { PageContainer} from '@ant-design/pro-components';
 
 /**
  * 角色模块

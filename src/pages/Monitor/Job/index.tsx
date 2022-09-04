@@ -27,7 +27,8 @@ import {
 import { pageQuery, remove, exportExcel, run, insert, update, getByJobId } from './service';
 import { system, auth } from '@/utils/twelvet';
 import JobStatus from './components/jobStatusSwitch/Index';
-import { PageContainer, ProColumns } from '@ant-design/pro-components';
+import type { ProColumns } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 import Details from './components/details/Index';
 import type { FormInstance } from 'antd/lib/form';
 import { isArray } from 'lodash';

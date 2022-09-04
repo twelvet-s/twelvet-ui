@@ -21,7 +21,8 @@ import {
 import { list, getInfo, remove, insert, update } from './service';
 import { system, makeTree, aotu, auth } from '@/utils/twelvet';
 import type { FormInstance } from 'antd/lib/form';
-import { PageContainer, ProColumns } from '@ant-design/pro-components';
+import type { ProColumns } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 
 /**
  * 部门模块

@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 
 import type { ActionType } from '@ant-design/pro-table';
-import { PageContainer, ProColumns } from '@ant-design/pro-components';
+import type { ProColumns } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 import ProTable from '@ant-design/pro-table';
 import { proTableConfigs } from '@/setting';
 import {
