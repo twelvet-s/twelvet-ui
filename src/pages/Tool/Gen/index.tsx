@@ -27,7 +27,7 @@ const Gen: React.FC = () => {
 
   const formRef = useRef<FormInstance>();
 
-  const [state] = useState<Gen.State>({
+  const [state] = useState<ToolGen.State>({
     pageSize: 10,
   });
 

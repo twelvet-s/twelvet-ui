@@ -15,7 +15,7 @@ export async function getInfo(tableId: number) {
 
 /**
  * 获取所有菜单
- * @returns 
+ * @returns
  */
 export async function getMenus() {
     return request(`/system/menu/list`, {
@@ -25,9 +25,9 @@ export async function getMenus() {
 
 /**
  * 获取字典数据
- * @returns 
+ * @returns
  */
-export async function getOptionselect() {
+export async function getOptionSelect() {
     return request(`/system/dictionaries/type/optionSelect`, {
         method: 'GET',
     });
@@ -35,7 +35,7 @@ export async function getOptionselect() {
 
 /**
  * 保存数据
- * @returns 
+ * @returns
  */
 export async function putGen(params: {}) {
     return request(`${controller}`, {

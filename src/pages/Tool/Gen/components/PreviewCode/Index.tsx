@@ -26,10 +26,10 @@ const PreviewCode: React.FC<{
    * 获取信息
    * @returns
    */
-  const refGetInfo = async () => {
+  const refGetInfo = async (tableId: number) => {
     try {
       setLoading(true)
-      const {data} = await getInfo(info.tableId)
+      const {data} = await getInfo(tableId)
 
       setCodeData(data)
     } catch (e) {
@@ -44,7 +44,7 @@ const PreviewCode: React.FC<{
    */
   useEffect(() => {
     if (info.tableId != 0) {
-      refGetInfo()
+      refGetInfo(info.tableId)
     }
   }, [info.tableId])
 

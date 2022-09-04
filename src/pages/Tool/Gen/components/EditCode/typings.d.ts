@@ -1,4 +1,4 @@
-declare namespace ToolGen {
+declare namespace ToolGenEditCode {
   /**
    * 状态参数
    */
@@ -10,20 +10,18 @@ declare namespace ToolGen {
    * 搜索参数
    */
   type PageParams = {
-    current: number;
-    pageSize: number;
     tableName: string;
     tableComment: string;
+    current: number;
+    pageSize: number;
   };
 
   /**
    * 响应参数
    */
   type PageListItem = {
-    tableId: number;
     tableName: string;
     tableComment: string;
-    className: string;
     createTime: Date;
     updateTime: Date;
   };

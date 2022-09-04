@@ -5,7 +5,7 @@ import type {ActionType, ProColumns} from '@ant-design/pro-components'
 import {EditableProTable} from '@ant-design/pro-components'
 import {Button, Cascader, Col, Divider, Drawer, Input, message, Row, Select, Tabs, TreeSelect} from 'antd'
 import Form from 'antd/lib/form'
-import {getInfo, getMenus, getOptionselect, putGen} from './service'
+import {getInfo, getMenus, getOptionSelect, putGen} from './service'
 import {makeTree, system} from '@/utils/twelvet'
 import ProSkeleton from '@ant-design/pro-skeleton';
 import TagList from './TagList'
@@ -59,7 +59,10 @@ const EditCode: React.FC<{
   const [formTables, setFormTables] = useState<{
     value: string
     label: string
-    children: []
+    children: {
+      value: string
+      label: string
+    }[]
   }[]>([{
     value: '',
     label: '',
@@ -129,51 +132,44 @@ const EditCode: React.FC<{
   /**
    * 获取数据源
    */
-  const refGetInfo = async () => {
+  const refGetInfo = async (tableId: number) => {
 
     try {
 
-      await getInfo(info.tableId).then(async ({code, msg, data}) => {
-        if (code != 200) {
-          return message.error(msg)
-        }
+      await getInfo(tableId).then(async ({data: tableData}) => {
 
-        setDataSource(data.rows)
+        setDataSource(tableData.rows)
 
         // 设置生成模板初始数据
-        setTplCategory(data.info.tplCategory)
+        setTplCategory(tableData.info.tplCategory)
 
 
         // 制作联动表数据
 
-        setFormInfo(data.info.columns)
+        setFormInfo(tableData.info.columns)
 
         // 配置链表参数
-        if (data.info.tplCategory == 'sub') {
-          data.info.subTable = [
-            data.info.subTableName,
-            data.info.subTableFkName
+        if (tableData.info.tplCategory == 'sub') {
+          tableData.info.subTable = [
+            tableData.info.subTableName,
+            tableData.info.subTableFkName
           ]
         }
 
         // 设置数据表信息
-        form.setFieldsValue({...data.info})
+        form.setFieldsValue({...tableData.info})
 
-        setEditableRowKeys(data.rows.map((item: { columnId: number }) => {
+        setEditableRowKeys(tableData.rows.map((item: { columnId: number }) => {
           return item.columnId
-
         }))
 
-        setFormTables(cascaderTree(data.tables))
+        setFormTables(cascaderTree(tableData.tables))
 
         // 获取菜单信息
-        await getMenus().then(async ({code, msg, data}) => {
-          if (code != 200) {
-            return message.error(msg)
-          }
+        await getMenus().then(async ({data: menuData}) => {
 
           setMenuTree(makeTree({
-            dataSource: data,
+            dataSource: menuData,
             id: `menuId`,
             enhance: {
               key: `menuId`,
@@ -182,15 +178,12 @@ const EditCode: React.FC<{
             }
           }))
 
-          await getOptionselect().then(async ({code, msg, data}) => {
-
-            if (code != 200) {
-              return message.error(msg)
-            }
+          await getOptionSelect().then(async ({data: optionSelectData}) => {
 
             const infos = {}
-            data.map((item: {
+            optionSelectData.map((item: {
               dictName: string
+              dictType: string
             }) => {
               const dictType = item.dictType
               infos[dictType] = {text: `${item.dictName}：${dictType}`, status: 'Default'}
@@ -236,7 +229,7 @@ const EditCode: React.FC<{
           setLoading(true)
           form
             .validateFields()
-            .then(async (params) => {
+            .then(async (params: any) => {
 
               dataSource.map((item: {
                 isEdit: [] | {}
@@ -282,11 +275,7 @@ const EditCode: React.FC<{
                 params.subTable = undefined
               }
 
-              const {code, msg} = await putGen(params)
-
-              if (code != 200) {
-                return message.error(msg)
-              }
+              const {msg} = await putGen(params)
 
               message.success(msg)
 
@@ -307,7 +296,7 @@ const EditCode: React.FC<{
   }
 
   // Form参数
-  const columns: ProColumns = [
+  const columns: ProColumns<ToolGenEditCode.PageListItem>[] = [
     {
       title: '字段名称',
       search: false,
@@ -418,9 +407,9 @@ const EditCode: React.FC<{
 
   useEffect(() => {
     if (info.tableId != 0) {
-      refGetInfo()
+      refGetInfo(info.tableId)
     }
-  }, [info])
+  }, [info.tableId])
 
   return (
     <Drawer
@@ -453,7 +442,7 @@ const EditCode: React.FC<{
       {tableLoading && <ProSkeleton type="list"/>}
 
       {!tableLoading && (
-        <EditableProTable
+        <EditableProTable<ToolGenEditCode.PageListItem, ToolGenEditCode.PageParams>
           // 支持横向超出自适应
           scroll={{x: 'x-content'}}
           headerTitle='字段信息'

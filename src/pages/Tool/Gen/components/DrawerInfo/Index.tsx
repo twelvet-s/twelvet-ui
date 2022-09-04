@@ -20,7 +20,7 @@ const DrawerInfo: React.FC<{
 
   const formRef = useRef<FormInstance>();
 
-  const [state] = useState<GenDrawerInfo.State>({
+  const [state] = useState<ToolGenDrawerInfo.State>({
     pageSize: 10,
   });
 
