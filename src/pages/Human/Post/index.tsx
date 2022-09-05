@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 
 import ProTable from '@ant-design/pro-table';
-import { proTableConfigs } from '@/setting';
+import {proTableConfigs} from '@/setting';
 import {
   DeleteOutlined,
   FundProjectionScreenOutlined,
@@ -21,17 +21,17 @@ import {
   Space,
   Divider,
 } from 'antd';
-import type { FormInstance } from 'antd/lib/form';
-import { pageQuery, remove, exportExcel, getByPostId, insert, update } from './service';
-import { system, aotu, auth } from '@/utils/twelvet';
-import type {ProColumns} from '@ant-design/pro-components';
-import { PageContainer} from '@ant-design/pro-components';
-import { isArray } from 'lodash';
+import type {FormInstance} from 'antd/lib/form';
+import {pageQuery, remove, exportExcel, getByPostId, insert, update} from './service';
+import {system, auth} from '@/utils/twelvet';
+import type {ProColumns, ActionType} from '@ant-design/pro-components';
+import {PageContainer} from '@ant-design/pro-components';
+import {isArray} from 'lodash';
 
 /**
  * 岗位模块
  */
-const Post: React.FC<{}> = () => {
+const Post: React.FC = () => {
   // 显示Modal
   const [modal, setModal] = useState<{ title: string; visible: boolean }>({
     title: ``,
@@ -45,19 +45,121 @@ const Post: React.FC<{}> = () => {
 
   const formRef = useRef<FormInstance>();
 
-  const [form] = Form.useForm<FormInstance>();
+  const [state] = useState<HumanPost.State>({
+    pageSize: 10,
+  });
 
-  const { TextArea } = Input;
+  const [form] = Form.useForm();
+
+  const {TextArea} = Input;
 
   const formItemLayout = {
     labelCol: {
-      xs: { span: 4 },
-      sm: { span: 4 },
+      xs: {span: 4},
+      sm: {span: 4},
     },
     wrapperCol: {
-      xs: { span: 18 },
-      sm: { span: 18 },
+      xs: {span: 18},
+      sm: {span: 18},
     },
+  };
+
+  /**
+   * 新增岗位
+   */
+  const refPost = async () => {
+    setModal({title: '新增', visible: true});
+  };
+
+  /**
+   * 获取修改岗位信息
+   * @param postId
+   */
+  const refPut = async (postId: number) => {
+    try {
+      const { data} = await getByPostId(postId);
+      // 赋值表单数据
+      form.setFieldsValue(data);
+
+      // 设置Modal状态
+      setModal({title: '修改', visible: true});
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 移除岗位
+   * @param postIds
+   */
+  const refRemove = async (postIds: (string | number)[] | string | undefined) => {
+    try {
+      if (!postIds) {
+        return true;
+      }
+
+      let params;
+      if (isArray(postIds)) {
+        params = postIds.join(',');
+      } else {
+        params = postIds;
+      }
+
+      const {code, msg} = await remove(params);
+
+      if (code !== 200) {
+        return message.error(msg);
+      }
+
+      message.success(msg);
+
+      acForm?.current?.reload();
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 取消Modal的显示
+   */
+  const handleCancel = () => {
+    setModal({title: '', visible: false});
+    form.resetFields();
+  };
+
+  /**
+   * 保存数据
+   */
+  const onSave = () => {
+    form
+      .validateFields()
+      .then(async (fields) => {
+        try {
+          // 开启加载中
+          setLoadingModal(true);
+          // ID为0则insert，否则将update
+          const {code, msg} = fields.postId == 0 ? await insert(fields) : await update(fields);
+          if (code != 200) {
+            return message.error(msg);
+          }
+
+          message.success(msg);
+
+          if (acForm.current) {
+            acForm.current.reload();
+          }
+
+          // 关闭模态框
+          handleCancel();
+        } catch (e) {
+          system.error(e);
+        } finally {
+          setLoadingModal(false);
+        }
+      })
+      .catch((e) => {
+        system.error(e);
+      });
   };
 
   // Form参数
@@ -87,8 +189,8 @@ const Post: React.FC<{}> = () => {
       width: 80,
       dataIndex: 'status',
       valueEnum: {
-        '0': { text: '正常', status: 'success' },
-        '1': { text: '停用', status: 'error' },
+        '0': {text: '正常', status: 'success'},
+        '1': {text: '停用', status: 'error'},
       },
     },
     {
@@ -104,20 +206,20 @@ const Post: React.FC<{}> = () => {
       width: 200,
       valueType: 'option',
       dataIndex: 'operation',
-      render: (_: string, row: Record<string, string>) => {
+      render: (_, row) => {
         return (
           <>
-            <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
+            <a onClick={() => refPut(row.postId)} hidden={auth('system:dict:update')}>
               <Space>
-                <EditOutlined />
+                <EditOutlined/>
                 修改
               </Space>
             </a>
-            <Divider type="vertical" />
-            <Popconfirm onConfirm={() => refRemove(row.postId)} title="确定删除吗">
+            <Divider type="vertical"/>
+            <Popconfirm onConfirm={() => refRemove([row.postId])} title="确定删除吗">
               <a href="#" hidden={auth('system:dict:remove')}>
                 <Space>
-                  <CloseOutlined />
+                  <CloseOutlined/>
                   删除
                 </Space>
               </a>
@@ -128,119 +230,23 @@ const Post: React.FC<{}> = () => {
     },
   ];
 
-  /**
-   * 新增岗位
-   * @param row row
-   */
-  const refPost = async () => {
-    setModal({ title: '新增', visible: true });
-  };
-
-  /**
-   * 获取修改岗位信息
-   * @param row row
-   */
-  const refPut = async (row: Record<string, any>) => {
-    try {
-      const { code, msg, data } = await getByPostId(row.postId);
-      if (code != 200) {
-        return message.error(msg);
-      }
-      // 赋值表单数据
-      form.setFieldsValue(data);
-
-      // 设置Modal状态
-      setModal({ title: '修改', visible: true });
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 移除岗位
-   * @param row postIds
-   */
-  const refRemove = async (postIds: (string | number)[] | string | undefined) => {
-    try {
-      if (!postIds) {
-        return true;
-      }
-
-      let params;
-      if (isArray(postIds)) {
-        params = postIds.join(',');
-      } else {
-        params = postIds;
-      }
-
-      const { code, msg } = await remove(params);
-
-      if (code !== 200) {
-        return message.error(msg);
-      }
-
-      message.success(msg);
-
-      acForm.current && acForm.current.reload();
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 取消Modal的显示
-   */
-  const handleCancel = () => {
-    setModal({ title: '', visible: false });
-    form.resetFields();
-  };
-
-  /**
-   * 保存数据
-   */
-  const onSave = () => {
-    form
-      .validateFields()
-      .then(async (fields) => {
-        try {
-          // 开启加载中
-          setLoadingModal(true);
-          // ID为0则insert，否则将update
-          const { code, msg } = fields.postId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
-            return message.error(msg);
-          }
-
-          message.success(msg);
-
-          if (acForm.current) {
-            acForm.current.reload();
-          }
-
-          // 关闭模态框
-          handleCancel();
-        } catch (e) {
-          system.error(e);
-        } finally {
-          setLoadingModal(false);
-        }
-      })
-      .catch((e) => {
-        system.error(e);
-      });
-  };
-
   return (
     <PageContainer>
       <ProTable<HumanPost.PageListItem, HumanPost.PageParams>
         {...proTableConfigs}
+        pagination={{
+          // 是否允许每页大小更改
+          showSizeChanger: true,
+          // 每页显示条数
+          pageSize: state.pageSize,
+        }}
         actionRef={acForm}
         formRef={formRef}
         rowKey="postId"
         columns={columns}
-        request={async (params, sorter, filter) => {
-          const { data } = await pageQuery(params);
-          const { records, total } = data;
+        request={async (params) => {
+          const {data} = await pageQuery(params);
+          const {records, total} = data;
           return Promise.resolve({
             data: records,
             success: true,
@@ -248,25 +254,13 @@ const Post: React.FC<{}> = () => {
           });
         }}
         rowSelection={{}}
-        beforeSearchSubmit={(params) => {
-          // 分隔搜索参数
-          if (params.between) {
-            const { between } = params;
-            // 移除参数
-            delete params.between;
-
-            // 适配参数
-            params.beginTime = between[0];
-            params.endTime = between[1];
-          }
-          return params;
-        }}
-        toolBarRender={(action, { selectedRowKeys }) => [
-          <Button type="default" onClick={refPost} hidden={auth('system:dict:insert')}>
-            <PlusOutlined />
+        toolBarRender={(action, {selectedRowKeys}) => [
+          <Button key={'addTool'} type="default" onClick={refPost} hidden={auth('system:dict:insert')}>
+            <PlusOutlined/>
             新增
           </Button>,
           <Popconfirm
+            key={'deleteTool'}
             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             onConfirm={() => refRemove(selectedRowKeys)}
             title="是否删除选中数据"
@@ -276,11 +270,12 @@ const Post: React.FC<{}> = () => {
               type="primary"
               danger
             >
-              <DeleteOutlined />
+              <DeleteOutlined/>
               批量删除
             </Button>
           </Popconfirm>,
           <Popconfirm
+            key={'exportTool'}
             title="是否导出数据"
             onConfirm={() => {
               exportExcel({
@@ -289,7 +284,7 @@ const Post: React.FC<{}> = () => {
             }}
           >
             <Button type="default" hidden={auth('system:dict:export')}>
-              <FundProjectionScreenOutlined />
+              <FundProjectionScreenOutlined/>
               导出数据
             </Button>
           </Popconfirm>,
@@ -306,25 +301,25 @@ const Post: React.FC<{}> = () => {
       >
         <Form name="Post" form={form}>
           <Form.Item hidden {...formItemLayout} label="岗位ID" name="postId" initialValue={0}>
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Form.Item
             {...formItemLayout}
             label="岗位名称"
             name="postName"
-            rules={[{ required: true, message: '岗位名称不能为空' }]}
+            rules={[{required: true, message: '岗位名称不能为空'}]}
           >
-            <Input placeholder="岗位名称" />
+            <Input placeholder="岗位名称"/>
           </Form.Item>
 
           <Form.Item
             {...formItemLayout}
             label="岗位编码"
             name="postCode"
-            rules={[{ required: true, message: '岗位编码不能为空' }]}
+            rules={[{required: true, message: '岗位编码不能为空'}]}
           >
-            <Input placeholder="岗位编码" />
+            <Input placeholder="岗位编码"/>
           </Form.Item>
 
           <Form.Item
@@ -332,9 +327,9 @@ const Post: React.FC<{}> = () => {
             label="岗位顺序"
             name="postSort"
             initialValue={0}
-            rules={[{ required: true, message: '岗位顺序不能为空' }]}
+            rules={[{required: true, message: '岗位顺序不能为空'}]}
           >
-            <InputNumber placeholder="岗位顺序" />
+            <InputNumber placeholder="岗位顺序"/>
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="岗位状态" name="status" initialValue="0">
@@ -345,7 +340,7 @@ const Post: React.FC<{}> = () => {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="备注" name="remark">
-            <TextArea placeholder="请输入内容" />
+            <TextArea placeholder="请输入内容"/>
           </Form.Item>
         </Form>
       </Modal>

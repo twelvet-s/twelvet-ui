@@ -1,52 +1,48 @@
-import React, { useState, useRef } from 'react'
-import { message, Switch } from 'antd'
-import { system } from '@/utils/twelvet'
-import { changeStatus } from './../service'
+import React, {useState} from 'react'
+import {message, Switch} from 'antd'
+import {system} from '@/utils/twelvet'
+import {changeStatus} from './../service'
 
 /**
  * 状态组件操作
  * @param props row 参数
  */
 const RoleSwitch: React.FC<{
-    row: Record<string, any>
+  row: Record<string, any>
 }> = (props) => {
 
-    const [loading, setLoading] = useState<boolean>(false)
-    const [checked, setChecked] = useState<number>(props.row.status)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [checked, setChecked] = useState<string>(props.row.status)
 
-    const toggle = async () => {
-        try {
-            setLoading(true);
-            const params = {}
-            params.roleId = props.row.roleId;
-            params.status = checked == '1' ? '0' : '1'
-            const { code, msg } = await changeStatus(params);
+  const toggle = async () => {
+    try {
+      setLoading(true);
+      const params: { roleId: number, status: string } = {roleId: 0, status: "0"}
+      params.roleId = props.row.roleId;
+      params.status = checked == '1' ? '0' : '1'
+      const {msg} = await changeStatus(params);
 
-            if (code != 200) {
-                return message.error(msg);
-            }
+      if (checked === '1') {
+        setChecked('0')
+      } else {
+        setChecked('1')
+      }
 
-            if (checked === '1') {
-                setChecked('0')
-            } else {
-                setChecked('1')
-            }
+      message.success(msg);
+    } catch (e) {
+      system.log(e)
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            return message.success(msg);
-        } catch (e) {
-            system.log(e)
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return (
-        <Switch
-            loading={loading}
-            onClick={toggle}
-            checked={checked == '0' ? true : false}
-        />
-    )
+  return (
+    <Switch
+      loading={loading}
+      onClick={toggle}
+      checked={checked == '0'}
+    />
+  )
 }
 
 export default RoleSwitch

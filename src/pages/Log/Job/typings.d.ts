@@ -4,8 +4,6 @@ declare namespace LogJob {
    */
   type State = {
     pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
   };
 
   /**

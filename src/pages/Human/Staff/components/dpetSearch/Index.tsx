@@ -1,45 +1,43 @@
-import React, { useState, useEffect } from 'react'
-import { message, TreeSelect } from 'antd'
-import { treeSelect } from '../../service'
-import { system } from '@/utils/twelvet'
+import React, {useState, useEffect} from 'react'
+import {TreeSelect} from 'antd'
+import {treeSelect} from '../../service'
+import {system} from '@/utils/twelvet'
 
-const DeptSearch: React.FC<{}> = props => {
+const DeptSearch: React.FC = props => {
 
-    // 部门数据
-    const [DEPTS, setDEPTS] = useState<Record<string, any>[]>([{}])
+  // 部门数据
+  const [depts, setDepts] = useState<Record<string, any>[]>([{}])
 
-    useEffect(() => {
-        makeDept()
-    }, [])
+  const makeDept = async () => {
+    try {
+      const {data} = await treeSelect()
 
-    const makeDept = async () => {
-        try {
-            const { code, msg, data } = await treeSelect()
-            if (code != 200) {
-                return message.error(msg)
-            }
+      setDepts(data)
 
-            setDEPTS(data)
-
-        } catch (e) {
-            system.error(e)
-        }
+    } catch (e) {
+      system.error(e)
     }
+  }
 
-    return (
-        <>
-            <TreeSelect
-                // 必须设置props，否则无法取值Search
-                {...props}
-                allowClear
-                showSearch
-                treeLine
-                treeNodeFilterProp="title"
-                treeNodeLabelProp='title'
-                treeData={DEPTS}
-            />
-        </>
-    )
+  useEffect(() => {
+    makeDept()
+  }, [])
+
+  return (
+    <>
+      <TreeSelect
+        // 必须设置props，否则无法取值Search
+        {...props}
+        placeholder={"部门"}
+        allowClear
+        showSearch
+        treeLine
+        treeNodeFilterProp="title"
+        treeNodeLabelProp='title'
+        treeData={depts}
+      />
+    </>
+  )
 }
 
 export default DeptSearch

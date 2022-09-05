@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 
 import ProTable from '@ant-design/pro-table';
-import type { proTableConfigs } from '@/setting';
+import { proTableConfigs } from '@/setting';
 import { ProColumns } from '@ant-design/pro-components';
 import { PageContainer} from '@ant-design/pro-components';
 import {
@@ -199,7 +199,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
 
       message.success(msg);
 
-      acForm.current && acForm.current.reload();
+      acForm?.current?.reload();
     } catch (e) {
       system.error(e);
     }

@@ -1,23 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 
-import type { ActionType } from '@ant-design/pro-table';
+import type {ActionType} from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { proTableConfigs } from '@/setting';
-import { DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined } from '@ant-design/icons';
+import {proTableConfigs} from '@/setting';
+import {DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined} from '@ant-design/icons';
 import ProDescriptions from '@ant-design/pro-descriptions';
-import type { ProColumns } from '@ant-design/pro-components';
-import { PageContainer } from '@ant-design/pro-components';
-import type { FormInstance } from 'antd';
-import { Popconfirm, Button, message, Modal, DatePicker, Space } from 'antd';
-import type { Moment } from 'moment';
-import moment from 'moment';
-import { pageQuery, remove, exportExcel, getDictionariesType } from './service';
-import { system, auth } from '@/utils/twelvet';
+import type {ProColumns} from '@ant-design/pro-components';
+import {PageContainer} from '@ant-design/pro-components';
+import type {FormInstance} from 'antd';
+import {Popconfirm, Button, message, Modal, Space} from 'antd';
+import {pageQuery, remove, exportExcel, getDictionariesType} from './service';
+import {system, auth} from '@/utils/twelvet';
 
 /**
  * 操作日志
  */
-const Operation: React.FC<{}> = () => {
+const Operation: React.FC = () => {
   const [descriptions, setDescriptions] = useState<Record<string, string | number>>();
 
   // 显示Modal
@@ -30,11 +28,64 @@ const Operation: React.FC<{}> = () => {
 
   const formRef = useRef<FormInstance>();
 
-  const { RangePicker } = DatePicker;
+  const [operType, setOperType] = useState<any>({});
 
-  const [operType, setOperType] = useState<{
-    key: string;
-  }>();
+  /**
+   * 获取操作类型数据
+   */
+  const getOperType = async () => {
+    try {
+      const {data} = await getDictionariesType();
+
+      const res = {};
+
+      data.map((item: { dictValue: string; dictLabel: string }) => {
+        res[item.dictValue] = item.dictLabel;
+      });
+
+      setOperType(res);
+
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 查看详情
+   * @param row row
+   */
+  const handleView = (row: Record<string, string | number>) => {
+    // 设置描述数据
+    setDescriptions(row);
+
+    setModal({title: '新增', visible: true});
+  };
+
+  /**
+   * 移除菜单
+   * @param infoIds
+   */
+  const refRemove = async (infoIds: (string | number)[] | undefined) => {
+    try {
+      if (!infoIds) {
+        return;
+      }
+      const {msg} = await remove(infoIds.join(','));
+
+      message.success(msg);
+
+      acForm?.current?.reload();
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 取消Modal的显示
+   */
+  const handleCancel = () => {
+    setModal({title: '', visible: false});
+  };
 
   /**
    * 初始化数据
@@ -42,29 +93,6 @@ const Operation: React.FC<{}> = () => {
   useEffect(() => {
     getOperType();
   }, []);
-
-  /**
-   * 获取操作类型数据
-   */
-  const getOperType = async () => {
-    try {
-      const { code, msg, data } = await getDictionariesType();
-
-      if (code != 200) {
-        message.error(msg);
-      }
-
-      const res: { key: string } = {};
-
-      data.map((item: { dictValue: string; dictLabel: string }) => {
-        res[item.dictValue] = item.dictLabel;
-      });
-
-      setOperType(res);
-    } catch (e) {
-      system.error(e);
-    }
-  };
 
   // Form参数
   const columns: ProColumns<LogOperation.PageListItem>[] = [
@@ -89,8 +117,8 @@ const Operation: React.FC<{}> = () => {
       valueType: 'text',
       search: false,
       dataIndex: 'businessType',
-      render: (businessType: string) => {
-        return operType && operType[businessType.toString()];
+      render: (_, row) => {
+        return operType[row.businessType];
       },
     },
     {
@@ -111,24 +139,23 @@ const Operation: React.FC<{}> = () => {
       search: false,
       dataIndex: 'status',
       valueEnum: {
-        0: { text: '失败', status: 'error' },
-        1: { text: '成功', status: 'success' },
+        0: {text: '失败', status: 'error'},
+        1: {text: '成功', status: 'success'},
       },
     },
     {
       title: '搜索日期',
       key: 'between',
       hideInTable: true,
-      dataIndex: 'between',
-      renderFormItem: () => (
-        <RangePicker
-          format="YYYY-MM-DD"
-          disabledDate={(currentDate: Moment) => {
-            // 不允许选择大于今天的日期
-            return moment(new Date(), 'YYYY-MM-DD') < currentDate;
-          }}
-        />
-      ),
+      valueType: 'dateRange',
+      search: {
+        transform: (value) => {
+          return {
+            beginTime: value[0],
+            endTime: value[1],
+          };
+        },
+      },
     },
     {
       title: '操作时间',
@@ -143,11 +170,11 @@ const Operation: React.FC<{}> = () => {
       width: 200,
       valueType: 'option',
       dataIndex: 'operation',
-      render: (_: string, row: Record<string, string>) => {
+      render: (_, row) => {
         return (
           <a onClick={() => handleView(row)}>
             <Space>
-              <EyeOutlined />
+              <EyeOutlined/>
               详情
             </Space>
           </a>
@@ -155,46 +182,6 @@ const Operation: React.FC<{}> = () => {
       },
     },
   ];
-
-  /**
-   * 查看详情
-   * @param row row
-   */
-  const handleView = (row: Record<string, string | number>) => {
-    // 设置描述数据
-    setDescriptions(row);
-
-    setModal({ title: '新增', visible: true });
-  };
-
-  /**
-   * 移除菜单
-   * @param row infoIds
-   */
-  const refRemove = async (infoIds: (string | number)[] | undefined) => {
-    try {
-      if (!infoIds) {
-        return true;
-      }
-      const { code, msg } = await remove(infoIds.join(','));
-      if (code !== 200) {
-        return message.error(msg);
-      }
-
-      message.success(msg);
-
-      acForm.current && acForm.current.reload();
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 取消Modal的显示
-   */
-  const handleCancel = () => {
-    setModal({ title: '', visible: false });
-  };
 
   return (
     <PageContainer>
@@ -204,9 +191,9 @@ const Operation: React.FC<{}> = () => {
         formRef={formRef}
         rowKey="operId"
         columns={columns}
-        request={async (params, sorter, filter) => {
-          const { data } = await pageQuery(params);
-          const { records, total } = data;
+        request={async (params) => {
+          const {data} = await pageQuery(params);
+          const {records, total} = data;
           return Promise.resolve({
             data: records,
             success: true,
@@ -214,21 +201,9 @@ const Operation: React.FC<{}> = () => {
           });
         }}
         rowSelection={{}}
-        beforeSearchSubmit={(params) => {
-          // 分隔搜索参数
-          if (params.between) {
-            const { between } = params;
-            // 移除参数
-            delete params.between;
-
-            // 适配参数
-            params.beginTime = between[0];
-            params.endTime = between[1];
-          }
-          return params;
-        }}
-        toolBarRender={(action, { selectedRowKeys }) => [
+        toolBarRender={(action, {selectedRowKeys}) => [
           <Popconfirm
+            key={'deleteTool'}
             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             onConfirm={() => refRemove(selectedRowKeys)}
             title="是否删除选中数据"
@@ -239,11 +214,12 @@ const Operation: React.FC<{}> = () => {
               type="primary"
               danger
             >
-              <DeleteOutlined />
+              <DeleteOutlined/>
               批量删除
             </Button>
           </Popconfirm>,
           <Popconfirm
+            key={'exportTool'}
             title="是否导出数据"
             onConfirm={() => {
               exportExcel({
@@ -252,7 +228,7 @@ const Operation: React.FC<{}> = () => {
             }}
           >
             <Button type="default" hidden={auth('system:dict:export')}>
-              <FundProjectionScreenOutlined />
+              <FundProjectionScreenOutlined/>
               导出数据
             </Button>
           </Popconfirm>,
@@ -269,43 +245,43 @@ const Operation: React.FC<{}> = () => {
       >
         <ProDescriptions column={2}>
           <ProDescriptions.Item label="操作模块">
-            {descriptions && descriptions.service}
+            {descriptions?.service}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="请求方式">
-            {descriptions && descriptions.requestMethod}
+            {descriptions?.requestMethod}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="请求地址">
-            {descriptions && descriptions.operUrl}
+            {descriptions?.operUrl}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="操作方法">
-            {descriptions && descriptions.method}
+            {descriptions?.method}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="请求参数" valueType="jsonCode">
-            {descriptions && descriptions.operParam}
+            {descriptions?.operParam}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="返回参数" valueType="jsonCode">
-            {descriptions && descriptions.jsonResult}
+            {descriptions?.jsonResult}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="操作状态">
-            {descriptions && descriptions.status === 1 ? '正常' : '失败'}
+            {descriptions?.status === 1 ? '正常' : '失败'}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="操作人员">
-            {descriptions && descriptions.operName}
+            {descriptions?.operName}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="操作时间">
-            {descriptions && descriptions.operTime}
+            {descriptions?.operTime}
           </ProDescriptions.Item>
 
           <ProDescriptions.Item label="操作地点">
-            {descriptions && descriptions.operIp}
+            {descriptions?.operIp}
           </ProDescriptions.Item>
         </ProDescriptions>
       </Modal>

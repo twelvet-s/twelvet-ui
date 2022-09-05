@@ -1,26 +1,25 @@
-import React, {useState, useRef} from 'react';
+import React, {useRef, useState} from 'react';
 
 import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
-import {PlusOutlined, CloseOutlined, EditOutlined} from '@ant-design/icons';
+import {CloseOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {
-  Row,
-  Col,
   Button,
-  message,
-  Space,
-  Popconfirm,
-  Modal,
+  Col,
+  Divider,
   Form,
   Input,
   InputNumber,
+  message,
+  Modal,
+  Popconfirm,
   Radio,
+  Row,
+  Space,
   TreeSelect,
-  Divider,
 } from 'antd';
-import {list, getInfo, remove, insert, update} from './service';
-import {system, makeTree, auth} from '@/utils/twelvet';
-import type {FormInstance} from 'antd/lib/form';
+import {getInfo, insert, list, remove, update} from './service';
+import {auth, makeTree, system} from '@/utils/twelvet';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {PageContainer} from '@ant-design/pro-components';
 
@@ -41,7 +40,7 @@ const Dept: React.FC = () => {
   });
 
   const acForm = useRef<ActionType>();
-  const [form] = Form.useForm<FormInstance>();
+  const [form] = Form.useForm();
 
   const formItemLayout = {
     labelCol: {
@@ -50,6 +49,134 @@ const Dept: React.FC = () => {
     wrapperCol: {
       sm: {span: 16},
     },
+  };
+
+  /**
+   * 更新部门数据(保证部门数据的最新)
+   */
+  const putData = async () => {
+    try {
+      const {code, msg, data} = await list({});
+      if (code != 200) {
+        return message.error(msg);
+      }
+
+      const tree = makeTree({
+        dataSource: data,
+        id: `deptId`,
+        enhance: {
+          key: `deptId`,
+          title: `deptName`,
+          value: `deptId`,
+        },
+      });
+
+      setDataSource([
+        {
+          key: 0,
+          title: `顶级企业`,
+          value: 0,
+          children: tree,
+        },
+      ]);
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 获取新增部门信息
+   * @param deptId
+   */
+  const refPost = async (deptId: number) => {
+    // 更新数据
+    putData();
+
+    if (deptId != 0) {
+      const field: Record<string, any> = {parentId: deptId};
+      // 设置表单数据
+      form.setFieldsValue(field);
+    }
+
+    setModal({title: '新增', visible: true});
+  };
+
+  /**
+   * 获取修改部门信息
+   * @param deptId
+   */
+  const refPut = async (deptId: number) => {
+    try {
+      // 更新部门数据
+      putData();
+      const {data} = await getInfo(deptId);
+
+      // 赋值表单数据
+      form.setFieldsValue(data);
+
+      // 设置Modal状态
+      setModal({title: '修改', visible: true});
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 移除部门
+   * @param row row
+   */
+  const refRemove = async (row: Record<string, any>) => {
+    try {
+      const {code, msg} = await remove(row.deptId);
+      if (code != 200) {
+        return message.error(msg);
+      }
+
+      message.success(msg);
+
+      acForm?.current?.reload();
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 取消Modal的显示
+   */
+  const handleCancel = () => {
+    setModal({title: '', visible: false});
+
+    form.resetFields();
+  };
+
+  /**
+   * 保存数据
+   */
+  const onSave = () => {
+    form
+      .validateFields()
+      .then(async (fields) => {
+        try {
+          // 开启加载中
+          setLoadingModal(true);
+          // deptId为0则insert，否则将update
+          const {msg} = fields.deptId == 0 ? await insert(fields) : await update(fields);
+
+          message.success(msg);
+
+          acForm?.current?.reload();
+
+          // 关闭模态框
+          handleCancel();
+        } catch (e) {
+          system.error(e);
+        } finally {
+          setLoadingModal(false);
+        }
+      })
+      .catch((e) => {
+        system.error(e);
+      });
   };
 
   // Form参数
@@ -95,7 +222,7 @@ const Dept: React.FC = () => {
       render: (_, row) => {
         return (
           <>
-            <a onClick={() => refPost(row)} hidden={auth('system:dict:insert')}>
+            <a onClick={() => refPost(row.deptId)} hidden={auth('system:dict:insert')}>
               <Space>
                 <PlusOutlined/>
                 新增
@@ -103,7 +230,7 @@ const Dept: React.FC = () => {
             </a>
             <Divider type="vertical"/>
 
-            <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
+            <a onClick={() => refPut(row.deptId)} hidden={auth('system:dict:update')}>
               <Space>
                 <EditOutlined/>
                 修改
@@ -125,142 +252,6 @@ const Dept: React.FC = () => {
     },
   ];
 
-  /**
-   * 获取新增部门信息
-   * @param row row
-   */
-  const refPost = async (row) => {
-    // 更新数据
-    putData();
-
-    if (row.deptId != 0) {
-      const field: Record<string, any> = {parentId: row.deptId};
-      // 设置表单数据
-      form.setFieldsValue(field);
-    }
-
-    setModal({title: '新增', visible: true});
-  };
-
-  /**
-   * 获取修改部门信息
-   * @param row row
-   */
-  const refPut = async (row: Record<string, any>) => {
-    try {
-      // 更新部门数据
-      putData();
-      const {code, msg, data} = await getInfo(row.deptId);
-      if (code != 200) {
-        return message.error(msg);
-      }
-
-      // 赋值表单数据
-      form.setFieldsValue(data);
-
-      // 设置Modal状态
-      setModal({title: '修改', visible: true});
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 更新部门数据(保证部门数据的最新)
-   */
-  const putData = async () => {
-    try {
-      const {code, msg, data} = await list({});
-      if (code != 200) {
-        return message.error(msg);
-      }
-
-      const tree = makeTree({
-        dataSource: data,
-        id: `deptId`,
-        enhance: {
-          key: `deptId`,
-          title: `deptName`,
-          value: `deptId`,
-        },
-      });
-
-      setDataSource([
-        {
-          key: 0,
-          title: `顶级企业`,
-          value: 0,
-          children: tree,
-        },
-      ]);
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 移除部门
-   * @param row row
-   */
-  const refRemove = async (row: Record<string, any>) => {
-    try {
-      const {code, msg} = await remove(row.deptId);
-      if (code != 200) {
-        return message.error(msg);
-      }
-
-      message.success(msg);
-
-      acForm.current && acForm.current.reload();
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 取消Modal的显示
-   */
-  const handleCancel = () => {
-    setModal({title: '', visible: false});
-
-    form.resetFields();
-  };
-
-  /**
-   * 保存数据
-   */
-  const onSave = () => {
-    form
-      .validateFields()
-      .then(async (fields) => {
-        try {
-          // 开启加载中
-          setLoadingModal(true);
-          // deptId为0则insert，否则将update
-          const {code, msg} = fields.deptId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
-            return message.error(msg);
-          }
-
-          message.success(msg);
-
-          if (acForm.current) {
-            acForm.current.reload();
-          }
-
-          // 关闭模态框
-          handleCancel();
-        } catch (e) {
-          system.error(e);
-        } finally {
-          setLoadingModal(false);
-        }
-      })
-      .catch((e) => {
-        system.error(e);
-      });
-  };
-
   return (
     <PageContainer>
       <ProTable<HumanDept.PageListItem, HumanDept.PageParams>
@@ -270,16 +261,15 @@ const Dept: React.FC = () => {
         columns={columns}
         defaultExpandAllRows={true}
         // 处理响应的数据
-        postData={(dataSource) => {
-          const tree = makeTree({
-            dataSource: dataSource,
+        postData={(postDataSource) => {
+          return makeTree({
+            dataSource: postDataSource,
             id: 'deptId',
           });
-          return tree;
         }}
         request={list}
         toolBarRender={() => [
-          <Button type="default" onClick={() => refPost({deptId: 0})}>
+          <Button key={'addTool'} type="default" onClick={() => refPost(0)}>
             <PlusOutlined/>
             新增
           </Button>,

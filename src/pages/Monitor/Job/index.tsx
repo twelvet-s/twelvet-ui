@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import ProTable from '@ant-design/pro-table';
-import { proTableConfigs } from '@/setting';
+import {proTableConfigs} from '@/setting';
 import {
   CaretRightOutlined,
   DeleteOutlined,
@@ -24,35 +24,40 @@ import {
   Tooltip,
   Divider,
 } from 'antd';
-import { pageQuery, remove, exportExcel, run, insert, update, getByJobId } from './service';
-import { system, auth } from '@/utils/twelvet';
+import {pageQuery, remove, exportExcel, run, insert, update, getByJobId} from './service';
+import {system, auth} from '@/utils/twelvet';
 import JobStatus from './components/jobStatusSwitch/Index';
-import type { ProColumns } from '@ant-design/pro-components';
-import { PageContainer } from '@ant-design/pro-components';
+import type {ProColumns} from '@ant-design/pro-components';
+import type {ActionType} from '@ant-design/pro-components';
+import {PageContainer} from '@ant-design/pro-components';
 import Details from './components/details/Index';
-import type { FormInstance } from 'antd/lib/form';
-import { isArray } from 'lodash';
+import type {FormInstance} from 'antd/lib/form';
+import {isArray} from 'lodash';
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
 
 /**
  * 定时任务
  */
-const Job: React.FC<{}> = () => {
+const Job: React.FC = () => {
   const formItemLayout = {
     labelCol: {
-      sm: { span: 6 },
+      sm: {span: 6},
     },
     wrapperCol: {
-      sm: { span: 16 },
+      sm: {span: 16},
     },
   };
 
-  const [form] = Form.useForm<FormInstance>();
+  const [form] = Form.useForm();
 
   // 显示Modal
   const [modal, setModal] = useState<{ title: string; visible: boolean }>({
     title: ``,
     visible: false,
+  });
+
+  const [state] = useState<MonitorJob.State>({
+    pageSize: 10
   });
 
   // 是否执行Modal数据操作中
@@ -69,6 +74,131 @@ const Job: React.FC<{}> = () => {
     vimodelDetails: false,
     jobId: 0,
   });
+
+  /**
+   * 初始化数据
+   */
+  useEffect(() => {
+  }, []);
+
+  /**
+   * 获取修改菜单信息
+   * @param jobId
+   */
+  const refPut = async (jobId: number) => {
+    try {
+      const {data} = await getByJobId(jobId);
+      // 赋值表单数据
+      form.setFieldsValue(data);
+
+      // 设置Modal状态
+      setModal({title: '修改', visible: true});
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 执行任务
+   * @param row
+   */
+  const runJob = async (row: Record<string, any>) => {
+    try {
+      // 参数
+      const params = {
+        jobId: row.jobId,
+        jobGroup: row.jobGroup,
+      };
+
+      const {code, msg} = await run(params);
+      if (code != 200) {
+        return message.error(msg);
+      }
+      message.success(msg);
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 移除任务
+   * @param jobIds
+   */
+  const refRemove = async (jobIds: (string | number)[] | undefined) => {
+    try {
+      if (!jobIds) {
+        return true;
+      }
+
+      let params: string;
+      if (isArray(jobIds)) {
+        params = jobIds.join(',');
+      } else {
+        params = jobIds;
+      }
+
+      const {code, msg} = await remove(params);
+      if (code != 200) {
+        return message.error(msg);
+      }
+
+      message.success(msg);
+
+      acForm?.current?.reload();
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 新增任务
+   */
+  const refPost = async () => {
+    setModal({title: '新增', visible: true});
+  };
+
+  /**
+   * 取消Modal的显示
+   */
+  const handleCancel = () => {
+    setModal({title: '', visible: false});
+    form.resetFields();
+  };
+
+  /**
+   * 保存数据
+   */
+  const onSave = () => {
+    form
+      .validateFields()
+      .then(async (fields) => {
+        try {
+          // 开启加载中
+          setLoadingModal(true);
+          // ID为0则insert，否则将update
+          const {code, msg} = fields.jobId == 0 ? await insert(fields) : await update(fields);
+          if (code != 200) {
+            return message.error(msg);
+          }
+
+          message.success(msg);
+
+          if (acForm.current) {
+            acForm.current.reload();
+          }
+
+          // 关闭模态框
+          handleCancel();
+        } catch (e) {
+          system.error(e);
+        } finally {
+          setLoadingModal(false);
+        }
+      })
+      .catch((e) => {
+        system.error(e);
+      });
+  };
 
   // Form参数
   const columns: ProColumns<MonitorJob.PageListItem>[] = [
@@ -104,10 +234,10 @@ const Job: React.FC<{}> = () => {
       ellipsis: false,
       dataIndex: 'status',
       valueEnum: {
-        '0': { text: '成功', status: 'success' },
-        '1': { text: '失败', status: 'error' },
+        '0': {text: '成功', status: 'success'},
+        '1': {text: '失败', status: 'error'},
       },
-      render: (_: string, row: Record<string, string>) => [<JobStatus row={row} />],
+      render: (_, row) => <JobStatus row={row}/>,
     },
     {
       title: '操作',
@@ -116,25 +246,25 @@ const Job: React.FC<{}> = () => {
       valueType: 'option',
       search: false,
       dataIndex: 'operation',
-      render: (_: string, row: Record<string, string>) => {
+      render: (_, row) => {
         return (
           <>
-            <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
+            <a onClick={() => refPut(row.jobId)} hidden={auth('system:dict:update')}>
               <Space>
-                <EditOutlined />
+                <EditOutlined/>
                 修改
               </Space>
             </a>
-            <Divider type="vertical" />
+            <Divider type="vertical"/>
             <Popconfirm onConfirm={() => runJob(row)} title="是否执行任务">
               <a href="#">
                 <Space>
-                  <CaretRightOutlined />
+                  <CaretRightOutlined/>
                   执行
                 </Space>
               </a>
             </Popconfirm>
-            <Divider type="vertical" />
+            <Divider type="vertical"/>
             <a
               type="default"
               onClick={() => {
@@ -145,15 +275,15 @@ const Job: React.FC<{}> = () => {
               }}
             >
               <Space>
-                <EyeOutlined />
+                <EyeOutlined/>
                 详情
               </Space>
             </a>
-            <Divider type="vertical" />
-            <Popconfirm onConfirm={() => refRemove(row.jobId)} title="是否删除">
+            <Divider type="vertical"/>
+            <Popconfirm onConfirm={() => refRemove([row.jobId])} title="是否删除">
               <a href="#" hidden={auth('system:dict:remove')}>
                 <Space>
-                  <DeleteOutlined />
+                  <DeleteOutlined/>
                   删除
                 </Space>
               </a>
@@ -164,145 +294,23 @@ const Job: React.FC<{}> = () => {
     },
   ];
 
-  /**
-   * 初始化数据
-   */
-  useEffect(() => {}, []);
-
-  /**
-   * 获取修改菜单信息
-   * @param row row
-   */
-  const refPut = async (row: Record<string, any>) => {
-    try {
-      const { code, msg, data } = await getByJobId(row.jobId);
-      if (code != 200) {
-        return message.error(msg);
-      }
-      // 赋值表单数据
-      form.setFieldsValue(data);
-
-      // 设置Modal状态
-      setModal({ title: '修改', visible: true });
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 执行任务
-   * @param row
-   */
-  const runJob = async (row: Record<string, any>) => {
-    try {
-      // 参数
-      const params = {
-        jobId: row.jobId,
-        jobGroup: row.jobGroup,
-      };
-
-      const { code, msg } = await run(params);
-      if (code != 200) {
-        return message.error(msg);
-      }
-      message.success(msg);
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 移除任务
-   * @param row jobIds
-   */
-  const refRemove = async (jobIds: (string | number)[] | undefined) => {
-    try {
-      if (!jobIds) {
-        return true;
-      }
-
-      let params: string;
-      if (isArray(jobIds)) {
-        params = jobIds.join(',');
-      } else {
-        params = jobIds;
-      }
-
-      const { code, msg } = await remove(params);
-      if (code != 200) {
-        return message.error(msg);
-      }
-
-      message.success(msg);
-
-      acForm.current && acForm.current.reload();
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 新增任务
-   * @param row row
-   */
-  const refPost = async () => {
-    setModal({ title: '新增', visible: true });
-  };
-
-  /**
-   * 保存数据
-   */
-  const onSave = () => {
-    form
-      .validateFields()
-      .then(async (fields) => {
-        try {
-          // 开启加载中
-          setLoadingModal(true);
-          // ID为0则insert，否则将update
-          const { code, msg } = fields.jobId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
-            return message.error(msg);
-          }
-
-          message.success(msg);
-
-          if (acForm.current) {
-            acForm.current.reload();
-          }
-
-          // 关闭模态框
-          handleCancel();
-        } catch (e) {
-          system.error(e);
-        } finally {
-          setLoadingModal(false);
-        }
-      })
-      .catch((e) => {
-        system.error(e);
-      });
-  };
-
-  /**
-   * 取消Modal的显示
-   */
-  const handleCancel = () => {
-    setModal({ title: '', visible: false });
-    form.resetFields();
-  };
-
   return (
     <PageContainer>
       <ProTable<MonitorJob.PageListItem, MonitorJob.PageParams>
         {...proTableConfigs}
+        pagination={{
+          // 是否允许每页大小更改
+          showSizeChanger: true,
+          // 每页显示条数
+          pageSize: state.pageSize,
+        }}
         actionRef={acForm}
         formRef={formRef}
         rowKey="jobId"
         columns={columns}
-        request={async (params, sorter, filter) => {
-          const { data } = await pageQuery(params);
-          const { records, total } = data;
+        request={async (params) => {
+          const {data} = await pageQuery(params);
+          const {records, total} = data;
           return Promise.resolve({
             data: records,
             success: true,
@@ -310,39 +318,28 @@ const Job: React.FC<{}> = () => {
           });
         }}
         rowSelection={{}}
-        beforeSearchSubmit={(params) => {
-          // 分隔搜索参数
-          if (params.between) {
-            const { between } = params;
-            // 移除参数
-            delete params.between;
-
-            // 适配参数
-            params.beginTime = between[0];
-            params.endTime = between[1];
-          }
-          return params;
-        }}
-        toolBarRender={(action, { selectedRowKeys }) => [
-          <Button hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
-            <PlusOutlined />
+        toolBarRender={(action, {selectedRowKeys}) => [
+          <Button key={'addTool'} hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
+            <PlusOutlined/>
             新增
           </Button>,
           <Popconfirm
-            disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
+            key={'deleteTool'}
+            disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             onConfirm={() => refRemove(selectedRowKeys)}
             title="是否删除选中数据"
           >
             <Button
-              disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
+              disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
               type="primary"
               danger
             >
-              <DeleteOutlined />
+              <DeleteOutlined/>
               批量删除
             </Button>
           </Popconfirm>,
           <Popconfirm
+            key={'exportTool'}
             title="是否导出数据"
             onConfirm={() => {
               exportExcel({
@@ -351,7 +348,7 @@ const Job: React.FC<{}> = () => {
             }}
           >
             <Button type="default">
-              <FundProjectionScreenOutlined />
+              <FundProjectionScreenOutlined/>
               导出数据
             </Button>
           </Popconfirm>,
@@ -369,7 +366,7 @@ const Job: React.FC<{}> = () => {
       >
         <Form name="Job" form={form}>
           <Form.Item hidden {...formItemLayout} label="任务ID" name="jobId" initialValue={0}>
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Row>
@@ -378,9 +375,9 @@ const Job: React.FC<{}> = () => {
                 {...formItemLayout}
                 label="任务名称"
                 name="jobName"
-                rules={[{ required: true, message: '任务名称不能为空' }]}
+                rules={[{required: true, message: '任务名称不能为空'}]}
               >
-                <Input placeholder="任务名称" />
+                <Input placeholder="任务名称"/>
               </Form.Item>
             </Col>
 
@@ -389,9 +386,9 @@ const Job: React.FC<{}> = () => {
                 {...formItemLayout}
                 label="任务分组"
                 name="jobGroup"
-                rules={[{ required: true, message: '任务分组不能为空' }]}
+                rules={[{required: true, message: '任务分组不能为空'}]}
               >
-                <DictionariesSelect type="sys_job_group" />
+                <DictionariesSelect type="sys_job_group"/>
               </Form.Item>
             </Col>
           </Row>
@@ -399,10 +396,10 @@ const Job: React.FC<{}> = () => {
           <Form.Item
             {...{
               labelCol: {
-                sm: { span: 3 },
+                sm: {span: 3},
               },
               wrapperCol: {
-                sm: { span: 16 },
+                sm: {span: 16},
               },
             }}
             label={
@@ -420,9 +417,9 @@ const Job: React.FC<{}> = () => {
               </Tooltip>
             }
             name="invokeTarget"
-            rules={[{ required: true, message: '调用方法不能为空' }]}
+            rules={[{required: true, message: '调用方法不能为空'}]}
           >
-            <Input placeholder="调用方法" />
+            <Input placeholder="调用方法"/>
           </Form.Item>
 
           <Row>
@@ -431,9 +428,9 @@ const Job: React.FC<{}> = () => {
                 {...formItemLayout}
                 label="cron命令"
                 name="cronExpression"
-                rules={[{ required: true, message: 'cron命令不能为空' }]}
+                rules={[{required: true, message: 'cron命令不能为空'}]}
               >
-                <Input placeholder="cron命令" />
+                <Input placeholder="cron命令"/>
               </Form.Item>
             </Col>
 
@@ -450,10 +447,10 @@ const Job: React.FC<{}> = () => {
           <Form.Item
             {...{
               labelCol: {
-                sm: { span: 3 },
+                sm: {span: 3},
               },
               wrapperCol: {
-                sm: { span: 21 },
+                sm: {span: 21},
               },
             }}
             label="错误策略"
@@ -470,10 +467,10 @@ const Job: React.FC<{}> = () => {
           <Form.Item
             {...{
               labelCol: {
-                sm: { span: 3 },
+                sm: {span: 3},
               },
               wrapperCol: {
-                sm: { span: 16 },
+                sm: {span: 16},
               },
             }}
             label="状态"

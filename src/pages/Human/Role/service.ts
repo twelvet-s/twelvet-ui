@@ -19,7 +19,7 @@ export async function insert(params: Record<string, any>) {
 
 /**
  * 删除
- * @param postId 角色ID 
+ * @param postIds
  */
 export async function remove(postIds: (string | number)[] | string) {
     return request(`${controller}/${postIds}`, {
@@ -55,7 +55,7 @@ export async function pageQuery(params: Record<string, any>) {
 
 /**
  * 获取指定角色信息
- * @param params 搜索参数
+ * @param postId
  */
 export async function getByroleId(postId: number) {
     return request(`${controller}/${postId}`, {
@@ -65,7 +65,7 @@ export async function getByroleId(postId: number) {
 
 /**
  * 获取菜单树根据ID
- * @param params 搜索参数
+ * @param postId
  */
 export async function roleMenuTreeSelectByMenuId(postId: number) {
     return request(`/system/menu/roleMenuTreeSelect/${postId}`, {
@@ -75,7 +75,6 @@ export async function roleMenuTreeSelectByMenuId(postId: number) {
 
 /**
  * 获取菜单树
- * @param params 搜索参数
  */
 export async function roleMenuTreeSelect() {
     return request(`/system/menu/treeSelect`, {
@@ -85,7 +84,7 @@ export async function roleMenuTreeSelect() {
 
 /**
  * 获取部门树ID
- * @param params 搜索参数
+ * @param postId
  */
 export async function roleDeptTreeSelectByDeptId(postId: number) {
     return request(`/system/dept/roleDeptTreeSelect/${postId}`, {
@@ -95,7 +94,6 @@ export async function roleDeptTreeSelectByDeptId(postId: number) {
 
 /**
  * 获取部门树
- * @param params 搜索参数
  */
 export async function roleDeptTreeSelect() {
     return request(`/system/dept/treeSelect`, {

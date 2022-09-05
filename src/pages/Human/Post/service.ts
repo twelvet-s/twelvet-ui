@@ -19,7 +19,7 @@ export async function insert(params: Record<string, any>) {
 
 /**
  * 删除
- * @param postId 岗位ID 
+ * @param postIds
  */
 export async function remove(postIds: (string | number)[] | string) {
     return request(`${controller}/${postIds}`, {
@@ -55,7 +55,7 @@ export async function pageQuery(params: Record<string, any>) {
 
 /**
  * 获取指定岗位信息
- * @param params 搜索参数
+ * @param postId
  */
 export async function getByPostId(postId: number) {
     return request(`${controller}/${postId}`, {

@@ -1,12 +1,4 @@
 declare namespace HumanStaff {
-  /**
-   * 状态参数
-   */
-  type State = {
-    pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
-  };
 
   /**
    * 搜索参数
@@ -23,9 +15,12 @@ declare namespace HumanStaff {
    * 响应参数
    */
   type PageListItem = {
+    userId: number;
     username: string;
     nickName: string;
-    dept: string;
+    dept: {
+      deptName: string
+    };
     phonenumber: string;
     status: string;
     createTime: Date;

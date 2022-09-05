@@ -4,8 +4,6 @@ declare namespace MonitorJob {
    */
   type State = {
     pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
   };
 
   /**
@@ -23,6 +21,7 @@ declare namespace MonitorJob {
    * 响应参数
    */
   type PageListItem = {
+    jobId: number;
     jobName: string;
     jobGroup: string;
     invokeTarget: string;

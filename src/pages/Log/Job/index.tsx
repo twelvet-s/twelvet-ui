@@ -1,25 +1,26 @@
-import React, { useRef } from 'react';
+import React, {useRef, useState} from 'react';
 
 import ProTable from '@ant-design/pro-table';
-import { proTableConfigs } from '@/setting';
-import { DeleteOutlined, EyeOutlined, FundProjectionScreenOutlined } from '@ant-design/icons';
-import { Popconfirm, Button, message, DatePicker, Space } from 'antd';
-import { pageQuery, remove, exportExcel } from './service';
-import { system, auth } from '@/utils/twelvet';
-import type { RequestData } from '@ant-design/pro-table';
-import type { ProColumns } from '@ant-design/pro-components';
-import { PageContainer} from '@ant-design/pro-components';
-import type { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
+import {proTableConfigs} from '@/setting';
+import {DeleteOutlined, FundProjectionScreenOutlined} from '@ant-design/icons';
+import type {FormInstance} from 'antd';
+import {Popconfirm, Button, message} from 'antd';
+import {pageQuery, remove, exportExcel} from './service';
+import {system, auth} from '@/utils/twelvet';
+import type {ProColumns, ActionType} from '@ant-design/pro-components';
+import {PageContainer} from '@ant-design/pro-components';
 
 /**
  * 登录日志
  */
-const Login: React.FC<{}> = () => {
+const Login: React.FC = () => {
   const acForm = useRef<ActionType>();
 
   const formRef = useRef<FormInstance>();
 
-  const { RangePicker } = DatePicker;
+  const [state] = useState<LogJob.State>({
+    pageSize: 10
+  });
 
   // Form参数
   const columns: ProColumns<LogJob.PageListItem>[] = [
@@ -56,8 +57,8 @@ const Login: React.FC<{}> = () => {
       width: 200,
       dataIndex: 'status',
       valueEnum: {
-        '0': { text: '成功', status: 'success' },
-        '1': { text: '失败', status: 'error' },
+        '0': {text: '成功', status: 'success'},
+        '1': {text: '失败', status: 'error'},
       },
     },
     {
@@ -85,17 +86,18 @@ const Login: React.FC<{}> = () => {
 
   /**
    * 移除
-   * @param row jobLogIds
+   * @param jobLogIds
+   * @param action
    */
   const refRemove = async (
     jobLogIds: (string | number)[] | undefined,
-    action: UseFetchDataAction<RequestData<string>>,
+    action: any,
   ) => {
     try {
       if (!jobLogIds) {
         return true;
       }
-      const { code, msg } = await remove(jobLogIds.join(','));
+      const {code, msg} = await remove(jobLogIds.join(','));
       if (code != 200) {
         return message.error(msg);
       }
@@ -112,13 +114,19 @@ const Login: React.FC<{}> = () => {
     <PageContainer>
       <ProTable<LogJob.PageListItem, LogJob.PageParams>
         {...proTableConfigs}
+        pagination={{
+          // 是否允许每页大小更改
+          showSizeChanger: true,
+          // 每页显示条数
+          pageSize: state.pageSize,
+        }}
         actionRef={acForm}
         formRef={formRef}
         rowKey="jobLogId"
         columns={columns}
-        request={async (params, sorter, filter) => {
-          const { data } = await pageQuery(params);
-          const { records, total } = data;
+        request={async (params) => {
+          const {data} = await pageQuery(params);
+          const {records, total} = data;
           return Promise.resolve({
             data: records,
             success: true,
@@ -126,36 +134,25 @@ const Login: React.FC<{}> = () => {
           });
         }}
         rowSelection={{}}
-        beforeSearchSubmit={(params) => {
-          // 分隔搜索参数
-          if (params.between) {
-            const { between } = params;
-            // 移除参数
-            delete params.between;
-
-            // 适配参数
-            params.beginTime = between[0];
-            params.endTime = between[1];
-          }
-          return params;
-        }}
-        toolBarRender={(action, { selectedRowKeys }) => [
+        toolBarRender={(action, {selectedRowKeys}) => [
           <Popconfirm
-            disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
+            key={'deleteTool'}
+            disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             onConfirm={() => refRemove(selectedRowKeys, action)}
             title="是否删除选中数据"
           >
             <Button
               hidden={auth('system:dict:remove')}
-              disabled={selectedRowKeys && selectedRowKeys.length > 0 ? false : true}
+              disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
               type="primary"
               danger
             >
-              <DeleteOutlined />
+              <DeleteOutlined/>
               批量删除
             </Button>
           </Popconfirm>,
           <Popconfirm
+            key={'exportTool'}
             onConfirm={() => {
               exportExcel({
                 ...formRef.current?.getFieldsValue(),
@@ -164,13 +161,13 @@ const Login: React.FC<{}> = () => {
             title="是否导出数据"
           >
             <Button type="default" hidden={auth('system:dict:export')}>
-              <FundProjectionScreenOutlined />
+              <FundProjectionScreenOutlined/>
               导出数据
             </Button>
           </Popconfirm>,
-          <Popconfirm onConfirm={() => refRemove(selectedRowKeys, action)} title="是否清空">
+          <Popconfirm key={'cleanTool'} onConfirm={() => refRemove(selectedRowKeys, action)} title="是否清空">
             <Button type="primary" danger>
-              <DeleteOutlined />
+              <DeleteOutlined/>
               清空
             </Button>
           </Popconfirm>,

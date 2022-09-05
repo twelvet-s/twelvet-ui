@@ -4,8 +4,6 @@ declare namespace HumanPost {
    */
   type State = {
     pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
   };
 
   /**
@@ -23,6 +21,7 @@ declare namespace HumanPost {
    * 响应参数
    */
   type PageListItem = {
+    postId: number;
     postCode: string;
     postName: string;
     postSort: string;

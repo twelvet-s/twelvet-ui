@@ -244,7 +244,7 @@ const Menu: React.FC<{}> = () => {
 
       message.success(msg);
 
-      acForm.current && acForm.current.reload();
+      acForm?.current?.reload();
     } catch (e) {
       system.error(e);
     }

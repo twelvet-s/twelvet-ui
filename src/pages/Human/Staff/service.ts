@@ -19,7 +19,7 @@ export async function insert(params: Record<string, any>) {
 
 /**
  * 删除
- * @param userId 职员ID 
+ * @param userIds
  */
 export async function remove(userIds: (string | number)[] | string) {
     return request(`${controller}/${userIds}`, {
@@ -67,8 +67,8 @@ export async function pageQuery(params: Record<string, any>) {
 }
 
 /**
- * 
- * @param params 
+ *
+ * @param params
  */
 export async function changeStatus(params: Record<string, any>) {
     return request(`${controller}/changeStatus`, {
@@ -81,7 +81,7 @@ export async function changeStatus(params: Record<string, any>) {
 
 /**
  * 获取指定职员信息
- * @param params 搜索参数
+ * @param userId
  */
 export async function getByStaffId(userId: number) {
     return request(`${controller}/${userId}`, {
@@ -91,7 +91,6 @@ export async function getByStaffId(userId: number) {
 
 /**
  * 获取职员新增所属信息
- * @param userId 
  */
 export async function getByStaff() {
     return request(`${controller}/`, {
@@ -109,7 +108,6 @@ export async function exportExcel(params?: Record<string, any>) {
 
 /**
  * 获取部门树
- * @param params 搜索参数
  */
 export async function treeSelect() {
     return request(`/system/dept/treeSelect`, {
@@ -127,7 +125,7 @@ export async function exportTemplate(params?: Record<string, any>) {
 
 /**
  * 上传数据
- * @param params
+ * @param formData
  */
 export async function importData(formData: FormData) {
     return upload(`${controller}/importData`, formData);

@@ -1,12 +1,4 @@
 declare namespace HumanDept {
-  /**
-   * 状态参数
-   */
-  type State = {
-    pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
-  };
 
   /**
    * 搜索参数
@@ -22,6 +14,7 @@ declare namespace HumanDept {
    * 响应参数
    */
   type PageListItem = {
+    deptId: number;
     deptName: string;
     orderNum: string;
     status: string;

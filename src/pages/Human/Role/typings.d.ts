@@ -4,8 +4,6 @@ declare namespace HumanRole {
    */
   type State = {
     pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
   };
 
   /**
@@ -23,6 +21,7 @@ declare namespace HumanRole {
    * 响应参数
    */
   type PageListItem = {
+    roleId: number;
     roleName: string;
     roleKey: string;
     roleSort: string;
