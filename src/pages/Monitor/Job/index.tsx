@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 
-import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
 import {
   CaretRightOutlined,
@@ -29,7 +28,7 @@ import {system, auth} from '@/utils/twelvet';
 import JobStatus from './components/jobStatusSwitch/Index';
 import type {ProColumns} from '@ant-design/pro-components';
 import type {ActionType} from '@ant-design/pro-components';
-import {PageContainer} from '@ant-design/pro-components';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 import Details from './components/details/Index';
 import type {FormInstance} from 'antd/lib/form';
 import {isArray} from 'lodash';

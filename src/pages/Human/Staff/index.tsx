@@ -1,6 +1,5 @@
 import React, {useState, useRef} from 'react';
 
-import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
 import {
   DeleteOutlined,
@@ -41,7 +40,7 @@ import {
 import {system, auth} from '@/utils/twelvet';
 import {isArray} from 'lodash';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
-import {PageContainer} from '@ant-design/pro-components';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 
 /**
  * 职员模块

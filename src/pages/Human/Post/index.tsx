@@ -1,6 +1,5 @@
 import React, {useState, useRef} from 'react';
 
-import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
 import {
   DeleteOutlined,
@@ -25,7 +24,7 @@ import type {FormInstance} from 'antd/lib/form';
 import {pageQuery, remove, exportExcel, getByPostId, insert, update} from './service';
 import {system, auth} from '@/utils/twelvet';
 import type {ProColumns, ActionType} from '@ant-design/pro-components';
-import {PageContainer} from '@ant-design/pro-components';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 import {isArray} from 'lodash';
 
 /**

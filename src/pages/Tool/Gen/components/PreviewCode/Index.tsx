@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import {Modal, Tabs} from 'antd'
-import ProSkeleton from '@ant-design/pro-skeleton'
 import {getInfo} from './service'
 import {system} from '@/utils/twelvet'
 import styles from './styles.less'
@@ -58,8 +57,6 @@ const PreviewCode: React.FC<{
       }}
       footer={null}
     >
-
-      {loading && <ProSkeleton type="list"/>}
 
       {
         !loading && (

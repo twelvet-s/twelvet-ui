@@ -1,9 +1,7 @@
 import React, {useState, useRef} from 'react';
 
-import type {ActionType} from '@ant-design/pro-table';
 import type {ProColumns} from '@ant-design/pro-components';
-import {PageContainer} from '@ant-design/pro-components';
-import ProTable from '@ant-design/pro-table';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 import {proTableConfigs} from '@/setting';
 import {
   DeleteOutlined,

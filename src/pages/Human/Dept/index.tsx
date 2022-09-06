@@ -1,6 +1,5 @@
 import React, {useRef, useState} from 'react';
 
-import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
 import {CloseOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {
@@ -21,7 +20,7 @@ import {
 import {getInfo, insert, list, remove, update} from './service';
 import {auth, makeTree, system} from '@/utils/twelvet';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
-import {PageContainer} from '@ant-design/pro-components';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 
 /**
  * 部门模块

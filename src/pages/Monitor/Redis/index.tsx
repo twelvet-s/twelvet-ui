@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react'
 
-import ProDescriptions from '@ant-design/pro-descriptions'
 import {query} from './service'
 import {Card, Col, Row} from 'antd'
 import CommandStatsChart from './components/CommandStatsChart'
-import {PageContainer} from '@ant-design/pro-components'
+import {PageContainer, ProDescriptions} from '@ant-design/pro-components'
 import RAMChart from './components/RAMChart'
 import KeyChart from './components/KeyChart'
 

@@ -1,12 +1,9 @@
 import React, {useState, useRef, useEffect} from 'react';
 
-import type {ActionType} from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
 import {DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined} from '@ant-design/icons';
-import ProDescriptions from '@ant-design/pro-descriptions';
 import type {ProColumns} from '@ant-design/pro-components';
-import {PageContainer} from '@ant-design/pro-components';
+import {PageContainer, ProTable, ProDescriptions} from '@ant-design/pro-components';
 import type {FormInstance} from 'antd';
 import {Popconfirm, Button, message, Modal, Space} from 'antd';
 import {pageQuery, remove, exportExcel, getDictionariesType} from './service';

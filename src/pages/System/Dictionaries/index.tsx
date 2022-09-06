@@ -1,9 +1,8 @@
 import React, {useState, useRef} from 'react';
 
-import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
 import type {ProColumns, ActionType} from '@ant-design/pro-components';
-import {PageContainer} from '@ant-design/pro-components';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 import {
   DeleteOutlined,
   FundProjectionScreenOutlined,

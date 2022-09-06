@@ -1,6 +1,5 @@
 import React, {useState, useRef} from 'react';
 
-import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
 import RoleStatusSwitch from './components/Switch';
 import {
@@ -44,7 +43,7 @@ import {isArray} from 'lodash';
 import type {DataNode} from 'antd/lib/tree';
 import type {Key} from 'antd/lib/table/interface';
 import type {ProColumns, ActionType} from '@ant-design/pro-components'
-import {PageContainer} from '@ant-design/pro-components';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 
 /**
  * 角色模块

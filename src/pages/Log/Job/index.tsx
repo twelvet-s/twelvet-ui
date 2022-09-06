@@ -1,6 +1,5 @@
 import React, {useRef, useState} from 'react';
 
-import ProTable from '@ant-design/pro-table';
 import {proTableConfigs} from '@/setting';
 import {DeleteOutlined, FundProjectionScreenOutlined} from '@ant-design/icons';
 import type {FormInstance} from 'antd';
@@ -8,7 +7,7 @@ import {Popconfirm, Button, message} from 'antd';
 import {pageQuery, remove, exportExcel} from './service';
 import {system, auth} from '@/utils/twelvet';
 import type {ProColumns, ActionType} from '@ant-design/pro-components';
-import {PageContainer} from '@ant-design/pro-components';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 
 /**
  * 登录日志

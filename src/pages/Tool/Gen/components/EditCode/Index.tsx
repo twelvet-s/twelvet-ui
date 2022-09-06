@@ -7,7 +7,6 @@ import {Button, Cascader, Col, Divider, Drawer, Input, message, Row, Select, Tab
 import Form from 'antd/lib/form'
 import {getInfo, getMenus, getOptionSelect, putGen} from './service'
 import {makeTree, system} from '@/utils/twelvet'
-import ProSkeleton from '@ant-design/pro-skeleton';
 import TagList from './TagList'
 
 /**
@@ -438,8 +437,6 @@ const EditCode: React.FC<{
         </div>
       }
     >
-
-      {tableLoading && <ProSkeleton type="list"/>}
 
       {!tableLoading && (
         <EditableProTable<ToolGenEditCode.PageListItem, ToolGenEditCode.PageParams>
