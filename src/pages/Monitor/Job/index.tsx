@@ -357,7 +357,7 @@ const Job: React.FC = () => {
       <Modal
         title={`${modal.title}任务`}
         width={700}
-        visible={modal.visible}
+        open={modal.visible}
         okText={`${modal.title}`}
         confirmLoading={loadingModal}
         onOk={onSave}

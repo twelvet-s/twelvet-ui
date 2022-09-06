@@ -336,7 +336,7 @@ const Dictionaries: React.FC = () => {
 
       <Modal
         title={`${modal.title}字典`}
-        visible={modal.visible}
+        open={modal.visible}
         okText={`${modal.title}`}
         confirmLoading={loadingModal}
         onOk={onSave}

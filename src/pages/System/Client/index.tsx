@@ -272,7 +272,7 @@ const Post: React.FC = () => {
 
       <Modal
         title={`${modal.title}终端`}
-        visible={modal.visible}
+        open={modal.visible}
         okText={`${modal.title}`}
         confirmLoading={loadingModal}
         width={700}

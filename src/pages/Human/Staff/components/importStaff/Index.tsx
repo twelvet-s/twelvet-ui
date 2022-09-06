@@ -73,7 +73,7 @@ const DeptSearch: React.FC<{
     <>
       <Modal
         title='导入数据'
-        visible={visibleModal}
+        open={visibleModal}
         okText="上传"
         onCancel={onCancel}
         footer={[

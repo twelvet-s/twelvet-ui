@@ -292,7 +292,7 @@ const Post: React.FC = () => {
 
       <Modal
         title={`${modal.title}岗位`}
-        visible={modal.visible}
+        open={modal.visible}
         okText={`${modal.title}`}
         confirmLoading={loadingModal}
         onOk={onSave}

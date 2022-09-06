@@ -74,7 +74,7 @@ const ImportDFS: React.FC<{
         <>
             <Modal
                 title='文件上传'
-                visible={visibleModal}
+                open={visibleModal}
                 okText="上传"
                 onCancel={onCancel}
                 footer={[

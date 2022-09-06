@@ -323,7 +323,7 @@ const Menu: React.FC = () => {
       <Modal
         title={`${modal.title}菜单`}
         width={700}
-        visible={modal.visible}
+        open={modal.visible}
         confirmLoading={loadingModal}
         okText={`${modal.title}`}
         onOk={onSave}

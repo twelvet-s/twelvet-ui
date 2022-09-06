@@ -235,7 +235,7 @@ const Operation: React.FC = () => {
       <Modal
         title={`查看详情`}
         width={700}
-        visible={modal.visible}
+        open={modal.visible}
         okText={`${modal.title}`}
         onCancel={handleCancel}
         footer={null}

@@ -468,7 +468,7 @@ const Role: React.FC = () => {
 
       <Modal
         title={`${modal.title}角色`}
-        visible={modal.visible}
+        open={modal.visible}
         width={700}
         okText={`${modal.title}`}
         confirmLoading={loadingModal}

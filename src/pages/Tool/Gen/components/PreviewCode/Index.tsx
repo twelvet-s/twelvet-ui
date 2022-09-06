@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Modal, Tabs} from 'antd'
+import {Modal, Tabs, Skeleton} from 'antd'
 import {getInfo} from './service'
 import {system} from '@/utils/twelvet'
 import styles from './styles.less'
@@ -51,28 +51,26 @@ const PreviewCode: React.FC<{
     <Modal
       title={`代码预览`}
       width={'80%'}
-      visible={info.visible}
+      open={info.visible}
       onCancel={() => {
         onClose()
       }}
       footer={null}
     >
-
-      {
-        !loading && (
-          <Tabs
-            defaultActiveKey="1"
-            tabPosition='top'
-          >
-            <Tabs.TabPane tab="Controller.java" key="1">
+      <Skeleton active loading={loading}>
+        <Tabs
+          defaultActiveKey="1"
+          tabPosition='top'
+        >
+          <Tabs.TabPane tab="Controller.java" key="1">
               <pre className={styles.preCode}>
                   <code>
                     {codeData['vm/java/controller.java.vm']}
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-            <Tabs.TabPane tab="Service.java" key="2">
+          <Tabs.TabPane tab="Service.java" key="2">
               <pre className={styles.preCode}>
                   <code>
 
@@ -80,9 +78,9 @@ const PreviewCode: React.FC<{
 
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-            <Tabs.TabPane tab="ServiceImpl.java" key="3">
+          <Tabs.TabPane tab="ServiceImpl.java" key="3">
               <pre className={styles.preCode}>
                   <code>
 
@@ -90,9 +88,9 @@ const PreviewCode: React.FC<{
 
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-            <Tabs.TabPane tab="Mapper.java" key="4">
+          <Tabs.TabPane tab="Mapper.java" key="4">
               <pre className={styles.preCode}>
                   <code>
 
@@ -100,9 +98,9 @@ const PreviewCode: React.FC<{
 
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-            <Tabs.TabPane tab="Mapper.xml" key="5">
+          <Tabs.TabPane tab="Mapper.xml" key="5">
               <pre className={styles.preCode}>
                   <code>
 
@@ -110,9 +108,9 @@ const PreviewCode: React.FC<{
 
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-            <Tabs.TabPane tab="Domain.java" key="6">
+          <Tabs.TabPane tab="Domain.java" key="6">
               <pre className={styles.preCode}>
                   <code>
 
@@ -120,9 +118,9 @@ const PreviewCode: React.FC<{
 
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-            <Tabs.TabPane tab={codeData['vm/react/index.tsx.vm'] ? 'index.tsx' : 'index-tree.tsx'} key="7">
+          <Tabs.TabPane tab={codeData['vm/react/index.tsx.vm'] ? 'index.tsx' : 'index-tree.tsx'} key="7">
               <pre className={styles.preCode}>
                   <code>
 
@@ -130,9 +128,9 @@ const PreviewCode: React.FC<{
 
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-            <Tabs.TabPane tab="Api.ts" key="8">
+          <Tabs.TabPane tab="Api.ts" key="8">
               <pre className={styles.preCode}>
                   <code>
 
@@ -140,9 +138,9 @@ const PreviewCode: React.FC<{
 
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-            <Tabs.TabPane tab="SQL" key="9">
+          <Tabs.TabPane tab="SQL" key="9">
               <pre className={styles.preCode}>
                   <code>
 
@@ -150,11 +148,10 @@ const PreviewCode: React.FC<{
 
                   </code>
               </pre>
-            </Tabs.TabPane>
+          </Tabs.TabPane>
 
-          </Tabs>
-        )
-      }
+        </Tabs>
+      </Skeleton>
 
     </Modal>
   )

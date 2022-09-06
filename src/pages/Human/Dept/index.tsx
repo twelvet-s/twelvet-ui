@@ -279,7 +279,7 @@ const Dept: React.FC = () => {
       <Modal
         title={`${modal.title}部门`}
         width={700}
-        visible={modal.visible}
+        open={modal.visible}
         confirmLoading={loadingModal}
         okText={`${modal.title}`}
         onOk={onSave}

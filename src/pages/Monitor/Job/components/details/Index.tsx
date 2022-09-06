@@ -45,7 +45,7 @@ const Details: React.FC<{
     <Modal
       title={`查看详情`}
       width={700}
-      visible={props.modelDetails.vimodelDetails}
+      open={props.modelDetails.vimodelDetails}
       onCancel={props.onCancel}
       footer={null}
     >

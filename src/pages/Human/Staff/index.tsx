@@ -494,7 +494,7 @@ const Staff: React.FC = () => {
 
       <Modal
         title={`${resetPassword.title}`}
-        visible={resetPassword.visible}
+        open={resetPassword.visible}
         width={500}
         okText={`${resetPassword.title}`}
         confirmLoading={loadingModal}
@@ -521,7 +521,7 @@ const Staff: React.FC = () => {
 
       <Modal
         title={`${modal.title}职员`}
-        visible={modal.visible}
+        open={modal.visible}
         width={600}
         okText={`${modal.title}`}
         confirmLoading={loadingModal}
