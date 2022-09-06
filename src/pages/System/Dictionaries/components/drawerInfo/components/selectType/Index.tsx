@@ -1,57 +1,54 @@
-import React, { useEffect, useState } from 'react'
-import { message, Select } from 'antd'
-import { optionSelect } from './service'
-import { system } from '@/utils/twelvet'
+import React, {useEffect, useState} from 'react'
+import {Select} from 'antd'
+import {optionSelect} from './service'
+import {system} from '@/utils/twelvet'
 
 /**
  * 字典模块数据管理类型选择器
  */
-const DrawerInfo: React.FC<{}> = (props) => {
+const DrawerInfo: React.FC<any> = (props) => {
 
-    const { Option } = Select
+  const {Option} = Select
 
-    const [treeData, setTreeData] = useState<React.ReactNode[]>([])
+  const [treeData, setTreeData] = useState<React.ReactNode[]>([])
 
-    useEffect(() => {
-        makeTree()
-    }, [])
+  const makeTree = async () => {
+    try {
+      const {data} = await optionSelect()
 
-    const makeTree = async () => {
-        try {
-            const { code, msg, data } = await optionSelect()
-            if (code != 200) {
-                return message.error(msg)
-            }
+      // 制作数据
+      const tree: React.ReactNode[] = []
+      data.map((item: {
+        dictId: number
+        dictType: string
+        dictName: string
+      }) => {
+        tree.push(
+          <Option key={item.dictId} value={item.dictType}>{item.dictName}</Option>
+        )
+      })
 
-            // 制作数据
-            const tree: React.ReactNode[] = []
-            data.map((item: {
-                dictId: number
-                dictType: string
-                dictName: string
-            }) => {
-                tree.push(
-                    <Option key={item.dictId} value={item.dictType}>{item.dictName}</Option>
-                )
-            })
+      setTreeData(tree)
 
-            setTreeData(tree)
-
-        } catch (e) {
-            system.error(e)
-        }
+    } catch (e) {
+      system.error(e)
     }
+  }
 
-    return (
-        <Select
-            {...props}
-            placeholder='字典名称'
-            showSearch
-            allowClear
-        >
-            {treeData}
-        </Select>
-    )
+  useEffect(() => {
+    makeTree()
+  }, [])
+
+  return (
+    <Select
+      {...props}
+      placeholder='字典名称'
+      showSearch
+      allowClear
+    >
+      {treeData}
+    </Select>
+  )
 
 }
 

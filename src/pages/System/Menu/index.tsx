@@ -1,33 +1,32 @@
-import React, { useState, useRef } from 'react';
+import React, {useRef, useState} from 'react';
 
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import type {ActionType, ProColumns} from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { proTableConfigs } from '@/setting';
-import { createFromIconfontCN, PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
+import {proTableConfigs} from '@/setting';
+import {CloseOutlined, createFromIconfontCN, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {
-  Row,
-  Col,
   Button,
-  message,
-  Space,
-  Popconfirm,
-  Modal,
+  Col,
+  Divider,
   Form,
   Input,
   InputNumber,
+  message,
+  Modal,
+  Popconfirm,
   Radio,
+  Row,
+  Space,
   TreeSelect,
-  Divider,
 } from 'antd';
-import { list, getInfo, remove, insert, update } from './service';
-import { system, makeTree, auth } from '@/utils/twelvet';
-import type { FormInstance } from 'antd/lib/form';
-import { PageContainer } from '@ant-design/pro-components';
+import {getInfo, insert, list, remove, update} from './service';
+import {auth, makeTree, system} from '@/utils/twelvet';
+import {PageContainer} from '@ant-design/pro-components';
 
 /**
  * 菜单模块
  */
-const Menu: React.FC<{}> = () => {
+const Menu: React.FC = () => {
   // 是否执行Modal数据操作中
   const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
@@ -43,159 +42,18 @@ const Menu: React.FC<{}> = () => {
   // 菜单类型参数设置的显示
   const [menuType, setMenuType] = useState<string>(`M`);
   const acForm = useRef<ActionType>();
-  const [form] = Form.useForm<FormInstance>();
+  const [form] = Form.useForm();
 
   // 创建远程Icon
   const IconFont = createFromIconfontCN();
 
   const formItemLayout = {
     labelCol: {
-      sm: { span: 6 },
+      sm: {span: 6},
     },
     wrapperCol: {
-      sm: { span: 16 },
+      sm: {span: 16},
     },
-  };
-
-  // Form参数
-  const columns: ProColumns<SystemMenu.PageListItem>[] = [
-    {
-      title: '菜单名称',
-      fixed: 'left',
-      width: 200,
-      ellipsis: false,
-      valueType: 'text',
-      dataIndex: 'menuName',
-    },
-    {
-      title: 'Icon',
-      width: 50,
-      ellipsis: false,
-      valueType: 'text',
-      search: false,
-      dataIndex: 'icon',
-      render: (item: string) => {
-        return <IconFont type={item} />;
-      },
-    },
-    {
-      title: '排序',
-      width: 50,
-      ellipsis: false,
-      valueType: 'text',
-      search: false,
-      dataIndex: 'orderNum',
-    },
-    {
-      title: '权限标识',
-      width: 200,
-      search: false,
-      dataIndex: 'perms',
-    },
-    {
-      title: '组件路径',
-      width: 200,
-      search: false,
-      dataIndex: 'component',
-    },
-    {
-      title: '状态',
-      width: 80,
-      ellipsis: false,
-      dataIndex: 'status',
-      valueEnum: {
-        0: { text: '正常', status: 'success' },
-        1: { text: '停用', status: 'error' },
-      },
-    },
-    {
-      title: '创建时间',
-      width: 150,
-      valueType: 'dateTime',
-      search: false,
-      dataIndex: 'createTime',
-    },
-    {
-      title: '操作',
-      fixed: 'right',
-      width: 280,
-      search: false,
-      valueType: 'option',
-      dataIndex: 'operation',
-      render: (_: string, row: Record<string, string>) => {
-        return (
-          <>
-            {(row.menuType == `M` || row.menuType == `C`) && (
-              <>
-                <a onClick={() => refPost(row)} hidden={auth('system:menu:insert')}>
-                  <Space>
-                    <PlusOutlined />
-                    新增
-                  </Space>
-                </a>
-                <Divider type="vertical" />
-              </>
-            )}
-
-            <a onClick={() => refPut(row)} hidden={auth('system:menu:update')}>
-              <Space>
-                <EditOutlined />
-                修改
-              </Space>
-            </a>
-            <Divider type="vertical" />
-            <Popconfirm onConfirm={() => refRemove(row)} title="确定删除吗">
-              <a href="#" hidden={auth('system:menu:remove')}>
-                <Space>
-                  <CloseOutlined />
-                  删除
-                </Space>
-              </a>
-            </Popconfirm>
-          </>
-        );
-      },
-    },
-  ];
-
-  /**
-   * 获取新增菜单信息
-   * @param row row
-   */
-  const refPost = async (row: Record<string, any>) => {
-    // 更新数据
-    putData();
-
-    const field: Record<string, any> = { parentId: row.menuId };
-    // 设置表单数据
-    form.setFieldsValue(field);
-
-    setModal({ title: '新增', visible: true });
-  };
-
-  /**
-   * 获取修改菜单信息
-   * @param row row
-   */
-  const refPut = async (row: Record<string, any>) => {
-    try {
-      // 更新菜单数据
-      putData();
-      const { code, msg, data } = await getInfo(row.menuId);
-      if (code != 200) {
-        return message.error(msg);
-      }
-      // 赋值表单数据
-      form.setFieldsValue(data);
-
-      // 设置菜单类型
-      setMenuType(data.menuType);
-
-      // 设置Modal状态
-      setModal({ title: '修改', visible: true });
-    } catch (e) {
-      system.error(e);
-    }
   };
 
   /**
@@ -203,7 +61,7 @@ const Menu: React.FC<{}> = () => {
    */
   const putData = async () => {
     try {
-      const { code, msg, data } = await list({});
+      const {code, msg, data} = await list({});
       if (code != 200) {
         return message.error(msg);
       }
@@ -232,12 +90,52 @@ const Menu: React.FC<{}> = () => {
   };
 
   /**
+   * 获取新增菜单信息
+   * @param row row
+   */
+  const refPost = async (row: Record<string, any>) => {
+    // 更新数据
+    putData();
+
+    const field: Record<string, any> = {parentId: row.menuId};
+    // 设置表单数据
+    form.setFieldsValue(field);
+
+    setModal({title: '新增', visible: true});
+  };
+
+  /**
+   * 获取修改菜单信息
+   * @param row row
+   */
+  const refPut = async (row: Record<string, any>) => {
+    try {
+      // 更新菜单数据
+      putData();
+      const {code, msg, data} = await getInfo(row.menuId);
+      if (code != 200) {
+        return message.error(msg);
+      }
+      // 赋值表单数据
+      form.setFieldsValue(data);
+
+      // 设置菜单类型
+      setMenuType(data.menuType);
+
+      // 设置Modal状态
+      setModal({title: '修改', visible: true});
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
    * 移除菜单
    * @param row row
    */
   const refRemove = async (row: Record<string, any>) => {
     try {
-      const { code, msg } = await remove(row.menuId);
+      const {code, msg} = await remove(row.menuId);
       if (code != 200) {
         return message.error(msg);
       }
@@ -254,7 +152,7 @@ const Menu: React.FC<{}> = () => {
    * 取消Modal的显示
    */
   const handleCancel = () => {
-    setModal({ title: '', visible: false });
+    setModal({title: '', visible: false});
 
     form.resetFields();
 
@@ -272,10 +170,7 @@ const Menu: React.FC<{}> = () => {
           // 开启加载中
           setLoadingModal(true);
           // menuId为0则insert，否则将update
-          const { code, msg } = fields.menuId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
-            return message.error(msg);
-          }
+          const {msg} = fields.menuId == 0 ? await insert(fields) : await update(fields);
 
           message.success(msg);
 
@@ -296,6 +191,107 @@ const Menu: React.FC<{}> = () => {
       });
   };
 
+  // Form参数
+  const columns: ProColumns<SystemMenu.PageListItem>[] = [
+    {
+      title: '菜单名称',
+      fixed: 'left',
+      width: 200,
+      ellipsis: false,
+      valueType: 'text',
+      dataIndex: 'menuName',
+    },
+    {
+      title: 'Icon',
+      width: 50,
+      ellipsis: false,
+      valueType: 'text',
+      search: false,
+      dataIndex: 'icon',
+      render: (item) => {
+        return item && <IconFont type={item.toString()}/>;
+      },
+    },
+    {
+      title: '排序',
+      width: 50,
+      ellipsis: false,
+      valueType: 'text',
+      search: false,
+      dataIndex: 'orderNum',
+    },
+    {
+      title: '权限标识',
+      width: 200,
+      search: false,
+      dataIndex: 'perms',
+    },
+    {
+      title: '组件路径',
+      width: 200,
+      search: false,
+      dataIndex: 'component',
+    },
+    {
+      title: '状态',
+      width: 80,
+      ellipsis: false,
+      dataIndex: 'status',
+      valueEnum: {
+        0: {text: '正常', status: 'success'},
+        1: {text: '停用', status: 'error'},
+      },
+    },
+    {
+      title: '创建时间',
+      width: 150,
+      valueType: 'dateTime',
+      search: false,
+      dataIndex: 'createTime',
+    },
+    {
+      title: '操作',
+      fixed: 'right',
+      width: 280,
+      search: false,
+      valueType: 'option',
+      dataIndex: 'operation',
+      render: (_, row) => {
+        return (
+          <>
+            {(row.menuType == `M` || row.menuType == `C`) && (
+              <>
+                <a onClick={() => refPost(row)} hidden={auth('system:menu:insert')}>
+                  <Space>
+                    <PlusOutlined/>
+                    新增
+                  </Space>
+                </a>
+                <Divider type="vertical"/>
+              </>
+            )}
+
+            <a onClick={() => refPut(row)} hidden={auth('system:menu:update')}>
+              <Space>
+                <EditOutlined/>
+                修改
+              </Space>
+            </a>
+            <Divider type="vertical"/>
+            <Popconfirm onConfirm={() => refRemove(row)} title="确定删除吗">
+              <a href="#" hidden={auth('system:menu:remove')}>
+                <Space>
+                  <CloseOutlined/>
+                  删除
+                </Space>
+              </a>
+            </Popconfirm>
+          </>
+        );
+      },
+    },
+  ];
+
   return (
     <PageContainer>
       <ProTable<SystemMenu.PageListItem, SystemMenu.PageParams>
@@ -304,21 +300,21 @@ const Menu: React.FC<{}> = () => {
         rowKey="menuId"
         columns={columns}
         // 处理响应的数据
-        postData={(dataSource) => {
-          const tree = makeTree({
-            dataSource: dataSource,
+        postData={(postDataSource) => {
+          return makeTree({
+            dataSource: postDataSource,
             id: 'menuId',
           });
-          return tree;
         }}
         request={list}
         toolBarRender={() => [
           <Button
+            key={'addTool'}
             hidden={auth('system:menu:insert')}
             type="default"
-            onClick={() => refPost({ menuId: 0 })}
+            onClick={() => refPost({menuId: 0})}
           >
-            <PlusOutlined />
+            <PlusOutlined/>
             新增
           </Button>,
         ]}
@@ -336,16 +332,16 @@ const Menu: React.FC<{}> = () => {
       >
         <Form name="Menu" form={form}>
           <Form.Item hidden label="菜单ID" name="menuId" initialValue={0}>
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Form.Item
             {...{
               labelCol: {
-                sm: { span: 3 },
+                sm: {span: 3},
               },
               wrapperCol: {
-                sm: { span: 16 },
+                sm: {span: 16},
               },
             }}
             label="上级菜单"
@@ -356,7 +352,7 @@ const Menu: React.FC<{}> = () => {
               showSearch
               // 根据title进行搜索
               treeNodeFilterProp="title"
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              dropdownStyle={{maxHeight: 400, overflow: 'auto'}}
               placeholder="上级菜单"
               treeData={dataSource}
             />
@@ -365,10 +361,10 @@ const Menu: React.FC<{}> = () => {
           <Form.Item
             {...{
               labelCol: {
-                sm: { span: 3 },
+                sm: {span: 3},
               },
               wrapperCol: {
-                sm: { span: 16 },
+                sm: {span: 16},
               },
             }}
             label="菜单类型"
@@ -391,9 +387,9 @@ const Menu: React.FC<{}> = () => {
             <Form.Item
               label="菜单图标"
               name="icon"
-              rules={[{ required: true, message: '菜单图标不能为空' }]}
+              rules={[{required: true, message: '菜单图标不能为空'}]}
             >
-              <Input placeholder="菜单图标" />
+              <Input placeholder="菜单图标"/>
             </Form.Item>
           )}
 
@@ -403,9 +399,9 @@ const Menu: React.FC<{}> = () => {
                 {...formItemLayout}
                 label="菜单名称"
                 name="menuName"
-                rules={[{ required: true, message: '菜单名称不能为空' }]}
+                rules={[{required: true, message: '菜单名称不能为空'}]}
               >
-                <Input placeholder="菜单名称" />
+                <Input placeholder="菜单名称"/>
               </Form.Item>
             </Col>
 
@@ -414,9 +410,9 @@ const Menu: React.FC<{}> = () => {
                 {...formItemLayout}
                 label="显示排序"
                 name="orderNum"
-                rules={[{ required: true, message: '菜单排序不能为空' }]}
+                rules={[{required: true, message: '菜单排序不能为空'}]}
               >
-                <InputNumber placeholder="排序" min={0} />
+                <InputNumber placeholder="排序" min={0}/>
               </Form.Item>
             </Col>
           </Row>
@@ -437,9 +433,9 @@ const Menu: React.FC<{}> = () => {
                   {...formItemLayout}
                   label="路由地址"
                   name="path"
-                  rules={[{ required: true, message: '路由地址不能为空' }]}
+                  rules={[{required: true, message: '路由地址不能为空'}]}
                 >
-                  <Input placeholder="路由地址" />
+                  <Input placeholder="路由地址"/>
                 </Form.Item>
               </Col>
             </Row>
@@ -452,9 +448,9 @@ const Menu: React.FC<{}> = () => {
                   {...formItemLayout}
                   label="组件路径"
                   name="component"
-                  rules={[{ required: true, message: '组件路径不能为空' }]}
+                  rules={[{required: true, message: '组件路径不能为空'}]}
                 >
-                  <Input placeholder="组件路径" />
+                  <Input placeholder="组件路径"/>
                 </Form.Item>
               </Col>
             )}
@@ -465,9 +461,9 @@ const Menu: React.FC<{}> = () => {
                   {...formItemLayout}
                   label="权限标识"
                   name="perms"
-                  rules={[{ required: true, message: '权限标识不能为空' }]}
+                  rules={[{required: true, message: '权限标识不能为空'}]}
                 >
-                  <Input placeholder="权限标识" />
+                  <Input placeholder="权限标识"/>
                 </Form.Item>
               </Col>
             )}

@@ -26,7 +26,7 @@ const Details: React.FC<{
         return false;
       }
 
-      const {code, msg, data} = await getByJobId(jobId)
+      const {code, msg, data} = await getByJobId({jobId: jobId})
       if (code != 200) {
         return message.error(msg)
       }

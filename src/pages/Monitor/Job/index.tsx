@@ -87,7 +87,7 @@ const Job: React.FC = () => {
    */
   const refPut = async (jobId: number) => {
     try {
-      const {data} = await getByJobId(jobId);
+      const {data} = await getByJobId({jobId: jobId});
       // 赋值表单数据
       form.setFieldsValue(data);
 

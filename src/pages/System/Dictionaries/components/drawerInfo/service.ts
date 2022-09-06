@@ -1,5 +1,5 @@
-import { request } from '@umijs/max'
-import { download } from '@/utils/twelvet'
+import {request} from '@umijs/max'
+import {download} from '@/utils/twelvet'
 
 // 请求的控制器名称
 const controller = "/system/dictionaries/data";
@@ -9,22 +9,22 @@ const controller = "/system/dictionaries/data";
  * @param params 搜索参数
  */
 export async function insert(params: Record<string, any>) {
-    return request(`${controller}`, {
-        method: 'POST',
-        data: {
-            ...params
-        },
-    });
+  return request(`${controller}`, {
+    method: 'POST',
+    data: {
+      ...params
+    },
+  });
 }
 
 /**
  * 删除
- * @param postId 字典ID 
+ * @param postIds
  */
 export async function remove(postIds: (string | number)[] | string) {
-    return request(`${controller}/${postIds}`, {
-        method: 'DELETE',
-    });
+  return request(`${controller}/${postIds}`, {
+    method: 'DELETE',
+  });
 }
 
 /**
@@ -32,12 +32,12 @@ export async function remove(postIds: (string | number)[] | string) {
  * @param params 搜索参数
  */
 export async function update(params: Record<string, any>) {
-    return request(`${controller}`, {
-        method: 'PUT',
-        data: {
-            ...params
-        },
-    });
+  return request(`${controller}`, {
+    method: 'PUT',
+    data: {
+      ...params
+    },
+  });
 }
 
 /**
@@ -45,22 +45,22 @@ export async function update(params: Record<string, any>) {
  * @param params 搜索参数
  */
 export async function pageQuery(params: Record<string, any>) {
-    return request(`${controller}/pageQuery`, {
-        method: 'GET',
-        params: {
-            ...params
-        },
-    });
+  return request(`${controller}/pageQuery`, {
+    method: 'GET',
+    params: {
+      ...params
+    },
+  });
 }
 
 /**
  * 获取指定字典信息
- * @param params 搜索参数
+ * @param postId
  */
 export async function getBydictCode(postId: number) {
-    return request(`${controller}/${postId}`, {
-        method: 'GET'
-    });
+  return request(`${controller}/${postId}`, {
+    method: 'GET'
+  });
 }
 
 /**
@@ -68,5 +68,5 @@ export async function getBydictCode(postId: number) {
  * @param params
  */
 export async function exportExcel(params?: Record<string, any>) {
-    return download(`${controller}/export`, params);
+  return download(`${controller}/export`, params);
 }

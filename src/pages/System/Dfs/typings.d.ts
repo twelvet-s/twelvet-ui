@@ -4,8 +4,6 @@ declare namespace SystemDfs {
    */
   type State = {
     pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
   };
 
   /**
@@ -21,6 +19,8 @@ declare namespace SystemDfs {
    * 响应参数
    */
   type PageListItem = {
+    fileId: number;
+    path: string;
     spaceName: string;
     fileName: string;
     originalFileName: string;

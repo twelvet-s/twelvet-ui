@@ -19,7 +19,7 @@ export async function insert(params: Record<string, any>) {
 
 /**
  * 删除
- * @param postId 字典ID 
+ * @param postIds
  */
 export async function remove(postIds: (string | number)[] | string) {
     return request(`${controller}/${postIds}`, {
@@ -55,7 +55,7 @@ export async function pageQuery(params: Record<string, any>) {
 
 /**
  * 获取指定字典信息
- * @param params 搜索参数
+ * @param postId
  */
 export async function getBydictId(postId: number) {
     return request(`${controller}/${postId}`, {
@@ -65,7 +65,6 @@ export async function getBydictId(postId: number) {
 
 /**
  * 获取指定字典信息
- * @param params 搜索参数
  */
 export async function clearCache() {
     return request(`${controller}/clearCache`, {

@@ -4,8 +4,6 @@ declare namespace SystemDictionariesDrawerinfo {
    */
   type State = {
     pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
   };
 
   /**
@@ -21,6 +19,7 @@ declare namespace SystemDictionariesDrawerinfo {
    * 响应参数
    */
   type PageListItem = {
+    dictCode: string;
     dictName: string;
     dictValue: string;
     dictSort: string;

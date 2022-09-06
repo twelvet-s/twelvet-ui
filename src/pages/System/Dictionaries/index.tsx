@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 
 import ProTable from '@ant-design/pro-table';
-import { proTableConfigs } from '@/setting';
-import { ProColumns } from '@ant-design/pro-components';
-import { PageContainer} from '@ant-design/pro-components';
+import {proTableConfigs} from '@/setting';
+import type {ProColumns, ActionType} from '@ant-design/pro-components';
+import {PageContainer} from '@ant-design/pro-components';
 import {
   DeleteOutlined,
   FundProjectionScreenOutlined,
@@ -12,17 +12,17 @@ import {
   CloseOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import { Popconfirm, Button, message, Modal, Form, Input, Radio, Space, Divider } from 'antd';
-import type { FormInstance } from 'antd/lib/form';
-import { pageQuery, remove, exportExcel, getBydictId, insert, update, clearCache } from './service';
-import { system, auth } from '@/utils/twelvet';
-import { isArray } from 'lodash';
+import {Popconfirm, Button, message, Modal, Form, Input, Radio, Space, Divider} from 'antd';
+import type {FormInstance} from 'antd/lib/form';
+import {pageQuery, remove, exportExcel, getBydictId, insert, update, clearCache} from './service';
+import {system, auth} from '@/utils/twelvet';
+import {isArray} from 'lodash';
 import DrawerInfo from './components/drawerInfo/Index';
 
 /**
  * 字典模块类型管理
  */
-const Dictionaries: React.FC<{}> = (xinzen) => {
+const Dictionaries: React.FC = () => {
   // 显示Modal
   const [modal, setModal] = useState<{ title: string; visible: boolean }>({
     title: ``,
@@ -44,114 +44,30 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
 
   const formRef = useRef<FormInstance>();
 
-  const [form] = Form.useForm<FormInstance>();
+  const [state] = useState<SystemDictionaries.State>({
+    pageSize: 10,
+  });
 
-  const { TextArea } = Input;
+  const [form] = Form.useForm();
+
+  const {TextArea} = Input;
 
   const formItemLayout = {
     labelCol: {
-      xs: { span: 4 },
-      sm: { span: 4 },
+      xs: {span: 4},
+      sm: {span: 4},
     },
     wrapperCol: {
-      xs: { span: 18 },
-      sm: { span: 18 },
+      xs: {span: 18},
+      sm: {span: 18},
     },
   };
 
-  // Form参数
-  const columns: ProColumns<SystemDictionaries.PageListItem>[] = [
-    {
-      title: '字典名称',
-      ellipsis: true,
-      width: 200,
-      valueType: 'text',
-      dataIndex: 'dictName',
-    },
-    {
-      title: '字典类型',
-      width: 200,
-      valueType: 'text',
-      dataIndex: 'dictType',
-    },
-    {
-      title: '状态',
-      ellipsis: false,
-      width: 80,
-      dataIndex: 'status',
-      valueEnum: {
-        0: { text: '正常', status: 'success' },
-        1: { text: '停用', status: 'error' },
-      },
-    },
-    {
-      title: '备注',
-      search: false,
-      width: 200,
-      valueType: 'text',
-      dataIndex: 'remark',
-    },
-    {
-      title: '创建时间',
-      search: false,
-      width: 200,
-      valueType: 'dateTime',
-      dataIndex: 'createTime',
-    },
-    {
-      title: '操作',
-      fixed: 'right',
-      width: 320,
-      valueType: 'option',
-      dataIndex: 'operation',
-      render: (_: string, row: Record<string, string>) => {
-        return (
-          <>
-            <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
-              <Space>
-                <EditOutlined />
-                修改
-              </Space>
-            </a>
-
-            <Divider type="vertical" />
-
-            <a
-              onClick={() => {
-                setDrawerInfo({
-                  drawerInfoKey: row.dictType,
-                  visible: true,
-                });
-              }}
-            >
-              <Space>
-                <SettingOutlined />
-                数据管理
-              </Space>
-            </a>
-
-            <Divider type="vertical" />
-
-            <Popconfirm onConfirm={() => refRemove(row.dictId)} title="确定删除吗">
-              <a href="#" hidden={auth('system:dict:remove')}>
-                <Space>
-                  <CloseOutlined />
-                  删除
-                </Space>
-              </a>
-            </Popconfirm>
-          </>
-        );
-      },
-    },
-  ];
-
   /**
    * 新增字典
-   * @param row row
    */
   const refPost = async () => {
-    setModal({ title: '新增', visible: true });
+    setModal({title: '新增', visible: true});
   };
 
   /**
@@ -160,7 +76,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
    */
   const refPut = async (row: Record<string, any>) => {
     try {
-      const { code, msg, data } = await getBydictId(row.dictId);
+      const {code, msg, data} = await getBydictId(row.dictId);
       if (code != 200) {
         return message.error(msg);
       }
@@ -168,7 +84,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
       form.setFieldsValue(data);
 
       // 设置Modal状态
-      setModal({ title: '修改', visible: true });
+      setModal({title: '修改', visible: true});
     } catch (e) {
       system.error(e);
     }
@@ -176,12 +92,12 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
 
   /**
    * 移除字典
-   * @param row dictIds
+   * @param dictIds
    */
   const refRemove = async (dictIds: (string | number)[] | string | undefined) => {
     try {
       if (!dictIds) {
-        return true;
+        return;
       }
 
       let params;
@@ -191,7 +107,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
         params = dictIds;
       }
 
-      const { code, msg } = await remove(params);
+      const {code, msg} = await remove(params);
 
       if (code !== 200) {
         return message.error(msg);
@@ -209,7 +125,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
    * 取消Modal的显示
    */
   const handleCancel = () => {
-    setModal({ title: '', visible: false });
+    setModal({title: '', visible: false});
 
     form.resetFields();
   };
@@ -226,7 +142,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
           setLoadingModal(true);
 
           // ID为0则insert，否则将update
-          const { code, msg } = fields.dictId == 0 ? await insert(fields) : await update(fields);
+          const {code, msg} = fields.dictId == 0 ? await insert(fields) : await update(fields);
           if (code != 200) {
             return message.error(msg);
           }
@@ -255,7 +171,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
    */
   const clear = async () => {
     try {
-      const { code, msg } = await clearCache();
+      const {code, msg} = await clearCache();
       if (code != 200) {
         return message.error(msg);
       }
@@ -265,17 +181,110 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
     }
   };
 
+  // Form参数
+  const columns: ProColumns<SystemDictionaries.PageListItem>[] = [
+    {
+      title: '字典名称',
+      ellipsis: true,
+      width: 200,
+      valueType: 'text',
+      dataIndex: 'dictName',
+    },
+    {
+      title: '字典类型',
+      width: 200,
+      valueType: 'text',
+      dataIndex: 'dictType',
+    },
+    {
+      title: '状态',
+      ellipsis: false,
+      width: 80,
+      dataIndex: 'status',
+      valueEnum: {
+        0: {text: '正常', status: 'success'},
+        1: {text: '停用', status: 'error'},
+      },
+    },
+    {
+      title: '备注',
+      search: false,
+      width: 200,
+      valueType: 'text',
+      dataIndex: 'remark',
+    },
+    {
+      title: '创建时间',
+      search: false,
+      width: 200,
+      valueType: 'dateTime',
+      dataIndex: 'createTime',
+    },
+    {
+      title: '操作',
+      fixed: 'right',
+      width: 320,
+      valueType: 'option',
+      dataIndex: 'operation',
+      render: (_, row) => {
+        return (
+          <>
+            <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
+              <Space>
+                <EditOutlined/>
+                修改
+              </Space>
+            </a>
+
+            <Divider type="vertical"/>
+
+            <a
+              onClick={() => {
+                setDrawerInfo({
+                  drawerInfoKey: row.dictType,
+                  visible: true,
+                });
+              }}
+            >
+              <Space>
+                <SettingOutlined/>
+                数据管理
+              </Space>
+            </a>
+
+            <Divider type="vertical"/>
+
+            <Popconfirm onConfirm={() => refRemove([row.dictId])} title="确定删除吗">
+              <a href="#" hidden={auth('system:dict:remove')}>
+                <Space>
+                  <CloseOutlined/>
+                  删除
+                </Space>
+              </a>
+            </Popconfirm>
+          </>
+        );
+      },
+    },
+  ];
+
   return (
     <PageContainer>
       <ProTable<SystemDictionaries.PageListItem, SystemDictionaries.PageParams>
         {...proTableConfigs}
+        pagination={{
+          // 是否允许每页大小更改
+          showSizeChanger: true,
+          // 每页显示条数
+          pageSize: state.pageSize,
+        }}
         actionRef={acForm}
         formRef={formRef}
         rowKey="dictId"
         columns={columns}
-        request={async (params, sorter, filter) => {
-          const { data } = await pageQuery(params);
-          const { records, total } = data;
+        request={async (params) => {
+          const {data} = await pageQuery(params);
+          const {records, total} = data;
           return Promise.resolve({
             data: records,
             success: true,
@@ -283,25 +292,13 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
           });
         }}
         rowSelection={{}}
-        beforeSearchSubmit={(params) => {
-          // 分隔搜索参数
-          if (params.between) {
-            const { between } = params;
-            // 移除参数
-            delete params.between;
-
-            // 适配参数
-            params.beginTime = between[0];
-            params.endTime = between[1];
-          }
-          return params;
-        }}
-        toolBarRender={(action, { selectedRowKeys }) => [
-          <Button hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
-            <PlusOutlined />
+        toolBarRender={(action, {selectedRowKeys}) => [
+          <Button key={'addTool'} hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
+            <PlusOutlined/>
             新增
           </Button>,
           <Popconfirm
+            key={'deleteTool'}
             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             onConfirm={() => refRemove(selectedRowKeys)}
             title="是否删除选中数据"
@@ -311,11 +308,12 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
               type="primary"
               danger
             >
-              <DeleteOutlined />
+              <DeleteOutlined/>
               批量删除
             </Button>
           </Popconfirm>,
           <Popconfirm
+            key={'exportTool'}
             title="是否导出数据"
             onConfirm={() => {
               exportExcel({
@@ -324,13 +322,13 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
             }}
           >
             <Button type="default" hidden={auth('system:dict:export')}>
-              <FundProjectionScreenOutlined />
+              <FundProjectionScreenOutlined/>
               导出数据
             </Button>
           </Popconfirm>,
-          <Popconfirm title="是否清空缓存" onConfirm={() => clear()}>
+          <Popconfirm key={'cleanTool'} title="是否清空缓存" onConfirm={() => clear()}>
             <Button type="primary" danger>
-              <FundProjectionScreenOutlined />
+              <FundProjectionScreenOutlined/>
               清空缓存
             </Button>
           </Popconfirm>,
@@ -347,25 +345,25 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
       >
         <Form name="Dictionaries" form={form}>
           <Form.Item hidden {...formItemLayout} label="字典ID" name="dictId" initialValue={0}>
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Form.Item
             {...formItemLayout}
             label="字典名称"
             name="dictName"
-            rules={[{ required: true, message: '字典名称不能为空' }]}
+            rules={[{required: true, message: '字典名称不能为空'}]}
           >
-            <Input placeholder="字典名称" />
+            <Input placeholder="字典名称"/>
           </Form.Item>
 
           <Form.Item
             {...formItemLayout}
             label="字典类型"
             name="dictType"
-            rules={[{ required: true, message: '字典类型不能为空' }]}
+            rules={[{required: true, message: '字典类型不能为空'}]}
           >
-            <Input placeholder="字典类型" />
+            <Input placeholder="字典类型"/>
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="字典状态" name="status" initialValue={'0'}>
@@ -376,7 +374,7 @@ const Dictionaries: React.FC<{}> = (xinzen) => {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="备注" name="remark">
-            <TextArea placeholder="请输入内容" />
+            <TextArea placeholder="请输入内容"/>
           </Form.Item>
         </Form>
       </Modal>

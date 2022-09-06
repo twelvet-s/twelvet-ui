@@ -18,7 +18,7 @@ export async function insert(params: Record<string, any>) {
 
 /**
  * 删除
- * @param clinet 终端ID 
+ * @param clinets
  */
 export async function remove(clinets: (string | number)[] | string) {
     return request(`${controller}/${clinets}`, {
@@ -54,7 +54,7 @@ export async function pageQuery(params: Record<string, any>) {
 
 /**
  * 获取指定终端信息
- * @param params 搜索参数
+ * @param clinet
  */
 export async function getByClientId(clinet: number) {
     return request(`${controller}/${clinet}`, {

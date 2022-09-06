@@ -6,7 +6,7 @@ import styles from './index.less'
 import type { RcFile } from 'antd/lib/upload'
 import { uploadFile } from './service'
 
-const importDFS: React.FC<{
+const ImportDFS: React.FC<{
     visible: boolean
     onCancel: () => void
     ok: () => void
@@ -89,7 +89,7 @@ const importDFS: React.FC<{
                 <Dragger
                     // 列表显示模式
                     listType="text"
-                    name="fils"
+                    name="files"
                     // 支持多文件上传
                     multiple
                     // 文件列表
@@ -97,7 +97,7 @@ const importDFS: React.FC<{
                     onChange={(info: any) => {
                         const fileList: any[] = info.fileList
 
-                        const filesTemp: RcFile[] = []
+                        const filesTemp: any[] = []
 
                         fileList.forEach((file: {
                             originFileObj: RcFile
@@ -113,7 +113,7 @@ const importDFS: React.FC<{
                         setFiles(filesTemp)
                     }}
                     // 限制上传文件
-                    beforeUpload={(file: RcFile) => {
+                    beforeUpload={() => {
                         // 不允许直接上传, 手动操作
                         return false
                     }}
@@ -122,7 +122,7 @@ const importDFS: React.FC<{
                         <InboxOutlined />
                     </p>
                     <p className="ant-upload-text">
-                        将文件拖拽到此处，或<span className={styles.clickColr}>点击上传</span>
+                        将文件拖拽到此处，或<span className={styles.clickColor}>点击上传</span>
                     </p>
                 </Dragger>
 
@@ -131,4 +131,4 @@ const importDFS: React.FC<{
     )
 }
 
-export default importDFS
+export default ImportDFS

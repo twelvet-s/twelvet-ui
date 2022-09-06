@@ -1,55 +1,52 @@
-import React, { useEffect, useState } from 'react'
-import { Checkbox, CheckboxOptionType, message } from 'antd'
-import { getDictionariesType } from './service'
-import { system } from '@/utils/twelvet'
+import React, {useEffect, useState} from 'react'
+import {Checkbox} from 'antd'
+import {getDictionariesType} from './service'
+import {system} from '@/utils/twelvet'
 
 /**
  * 字典模块数据管理类型选择器
  */
 const DictionariesCheckbox: React.FC<{
-    type: string
+  type: string
 }> = (props) => {
 
-    const [treeData, setTreeData] = useState<Array<CheckboxOptionType | string>>([])
+  const [treeData, setTreeData] = useState<any>([])
 
-    const { type } = props
+  const {type} = props
 
-    useEffect(() => {
-        makeTree()
-    }, [])
+  const makeTree = async () => {
+    try {
+      const {data} = await getDictionariesType(type)
 
-    const makeTree = async () => {
-        try {
-            const { code, msg, data } = await getDictionariesType(type)
-            if (code != 200) {
-                return message.error(msg)
-            }
+      // 制作数据
+      const tree: any = []
+      data.map((item: {
+        dictCode: number
+        dictValue: string
+        dictLabel: string
+      }) => {
+        tree.push(
+          {label: item.dictLabel, value: item.dictValue}
+        )
+      })
 
-            // 制作数据
-            let tree: Array<CheckboxOptionType | string> = []
-            data.map((item: {
-                dictCode: number
-                dictValue: string
-                dictLabel: string
-            }) => {
-                tree.push(
-                    { label: item.dictLabel, value: item.dictValue }
-                )
-            })
+      setTreeData(tree)
 
-            setTreeData(tree)
-
-        } catch (e) {
-            system.error(e)
-        }
+    } catch (e) {
+      system.error(e)
     }
+  }
 
-    return (
-        <Checkbox.Group
-            {...props}
-            options={treeData}
-        />
-    )
+  useEffect(() => {
+    makeTree()
+  }, [])
+
+  return (
+    <Checkbox.Group
+      {...props}
+      options={treeData}
+    />
+  )
 
 }
 

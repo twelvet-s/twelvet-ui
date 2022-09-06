@@ -1,12 +1,4 @@
 declare namespace SystemMenu {
-  /**
-   * 状态参数
-   */
-  type State = {
-    pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
-  };
 
   /**
    * 搜索参数
@@ -23,6 +15,7 @@ declare namespace SystemMenu {
    */
   type PageListItem = {
     menuName: string;
+    menuType: string;
     icon: string;
     orderNum: string;
     perms: string;

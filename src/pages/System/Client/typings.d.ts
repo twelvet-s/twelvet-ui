@@ -4,8 +4,6 @@ declare namespace SystemClient {
    */
   type State = {
     pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
   };
 
   /**
@@ -21,7 +19,7 @@ declare namespace SystemClient {
    * 响应参数
    */
   type PageListItem = {
-    clientId: string;
+    clientId: number;
     scope: string;
     authorizedGrantTypes: string;
     accessTokenValidity: string;

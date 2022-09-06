@@ -5,7 +5,7 @@ const controller = "/dfs"
 
 /**
  * 上传数据
- * @param params
+ * @param formData
  */
 export async function uploadFile(formData: FormData) {
     return upload(`${controller}/batchUpload`, formData);

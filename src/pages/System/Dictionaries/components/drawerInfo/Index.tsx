@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 
-import ProTable from '@ant-design/pro-table';
-import { proTableConfigs } from '@/setting';
+import {proTableConfigs} from '@/setting';
 import SelectType from './components/selectType/Index';
 import {
   DeleteOutlined,
@@ -23,12 +22,12 @@ import {
   Divider,
   Space,
 } from 'antd';
-import type { FormInstance } from 'antd/lib/form';
-import { pageQuery, remove, exportExcel, getBydictCode, insert, update } from './service';
-import { system } from '@/utils/twelvet';
-import { isArray } from 'lodash';
-import { ProColumns } from '@ant-design/pro-components';
-import Dictionaries from '@/pages/System/Dictionaries';
+import type {FormInstance} from 'antd/lib/form';
+import {pageQuery, remove, exportExcel, getBydictCode, insert, update} from './service';
+import {system} from '@/utils/twelvet';
+import {isArray} from 'lodash';
+import type {ProColumns, ActionType} from '@ant-design/pro-components';
+import {ProTable} from '@ant-design/pro-components';
 
 /**
  * 字典模块数据管理
@@ -53,21 +52,128 @@ const DrawerInfo: React.FC<{
 
   const formRef = useRef<FormInstance>();
 
-  const [form] = Form.useForm<FormInstance>();
+  const [state] = useState<SystemDictionariesDrawerinfo.State>({
+    pageSize: 10,
+  });
 
-  const { TextArea } = Input;
+  const [form] = Form.useForm();
 
-  const { info, onClose } = props;
+  const {TextArea} = Input;
+
+  const {info, onClose} = props;
 
   const formItemLayout = {
     labelCol: {
-      xs: { span: 4 },
-      sm: { span: 4 },
+      xs: {span: 4},
+      sm: {span: 4},
     },
     wrapperCol: {
-      xs: { span: 18 },
-      sm: { span: 18 },
+      xs: {span: 18},
+      sm: {span: 18},
     },
+  };
+
+  /**
+   * 新增字典
+   */
+  const refPost = async () => {
+    form.setFieldsValue({
+      dictType: props.info.drawerInfoKey,
+    });
+    setModal({title: '新增', visible: true});
+  };
+
+  /**
+   * 获取修改字典信息
+   * @param row row
+   */
+  const refPut = async (row: Record<string, any>) => {
+    try {
+      const {code, msg, data} = await getBydictCode(row.dictCode);
+      if (code != 200) {
+        return message.error(msg);
+      }
+      // 赋值表单数据
+      form.setFieldsValue(data);
+
+      // 设置Modal状态
+      setModal({title: '修改', visible: true});
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 移除字典
+   * @param dictCodes
+   */
+  const refRemove = async (dictCodes: (string | number)[] | string | undefined) => {
+    try {
+      if (!dictCodes) {
+        return true;
+      }
+
+      let params;
+      if (isArray(dictCodes)) {
+        params = dictCodes.join(',');
+      } else {
+        params = dictCodes;
+      }
+
+      const {code, msg} = await remove(params);
+
+      if (code !== 200) {
+        return message.error(msg);
+      }
+
+      message.success(msg);
+
+      acForm?.current?.reload();
+    } catch (e) {
+      system.error(e);
+    }
+  };
+
+  /**
+   * 取消Modal的显示
+   */
+  const handleCancel = () => {
+    setModal({title: '', visible: false});
+
+    form.resetFields();
+  };
+
+  /**
+   * 保存数据
+   */
+  const onSave = () => {
+    form
+      .validateFields()
+      .then(async (fields) => {
+        try {
+          // 开启加载中
+          setLoadingModal(true);
+
+          // ID为0则insert，否则将update
+          const {msg} = fields.dictCode == 0 ? await insert(fields) : await update(fields);
+
+          message.success(msg);
+
+          if (acForm.current) {
+            acForm.current.reload();
+          }
+
+          // 关闭模态框
+          handleCancel();
+        } catch (e) {
+          system.error(e);
+        } finally {
+          setLoadingModal(false);
+        }
+      })
+      .catch((e) => {
+        system.error(e);
+      });
   };
 
   // Form参数
@@ -107,8 +213,8 @@ const DrawerInfo: React.FC<{
       ellipsis: false,
       dataIndex: 'status',
       valueEnum: {
-        0: { text: '正常', status: 'success' },
-        1: { text: '停用', status: 'error' },
+        0: {text: '正常', status: 'success'},
+        1: {text: '停用', status: 'error'},
       },
     },
     {
@@ -131,20 +237,20 @@ const DrawerInfo: React.FC<{
       width: 200,
       valueType: 'option',
       dataIndex: 'operation',
-      render: (_: string, row: Record<string, string>) => {
+      render: (_, row) => {
         return (
           <>
             <a onClick={() => refPut(row)}>
               <Space>
-                <EditOutlined />
+                <EditOutlined/>
                 修改
               </Space>
             </a>
-            <Divider type="vertical" />
-            <Popconfirm onConfirm={() => refRemove(row.dictCode)} title="确定删除吗">
+            <Divider type="vertical"/>
+            <Popconfirm onConfirm={() => refRemove([row.dictCode])} title="确定删除吗">
               <a href="#">
                 <Space>
-                  <CloseOutlined />
+                  <CloseOutlined/>
                   删除
                 </Space>
               </a>
@@ -154,113 +260,6 @@ const DrawerInfo: React.FC<{
       },
     },
   ];
-
-  /**
-   * 新增字典
-   * @param row row
-   */
-  const refPost = async () => {
-    form.setFieldsValue({
-      dictType: props.info.drawerInfoKey,
-    });
-    setModal({ title: '新增', visible: true });
-  };
-
-  /**
-   * 获取修改字典信息
-   * @param row row
-   */
-  const refPut = async (row: Record<string, any>) => {
-    try {
-      const { code, msg, data } = await getBydictCode(row.dictCode);
-      if (code != 200) {
-        return message.error(msg);
-      }
-      // 赋值表单数据
-      form.setFieldsValue(data);
-
-      // 设置Modal状态
-      setModal({ title: '修改', visible: true });
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 移除字典
-   * @param row dictCodes
-   */
-  const refRemove = async (dictCodes: (string | number)[] | string | undefined) => {
-    try {
-      if (!dictCodes) {
-        return true;
-      }
-
-      let params;
-      if (isArray(dictCodes)) {
-        params = dictCodes.join(',');
-      } else {
-        params = dictCodes;
-      }
-
-      const { code, msg } = await remove(params);
-
-      if (code !== 200) {
-        return message.error(msg);
-      }
-
-      message.success(msg);
-
-      acForm?.current?.reload();
-    } catch (e) {
-      system.error(e);
-    }
-  };
-
-  /**
-   * 取消Modal的显示
-   */
-  const handleCancel = () => {
-    setModal({ title: '', visible: false });
-
-    form.resetFields();
-  };
-
-  /**
-   * 保存数据
-   */
-  const onSave = () => {
-    form
-      .validateFields()
-      .then(async (fields) => {
-        try {
-          // 开启加载中
-          setLoadingModal(true);
-
-          // ID为0则insert，否则将update
-          const { code, msg } = fields.dictCode == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
-            return message.error(msg);
-          }
-
-          message.success(msg);
-
-          if (acForm.current) {
-            acForm.current.reload();
-          }
-
-          // 关闭模态框
-          handleCancel();
-        } catch (e) {
-          system.error(e);
-        } finally {
-          setLoadingModal(false);
-        }
-      })
-      .catch((e) => {
-        system.error(e);
-      });
-  };
 
   return (
     <Drawer
@@ -276,14 +275,20 @@ const DrawerInfo: React.FC<{
     >
       <ProTable<SystemDictionariesDrawerinfo.PageListItem, SystemDictionariesDrawerinfo.PageParams>
         {...proTableConfigs}
+        pagination={{
+          // 是否允许每页大小更改
+          showSizeChanger: true,
+          // 每页显示条数
+          pageSize: state.pageSize,
+        }}
         headerTitle="数据管理"
         actionRef={acForm}
         formRef={formRef}
         rowKey="dictCode"
         columns={columns}
-        request={async (params, sorter, filter) => {
-          const { data } = await pageQuery(params);
-          const { records, total } = data;
+        request={async (params) => {
+          const {data} = await pageQuery(params);
+          const {records, total} = data;
           return Promise.resolve({
             data: records,
             success: true,
@@ -295,12 +300,13 @@ const DrawerInfo: React.FC<{
         //     // 加入类型
         //     params.dictType = props.info.drawerInfoKey
         // }}
-        toolBarRender={(action, { selectedRowKeys }) => [
-          <Button type="default" onClick={refPost}>
-            <PlusOutlined />
+        toolBarRender={(action, {selectedRowKeys}) => [
+          <Button key={'addTool'} type="default" onClick={refPost}>
+            <PlusOutlined/>
             新增
           </Button>,
           <Popconfirm
+            key={'deleteTool'}
             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
             onConfirm={() => refRemove(selectedRowKeys)}
             title="是否删除选中数据"
@@ -310,11 +316,12 @@ const DrawerInfo: React.FC<{
               type="primary"
               danger
             >
-              <DeleteOutlined />
+              <DeleteOutlined/>
               批量删除
             </Button>
           </Popconfirm>,
           <Popconfirm
+            key={'exportTool'}
             title="是否导出数据"
             onConfirm={() => {
               exportExcel({
@@ -323,7 +330,7 @@ const DrawerInfo: React.FC<{
             }}
           >
             <Button type="default">
-              <FundProjectionScreenOutlined />
+              <FundProjectionScreenOutlined/>
               导出数据
             </Button>
           </Popconfirm>,
@@ -340,29 +347,29 @@ const DrawerInfo: React.FC<{
       >
         <Form name="Dictionaries" form={form}>
           <Form.Item hidden {...formItemLayout} label="字典Code" name="dictCode" initialValue={0}>
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="字典类型" name="dictType">
-            <Input disabled placeholder="字典类型" />
+            <Input disabled placeholder="字典类型"/>
           </Form.Item>
 
           <Form.Item
             {...formItemLayout}
             label="数据标签"
             name="dictLabel"
-            rules={[{ required: true, message: '数据标签不能为空' }]}
+            rules={[{required: true, message: '数据标签不能为空'}]}
           >
-            <Input placeholder="数据标签" />
+            <Input placeholder="数据标签"/>
           </Form.Item>
 
           <Form.Item
             {...formItemLayout}
             label="数据键值"
             name="dictValue"
-            rules={[{ required: true, message: '数据键值不能为空' }]}
+            rules={[{required: true, message: '数据键值不能为空'}]}
           >
-            <Input placeholder="数据键值" />
+            <Input placeholder="数据键值"/>
           </Form.Item>
 
           <Form.Item
@@ -370,9 +377,9 @@ const DrawerInfo: React.FC<{
             label="显示排序"
             name="dictSort"
             initialValue={0}
-            rules={[{ required: true, message: '显示排序不能为空' }]}
+            rules={[{required: true, message: '显示排序不能为空'}]}
           >
-            <InputNumber />
+            <InputNumber/>
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="状态" name="status" initialValue={'0'}>
@@ -383,7 +390,7 @@ const DrawerInfo: React.FC<{
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="备注" name="remark">
-            <TextArea placeholder="请输入内容" />
+            <TextArea placeholder="请输入内容"/>
           </Form.Item>
         </Form>
       </Modal>

@@ -5,7 +5,7 @@ const controller = "/system/dictionaries/data/type";
 
 /**
  * 根据字典获取信息
- * @param params 搜索参数
+ * @param type
  */
 export async function getDictionariesType(type: string) {
     return request(`${controller}/${type}`, {

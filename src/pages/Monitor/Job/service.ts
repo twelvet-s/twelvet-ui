@@ -32,9 +32,9 @@ export async function run(params: Record<string, any>) {
 
 /**
  * 根据ID获取任务信息
- * @param params 搜索参数
+ * @param jobId
  */
-export async function getByJobId(jobId: number) {
+export async function getByJobId({jobId}: { jobId: number }) {
     return request(`${controller}/${jobId}`, {
         method: 'GET',
     });
@@ -42,7 +42,7 @@ export async function getByJobId(jobId: number) {
 
 /**
  * 删除数据
- * @param params 删除id [1,2,3]
+ * @param infoIds
  */
 export async function remove(infoIds: string) {
     return request(`${controller}/${infoIds}`, {

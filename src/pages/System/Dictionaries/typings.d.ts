@@ -4,8 +4,6 @@ declare namespace SystemDictionaries {
    */
   type State = {
     pageSize: number;
-    exportExcelLoading: boolean;
-    deleteLoading: boolean;
   };
 
   /**
@@ -23,6 +21,7 @@ declare namespace SystemDictionaries {
    * 响应参数
    */
   type PageListItem = {
+    dictId: number;
     dictName: string;
     dictType: string;
     status: string;
