@@ -19,6 +19,7 @@ import {
 } from 'antd';
 import {getInfo, insert, list, remove, update} from './service';
 import {auth, makeTree, system} from '@/utils/twelvet';
+import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
 
 /**

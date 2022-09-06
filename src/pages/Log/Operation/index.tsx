@@ -2,7 +2,7 @@ import React, {useState, useRef, useEffect} from 'react';
 
 import {proTableConfigs} from '@/setting';
 import {DeleteOutlined, FundProjectionScreenOutlined, EyeOutlined} from '@ant-design/icons';
-import type {ProColumns} from '@ant-design/pro-components';
+import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {PageContainer, ProTable, ProDescriptions} from '@ant-design/pro-components';
 import type {FormInstance} from 'antd';
 import {Popconfirm, Button, message, Modal, Space} from 'antd';

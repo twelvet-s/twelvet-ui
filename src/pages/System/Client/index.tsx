@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react';
 
-import type {ProColumns} from '@ant-design/pro-components';
+import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
 import {proTableConfigs} from '@/setting';
 import {
@@ -143,9 +143,7 @@ const Post: React.FC = () => {
 
           message.success(msg);
 
-          if (acForm.current) {
-            acForm.current.reload();
-          }
+          acForm?.current?.reload();
 
           // 关闭模态框
           handleCancel();

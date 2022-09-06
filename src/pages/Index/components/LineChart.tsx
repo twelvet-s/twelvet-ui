@@ -84,7 +84,7 @@ const LineChart: React.FC<LineChartProps> = props => {
   }
 
   let lineChartRef: HTMLDivElement;
-  const [lineChart, setLineChart] = useState()
+  const [lineChart, setLineChart] = useState<any>()
 
   // 设置echarts属性
   const setEcharts = (instance: any | undefined = undefined) => {
@@ -118,7 +118,7 @@ const LineChart: React.FC<LineChartProps> = props => {
     if (!lineChart) {
       return
     }
-    window.addEventListener('resize', lineChart.resize())
+    window.addEventListener('resize', lineChart.resize)
     setEcharts()
   }, [option])
 

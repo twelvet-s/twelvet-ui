@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from 'react'
 import type {FormInstance} from 'antd/lib/form';
 import type {ActionType, ProColumns} from '@ant-design/pro-components'
 import {EditableProTable} from '@ant-design/pro-components'
-import {Button, Cascader, Col, Divider, Drawer, Input, message, Row, Select, Tabs, TreeSelect} from 'antd'
+import {Button, Cascader, Col, Divider, Skeleton, Drawer, Input, message, Row, Select, Tabs, TreeSelect} from 'antd'
 import Form from 'antd/lib/form'
 import {getInfo, getMenus, getOptionSelect, putGen} from './service'
 import {makeTree, system} from '@/utils/twelvet'
@@ -438,7 +438,10 @@ const EditCode: React.FC<{
       }
     >
 
-      {!tableLoading && (
+      <Skeleton
+        active
+        loading={tableLoading}
+      >
         <EditableProTable<ToolGenEditCode.PageListItem, ToolGenEditCode.PageParams>
           // 支持横向超出自适应
           scroll={{x: 'x-content'}}
@@ -798,7 +801,7 @@ const EditCode: React.FC<{
             </Form>
           )}
         />
-      )}
+      </Skeleton>
 
     </Drawer>
   )
