@@ -271,7 +271,7 @@ const DrawerInfo: React.FC<{
       onClose={() => {
         onClose();
       }}
-      visible={info.visible}
+      open={info.visible}
     >
       <ProTable<SystemDictionariesDrawerinfo.PageListItem, SystemDictionariesDrawerinfo.PageParams>
         {...proTableConfigs}

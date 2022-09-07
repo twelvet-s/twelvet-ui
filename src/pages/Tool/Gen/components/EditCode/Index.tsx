@@ -39,9 +39,9 @@ const EditCode: React.FC<{
     '1': {text: ' ', status: 'Default'},
   }
 
-  const [form] = Form.useForm<FormInstance>()
+  const [form] = Form.useForm()
 
-  const [tableForm] = Form.useForm<FormInstance>()
+  const [tableForm] = Form.useForm()
 
 
   const [tablesInfo, setTablesInfo] = useState<{}>({})
@@ -134,6 +134,8 @@ const EditCode: React.FC<{
   const refGetInfo = async (tableId: number) => {
 
     try {
+      setLoading(true)
+      setTableLoading(true)
 
       await getInfo(tableId).then(async ({data: tableData}) => {
 
@@ -157,7 +159,7 @@ const EditCode: React.FC<{
 
         // 设置数据表信息
         form.setFieldsValue({...tableData.info})
-
+        console.log('========================', tableData.info)
         setEditableRowKeys(tableData.rows.map((item: { columnId: number }) => {
           return item.columnId
         }))
@@ -208,13 +210,8 @@ const EditCode: React.FC<{
    * 关闭抽屉
    */
   const close = () => {
-    if (!loading && !tableLoading) {
-      // 清空数据关闭
-      setTableLoading(true)
-      setLoading(true)
-      setDataSource([])
-      onClose()
-    }
+    setDataSource([])
+    onClose()
   }
 
   /**
@@ -222,14 +219,14 @@ const EditCode: React.FC<{
    */
   const onSave = () => {
     try {
+      setLoading(true)
       tableForm
         .validateFields()
         .then(() => {
-          setLoading(true)
+
           form
             .validateFields()
             .then(async (params: any) => {
-
               dataSource.map((item: {
                 isEdit: [] | {}
                 isInsert: [] | {}
@@ -251,7 +248,7 @@ const EditCode: React.FC<{
 
 
               if (params.parentMenuId) {
-                params.params.parentMenuId = params.parentMenuId
+                params.params.parentMenuId = String(params.parentMenuId)
               }
 
 
@@ -281,7 +278,6 @@ const EditCode: React.FC<{
               close()
             }).catch((e) => {
             system.error(e)
-            return message.error('请确保不留空')
           })
         })
 
@@ -420,7 +416,7 @@ const EditCode: React.FC<{
       onClose={() => {
         close()
       }}
-      visible={info.visible}
+      open={info.visible}
       footer={
         <div
           style={{
@@ -725,7 +721,6 @@ const EditCode: React.FC<{
                               ]}
                             >
                               <Select>
-
                                 {formInfo.map((item: {
                                   columnName: string
                                   columnComment: string

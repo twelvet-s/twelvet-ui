@@ -101,7 +101,7 @@ const DrawerInfo: React.FC<{
       onClose={() => {
         close();
       }}
-      visible={visible}
+      open={visible}
       footer={
         <div
           style={{
