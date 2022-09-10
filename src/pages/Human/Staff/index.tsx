@@ -1,6 +1,6 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 
-import {proTableConfigs} from '@/setting';
+import { proTableConfigs } from '@/setting';
 import {
   DeleteOutlined,
   FundProjectionScreenOutlined,
@@ -23,7 +23,7 @@ import {
   Space,
   Divider,
 } from 'antd';
-import type {FormInstance} from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import DpetSearch from './components/dpetSearch/Index';
 import ImportStaff from './components/importStaff/Index';
 import StaffStatusSwitch from './components/staffStatusSwitch/Index';
@@ -35,18 +35,18 @@ import {
   getByStaff,
   insert,
   update,
-  treeSelect, updatePassword,
+  treeSelect,
+  updatePassword,
 } from './service';
-import {system, auth} from '@/utils/twelvet';
-import {isArray} from 'lodash';
-import type {ActionType, ProColumns} from '@ant-design/pro-components';
-import {PageContainer, ProTable} from '@ant-design/pro-components';
+import { system, auth } from '@/utils/twelvet';
+import { isArray } from 'lodash';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 /**
  * 职员模块
  */
 const Staff: React.FC = () => {
-
   // 显示Modal
   const [modal, setModal] = useState<{ title: string; visible: boolean; modelType: string }>({
     title: ``,
@@ -58,7 +58,7 @@ const Staff: React.FC = () => {
     title: string;
     visible: boolean;
     modelType: string;
-  }>({title: ``, visible: false, modelType: ''});
+  }>({ title: ``, visible: false, modelType: '' });
 
   // 是否执行Modal数据操作中
   const [loadingModal, setLoadingModal] = useState<boolean>(false);
@@ -82,22 +82,22 @@ const Staff: React.FC = () => {
   // 角色数据
   const [ROLES, setROLES] = useState<Record<string, any>[]>([]);
 
-  const {TextArea} = Input;
+  const { TextArea } = Input;
 
   const formItemLayout = {
     labelCol: {
-      xs: {span: 4},
-      sm: {span: 4},
+      xs: { span: 4 },
+      sm: { span: 4 },
     },
     wrapperCol: {
-      xs: {span: 18},
-      sm: {span: 18},
+      xs: { span: 18 },
+      sm: { span: 18 },
     },
   };
 
   const makeDept = async () => {
     try {
-      const {code, msg, data} = await treeSelect();
+      const { code, msg, data } = await treeSelect();
       if (code != 200) {
         return message.error(msg);
       }
@@ -112,11 +112,11 @@ const Staff: React.FC = () => {
    * 新增职员
    */
   const refPost = async () => {
-    setModal({title: '新增', visible: true, modelType: 'POST'});
+    setModal({ title: '新增', visible: true, modelType: 'POST' });
     // 获取新增用户所属数据
-    const {data} = await getByStaff();
+    const { data } = await getByStaff();
 
-    const {posts, roles} = data;
+    const { posts, roles } = data;
 
     const postTees: Record<string, any>[] = new Array<Record<string, any>>();
     // 制作岗位数据
@@ -147,9 +147,9 @@ const Staff: React.FC = () => {
   };
 
   const changPassword = async (userId: number) => {
-    prform.setFieldsValue({userId: userId});
+    prform.setFieldsValue({ userId: userId });
     // 设置Modal状态
-    setResetPassword({title: '重置密码', visible: true, modelType: 'PUT'});
+    setResetPassword({ title: '重置密码', visible: true, modelType: 'PUT' });
   };
 
   /**
@@ -158,12 +158,12 @@ const Staff: React.FC = () => {
    */
   const refPut = async (row: Record<string, any>) => {
     try {
-      const {code, msg, data} = await getByStaffId(row.userId);
+      const { code, msg, data } = await getByStaffId(row.userId);
       if (code != 200) {
         return message.error(msg);
       }
 
-      const {staff, posts, postIds, roles, roleIds} = data;
+      const { staff, posts, postIds, roles, roleIds } = data;
 
       staff.postIds = postIds;
       staff.roleIds = roleIds;
@@ -199,7 +199,7 @@ const Staff: React.FC = () => {
       makeDept();
 
       // 设置Modal状态
-      setModal({title: '修改', visible: true, modelType: 'PUT'});
+      setModal({ title: '修改', visible: true, modelType: 'PUT' });
     } catch (e) {
       system.error(e);
     }
@@ -222,7 +222,7 @@ const Staff: React.FC = () => {
         params = userIds;
       }
 
-      const {code, msg} = await remove(params);
+      const { code, msg } = await remove(params);
 
       if (code !== 200) {
         return message.error(msg);
@@ -240,15 +240,15 @@ const Staff: React.FC = () => {
    * 取消Modal的显示
    */
   const handleCancel = () => {
-    setModal({title: '', visible: false, modelType: ''});
+    setModal({ title: '', visible: false, modelType: '' });
     form.resetFields();
   };
   /**
    * 取消Modal的显示
    */
   const rehandleCancelHandler = () => {
-    setResetPassword({title: '', visible: false, modelType: ''});
-    form.resetFields();
+    setResetPassword({ title: '', visible: false, modelType: '' });
+    prform.resetFields();
   };
 
   /**
@@ -262,7 +262,7 @@ const Staff: React.FC = () => {
           // 开启加载中
           setLoadingModal(true);
           // ID为0则insert，否则将update
-          const {code, msg} = fields.userId == 0 ? await insert(fields) : await update(fields);
+          const { code, msg } = fields.userId == 0 ? await insert(fields) : await update(fields);
           if (code != 200) {
             return message.error(msg);
           }
@@ -298,7 +298,7 @@ const Staff: React.FC = () => {
 
           // ID为0则insert，否则将update
           debugger;
-          const {code, msg} = await updatePassword(fields);
+          const { code, msg } = await updatePassword(fields);
           if (code != 200) {
             return message.error(msg);
           }
@@ -325,7 +325,7 @@ const Staff: React.FC = () => {
       key: 'deptId',
       hideInTable: true,
       dataIndex: 'deptId',
-      renderFormItem: () => <DpetSearch/>,
+      renderFormItem: () => <DpetSearch />,
     },
     {
       title: '用户账号',
@@ -363,10 +363,10 @@ const Staff: React.FC = () => {
       width: 80,
       dataIndex: 'status',
       valueEnum: {
-        '0': {text: '正常', status: 'success'},
-        '1': {text: '停用', status: 'error'},
+        '0': { text: '正常', status: 'success' },
+        '1': { text: '停用', status: 'error' },
       },
-      render: (_, row) => <StaffStatusSwitch row={row}/>,
+      render: (_, row) => <StaffStatusSwitch row={row} />,
     },
     {
       title: '创建时间',
@@ -400,23 +400,23 @@ const Staff: React.FC = () => {
           <>
             <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
               <Space>
-                <EditOutlined/>
+                <EditOutlined />
                 修改
               </Space>
             </a>
-            <Divider type="vertical"/>
+            <Divider type="vertical" />
             <Popconfirm onConfirm={() => refRemove([row.userId])} title="确定删除吗">
               <a href="#" hidden={auth('system:dict:remove')}>
                 <Space>
-                  <CloseOutlined/>
+                  <CloseOutlined />
                   删除
                 </Space>
               </a>
             </Popconfirm>
-            <Divider type="vertical"/>
+            <Divider type="vertical" />
             <a onClick={() => changPassword(row.userId)}>
               <Space>
-                <EditOutlined/>
+                <EditOutlined />
                 重置密码
               </Space>
             </a>
@@ -435,8 +435,8 @@ const Staff: React.FC = () => {
         rowKey="userId"
         columns={columns}
         request={async (params) => {
-          const {data} = await pageQuery(params);
-          const {records, total} = data;
+          const { data } = await pageQuery(params);
+          const { records, total } = data;
           return Promise.resolve({
             data: records,
             success: true,
@@ -444,9 +444,14 @@ const Staff: React.FC = () => {
           });
         }}
         rowSelection={{}}
-        toolBarRender={(action, {selectedRowKeys}) => [
-          <Button key={'addTool'} hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
-            <PlusOutlined/>
+        toolBarRender={(action, { selectedRowKeys }) => [
+          <Button
+            key={'addTool'}
+            hidden={auth('system:dict:insert')}
+            type="default"
+            onClick={refPost}
+          >
+            <PlusOutlined />
             新增
           </Button>,
           <Popconfirm
@@ -460,7 +465,7 @@ const Staff: React.FC = () => {
               type="primary"
               danger
             >
-              <DeleteOutlined/>
+              <DeleteOutlined />
               批量删除
             </Button>
           </Popconfirm>,
@@ -474,7 +479,7 @@ const Staff: React.FC = () => {
             }}
           >
             <Button type="default" hidden={auth('system:dict:export')}>
-              <FundProjectionScreenOutlined/>
+              <FundProjectionScreenOutlined />
               导出数据
             </Button>
           </Popconfirm>,
@@ -486,7 +491,7 @@ const Staff: React.FC = () => {
               setImportStaffVisible(true);
             }}
           >
-            <PlusOutlined/>
+            <PlusOutlined />
             导入数据
           </Button>,
         ]}
@@ -507,12 +512,12 @@ const Staff: React.FC = () => {
               <Form.Item
                 label="新密码"
                 name="password"
-                rules={[{required: true, message: '密码不能为空'}]}
+                rules={[{ required: true, message: '密码不能为空' }]}
               >
-                <Input placeholder="输入新密码"/>
+                <Input placeholder="输入新密码" />
               </Form.Item>
               <Form.Item hidden label="用户ID" name="userId" initialValue={0}>
-                <Input/>
+                <Input />
               </Form.Item>
             </Col>
           </Row>
@@ -530,24 +535,24 @@ const Staff: React.FC = () => {
       >
         <Form name="Staff" form={form}>
           <Form.Item hidden {...formItemLayout} label="角色ID" name="userId" initialValue={0}>
-            <Input/>
+            <Input />
           </Form.Item>
 
           <Form.Item
             hidden
             {...{
               labelCol: {
-                sm: {span: 8},
+                sm: { span: 8 },
               },
               wrapperCol: {
-                sm: {span: 16},
+                sm: { span: 16 },
               },
             }}
             label="用户账号"
             name="username"
-            rules={[{required: true, message: '用户账号不能为空'}]}
+            rules={[{ required: true, message: '用户账号不能为空' }]}
           >
-            <Input placeholder="用户账号"/>
+            <Input placeholder="用户账号" />
           </Form.Item>
 
           <Row>
@@ -555,17 +560,17 @@ const Staff: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="用户昵称"
                 name="nickName"
-                rules={[{required: true, message: '用户昵称不能为空'}]}
+                rules={[{ required: true, message: '用户昵称不能为空' }]}
               >
-                <Input placeholder="用户昵称"/>
+                <Input placeholder="用户昵称" />
               </Form.Item>
             </Col>
 
@@ -573,17 +578,17 @@ const Staff: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="归属部门"
                 name="deptId"
-                rules={[{required: true, message: '归属部门不能为空'}]}
+                rules={[{ required: true, message: '归属部门不能为空' }]}
               >
-                <TreeSelect showSearch treeLine treeNodeFilterProp="title" treeData={DEPTS}/>
+                <TreeSelect showSearch treeLine treeNodeFilterProp="title" treeData={DEPTS} />
               </Form.Item>
             </Col>
           </Row>
@@ -593,17 +598,17 @@ const Staff: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="手机号码"
                 name="phonenumber"
-                rules={[{required: true, message: '手机号码不能为空'}]}
+                rules={[{ required: true, message: '手机号码不能为空' }]}
               >
-                <Input placeholder="手机号码"/>
+                <Input placeholder="手机号码" />
               </Form.Item>
             </Col>
 
@@ -611,17 +616,17 @@ const Staff: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="邮箱"
                 name="email"
-                rules={[{required: true, message: '邮箱不能为空'}]}
+                rules={[{ required: true, message: '邮箱不能为空' }]}
               >
-                <Input placeholder="邮箱"/>
+                <Input placeholder="邮箱" />
               </Form.Item>
             </Col>
           </Row>
@@ -632,17 +637,17 @@ const Staff: React.FC = () => {
                 <Form.Item
                   {...{
                     labelCol: {
-                      sm: {span: 8},
+                      sm: { span: 8 },
                     },
                     wrapperCol: {
-                      sm: {span: 16},
+                      sm: { span: 16 },
                     },
                   }}
                   label="登录账号"
                   name="username"
-                  rules={[{required: true, message: '登录账号不能为空'}]}
+                  rules={[{ required: true, message: '登录账号不能为空' }]}
                 >
-                  <Input placeholder="登录账号"/>
+                  <Input placeholder="登录账号" />
                 </Form.Item>
               </Col>
 
@@ -650,17 +655,17 @@ const Staff: React.FC = () => {
                 <Form.Item
                   {...{
                     labelCol: {
-                      sm: {span: 8},
+                      sm: { span: 8 },
                     },
                     wrapperCol: {
-                      sm: {span: 16},
+                      sm: { span: 16 },
                     },
                   }}
                   label="用户密码"
                   name="password"
-                  rules={[{required: true, message: '密码不能为空'}]}
+                  rules={[{ required: true, message: '密码不能为空' }]}
                 >
-                  <Input placeholder="密码"/>
+                  <Input placeholder="密码" />
                 </Form.Item>
               </Col>
             </Row>
@@ -671,16 +676,16 @@ const Staff: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="用户性别"
                 name="sex"
                 initialValue={'0'}
-                rules={[{required: true, message: '请选择用户性别'}]}
+                rules={[{ required: true, message: '请选择用户性别' }]}
               >
                 <Select>
                   <Select.Option value={'0'}>男</Select.Option>
@@ -694,10 +699,10 @@ const Staff: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="状态"
@@ -717,17 +722,17 @@ const Staff: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="岗位"
                 name="postIds"
-                rules={[{required: true, message: '岗位不能为空'}]}
+                rules={[{ required: true, message: '岗位不能为空' }]}
               >
-                <TreeSelect treeNodeFilterProp="title" treeCheckable={true} treeData={POSTS}/>
+                <TreeSelect treeNodeFilterProp="title" treeCheckable={true} treeData={POSTS} />
               </Form.Item>
             </Col>
 
@@ -735,22 +740,22 @@ const Staff: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="角色"
                 name="roleIds"
               >
-                <TreeSelect treeNodeFilterProp="title" treeCheckable={true} treeData={ROLES}/>
+                <TreeSelect treeNodeFilterProp="title" treeCheckable={true} treeData={ROLES} />
               </Form.Item>
             </Col>
           </Row>
 
           <Form.Item {...formItemLayout} label="备注" name="remark">
-            <TextArea placeholder="请输入内容"/>
+            <TextArea placeholder="请输入内容" />
           </Form.Item>
         </Form>
       </Modal>
