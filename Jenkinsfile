@@ -19,6 +19,8 @@ pipeline {
       steps {
         dir('twelvet-react-ui') {
           sh 'node -v'
+          sh 'rm -rf node_modules'
+          sh 'rm -rf yarn.lock'
           sh 'yarn'
         }
       }
@@ -26,8 +28,6 @@ pipeline {
     stage('Build twelvet-react-ui') {
       steps {
         dir('twelvet-react-ui') {
-          sh 'rm -rf node_modules'
-          sh 'rm -rf yarn.lock'
           sh 'rm -rf dist'
           sh 'yarn build'
           dir('dist') {
