@@ -27,7 +27,7 @@ pipeline {
       steps {
         dir('twelvet-react-ui') {
           sh 'rm -rf node_modules'
-          sh 'rm -rf package-lock.json'
+          sh 'rm -rf yarn.lock'
           sh 'rm -rf dist'
           sh 'yarn build'
           dir('dist') {
