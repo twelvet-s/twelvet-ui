@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-    nodejs 'nodejs106'
+    nodejs 'nodejs'
   }
   parameters {
     choice(
