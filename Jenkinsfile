@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-    yarn 'yarn'
+    nodejs 'nodejs106'
   }
   parameters {
     choice(
