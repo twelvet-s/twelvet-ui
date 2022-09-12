@@ -17,12 +17,10 @@ pipeline {
         expression { isInstall ==~ /(true)/ }
       }
       steps {
-        dir('twelvet-react-ui') {
-          sh 'node -v'
-          sh 'rm -rf node_modules'
-          sh 'rm -rf yarn.lock'
-          sh 'yarn'
-        }
+        sh 'node -v'
+        sh 'rm -rf node_modules'
+        sh 'rm -rf yarn.lock'
+        sh 'yarn'
       }
     }
     stage('Build prod') {
@@ -31,13 +29,11 @@ pipeline {
         branch 'master*'
       }
       steps {
-        dir('twelvet-react-ui') {
-          sh 'rm -rf dist'
-          sh 'yarn build'
-          dir('dist') {
-            sh(script: 'tar cvzf twelvet-react-ui.tar.gz .', returnStatus: true)
-            archiveArtifacts artifacts: '**/*.tar.gz', fingerprint: true
-          }
+        sh 'rm -rf dist'
+        sh 'yarn build'
+        dir('dist') {
+          sh(script: 'tar cvzf twelvet-react-ui.tar.gz .', returnStatus: true)
+          archiveArtifacts artifacts: '**/*.tar.gz', fingerprint: true
         }
       }
     }
