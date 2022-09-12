@@ -41,7 +41,7 @@ pipeline {
 }
 
 node {
-  if (env.BRANCH_NAME.contains('dev')) {
+  if (env.BRANCH_NAME.contains('master')) {
     def remote = [:]
     remote.name = 'twelvet'
     remote.host = env.REMOTE_HOST
