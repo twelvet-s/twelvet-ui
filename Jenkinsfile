@@ -25,7 +25,11 @@ pipeline {
         }
       }
     }
-    stage('Build twelvet-react-ui') {
+    stage('Build prod') {
+      when {
+        beforeAgent true
+        branch 'master*'
+      }
       steps {
         dir('twelvet-react-ui') {
           sh 'rm -rf dist'
