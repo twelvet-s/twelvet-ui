@@ -53,6 +53,7 @@ node {
       stage('push to twelvet-react-ui') {
         sshPut remote: remote, from: 'dist/twelvet-react-ui.tar.gz', into: '/twelvet/docker/nginx/html/.'
         sshCommand remote: remote, command: 'tar xvzf /twelvet/docker/nginx/html/twelvet-react-ui.tar.gz -C /twelvet/docker/nginx/html/'
+        sshCommand remote: remote, command: 'rm -rf /twelvet/docker/nginx/html/twelvet-react-ui.tar.gz'
       }
     }
   }
