@@ -45,7 +45,6 @@ node {
     def remote = [:]
     remote.name = 'twelvet'
     remote.host = env.REMOTE_HOST
-    remote.port = 22
     withCredentials([usernamePassword(credentialsId: 'twelvet', passwordVariable: 'password', usernameVariable: 'userName')]) {
       remote.user = userName
       remote.password = password
