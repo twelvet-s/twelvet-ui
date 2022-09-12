@@ -21,7 +21,7 @@ pipeline {
           sh 'node -v'
           sh 'npm config set sass_binary_site=https://npm.taobao.org/mirrors/node-sass'
           sh 'npm cache clean --force'
-          sh 'npm install -g yarn --unsafe-perm'
+          sh 'npm install'
         }
       }
     }
@@ -31,7 +31,7 @@ pipeline {
           sh 'rm -rf node_modules'
           sh 'rm -rf package-lock.json'
           sh 'rm -rf dist'
-          sh 'yarn build'
+          sh 'npm build'
           dir('dist') {
             sh(script: 'tar cvzf twelvet-react-ui.tar.gz .', returnStatus: true)
             archiveArtifacts artifacts: '**/*.tar.gz', fingerprint: true
