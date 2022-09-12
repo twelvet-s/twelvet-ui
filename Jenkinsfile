@@ -19,7 +19,7 @@ pipeline {
       steps {
         dir('twelvet-react-ui') {
           sh 'node -v'
-          sh 'npm install --registry=https://registry.npmmirror.com'
+          sh 'yarn'
         }
       }
     }
@@ -29,7 +29,7 @@ pipeline {
           sh 'rm -rf node_modules'
           sh 'rm -rf package-lock.json'
           sh 'rm -rf dist'
-          sh 'npm build'
+          sh 'yarn build'
           dir('dist') {
             sh(script: 'tar cvzf twelvet-react-ui.tar.gz .', returnStatus: true)
             archiveArtifacts artifacts: '**/*.tar.gz', fingerprint: true
