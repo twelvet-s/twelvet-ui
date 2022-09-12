@@ -19,9 +19,7 @@ pipeline {
       steps {
         dir('twelvet-react-ui') {
           sh 'node -v'
-          sh 'npm config set sass_binary_site=https://npm.taobao.org/mirrors/node-sass'
-          sh 'npm cache clean --force'
-          sh 'npm install'
+          sh 'npm install --registry=https://registry.npmmirror.com'
         }
       }
     }
