@@ -52,8 +52,8 @@ node {
       remote.password = password
       remote.allowAnyHosts = true
       stage('push to twelvet-react-ui') {
-        sshPut remote: remote, from: 'twelvet-react-ui/dist/twelvet-react-ui.tar.gz', into: '/data/docker/nginx/html/twelvet/.'
-        sshCommand remote: remote, command: 'tar xvzf /data/docker/nginx/html/twelvet/vue-shh-admin-ui.tar.gz -C /data/docker/nginx/html/twelvet'
+        sshPut remote: remote, from: 'twelvet-react-ui/dist/twelvet-react-ui.tar.gz', into: '/twelvet/docker/nginx/html/'
+        sshCommand remote: remote, command: 'tar xvzf /twelvet/docker/nginx/html/twelvet-react-ui.tar.gz -C /twelvet/docker/nginx/html/'
       }
     }
   }
