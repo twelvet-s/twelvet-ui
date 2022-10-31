@@ -1,6 +1,6 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 
-import {proTableConfigs} from '@/setting';
+import { proTableConfigs } from '@/setting';
 import RoleStatusSwitch from './components/Switch';
 import {
   DeleteOutlined,
@@ -25,7 +25,7 @@ import {
   Space,
   Divider,
 } from 'antd';
-import type {FormInstance} from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import {
   pageQuery,
   remove,
@@ -38,12 +38,12 @@ import {
   roleDeptTreeSelectByDeptId,
   roleDeptTreeSelect,
 } from './service';
-import {system, auth} from '@/utils/twelvet';
-import {isArray} from 'lodash';
-import type {DataNode} from 'antd/lib/tree';
-import type {Key} from 'antd/lib/table/interface';
-import type {ProColumns, ActionType} from '@ant-design/pro-components'
-import {PageContainer, ProTable} from '@ant-design/pro-components';
+import { system, auth } from '@/utils/twelvet';
+import { isArray } from 'lodash';
+import type { DataNode } from 'antd/lib/tree';
+import type { Key } from 'antd/lib/table/interface';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 /**
  * 角色模块
@@ -83,9 +83,9 @@ const Role: React.FC = () => {
    */
   const getMenuDataById = async (roleId: number) => {
     try {
-      const {data} = await roleMenuTreeSelectByMenuId(roleId);
+      const { data } = await roleMenuTreeSelectByMenuId(roleId);
 
-      const {checkedMenus, menus} = data;
+      const { checkedMenus, menus } = data;
 
       // 显示数据
       const keys: Key[] = [];
@@ -95,10 +95,8 @@ const Role: React.FC = () => {
 
       // 初始化选中菜单数据
       checkedMenus.map((menu: { menuId: number; menuType: string }) => {
-        // 显示数据只需要C类型权限
-        if (menu.menuType == 'F') {
-          keys.push(menu.menuId);
-        }
+        // 显示数据
+        keys.push(menu.menuId);
         // 所有初始化数据都必须提交
         finalkeys.push(menu.menuId);
       });
@@ -121,7 +119,7 @@ const Role: React.FC = () => {
    */
   const getDeptDataById = async (roleId: number) => {
     try {
-      const {code, msg, data} = await roleDeptTreeSelectByDeptId(roleId);
+      const { code, msg, data } = await roleDeptTreeSelectByDeptId(roleId);
       if (code != 200) {
         return message.error(msg);
       }
@@ -138,7 +136,7 @@ const Role: React.FC = () => {
    */
   const getMenuData = async () => {
     try {
-      const {code, msg, data} = await roleMenuTreeSelect();
+      const { code, msg, data } = await roleMenuTreeSelect();
       if (code != 200) {
         return message.error(msg);
       }
@@ -153,7 +151,7 @@ const Role: React.FC = () => {
    */
   const getDeptData = async () => {
     try {
-      const {code, msg, data} = await roleDeptTreeSelect();
+      const { code, msg, data } = await roleDeptTreeSelect();
       if (code != 200) {
         return message.error(msg);
       }
@@ -173,7 +171,7 @@ const Role: React.FC = () => {
     getDeptData();
     // 设置数据权限范围
     setDataScope('1');
-    setModal({title: '新增', visible: true});
+    setModal({ title: '新增', visible: true });
   };
 
   /**
@@ -185,7 +183,7 @@ const Role: React.FC = () => {
       // 获取权限数据
       getMenuDataById(roleId);
       getDeptDataById(roleId);
-      const {code, msg, data} = await getByroleId(roleId);
+      const { code, msg, data } = await getByroleId(roleId);
       if (code != 200) {
         return message.error(msg);
       }
@@ -196,7 +194,7 @@ const Role: React.FC = () => {
       setDataScope(data.dataScope);
 
       // 设置Modal状态
-      setModal({title: '修改', visible: true});
+      setModal({ title: '修改', visible: true });
     } catch (e) {
       system.error(e);
     }
@@ -219,7 +217,7 @@ const Role: React.FC = () => {
         params = roleIds;
       }
 
-      const {code, msg} = await remove(params);
+      const { code, msg } = await remove(params);
 
       if (code !== 200) {
         return message.error(msg);
@@ -237,7 +235,7 @@ const Role: React.FC = () => {
    * 取消Modal的显示
    */
   const handleCancel = () => {
-    setModal({title: '', visible: false});
+    setModal({ title: '', visible: false });
 
     setCheckdDeptData([]);
     setDeptData([]);
@@ -264,7 +262,7 @@ const Role: React.FC = () => {
           fields.deptIds = checkdDeptData;
 
           // ID为0则insert，否则将update
-          const {code, msg} = fields.roleId == 0 ? await insert(fields) : await update(fields);
+          const { code, msg } = fields.roleId == 0 ? await insert(fields) : await update(fields);
           if (code != 200) {
             return message.error(msg);
           }
@@ -287,7 +285,6 @@ const Role: React.FC = () => {
         system.error(e);
       });
   };
-
 
   const dataScopeOptions = [
     {
@@ -317,16 +314,16 @@ const Role: React.FC = () => {
     },
   ];
 
-  const {TextArea} = Input;
+  const { TextArea } = Input;
 
   const formItemLayout = {
     labelCol: {
-      xs: {span: 4},
-      sm: {span: 4},
+      xs: { span: 4 },
+      sm: { span: 4 },
     },
     wrapperCol: {
-      xs: {span: 18},
-      sm: {span: 18},
+      xs: { span: 18 },
+      sm: { span: 18 },
     },
   };
 
@@ -358,12 +355,10 @@ const Role: React.FC = () => {
       width: 80,
       dataIndex: 'status',
       valueEnum: {
-        '0': {text: '正常', status: 'success'},
-        '1': {text: '停用', status: 'error'},
+        '0': { text: '正常', status: 'success' },
+        '1': { text: '停用', status: 'error' },
       },
-      render: (_, row) => [
-        <RoleStatusSwitch row={row} key={row.roleId}/>,
-      ],
+      render: (_, row) => [<RoleStatusSwitch row={row} key={row.roleId} />],
     },
     {
       title: '创建时间',
@@ -385,15 +380,15 @@ const Role: React.FC = () => {
             <>
               <a onClick={() => refPut(row.roleId)} hidden={auth('system:dict:update')}>
                 <Space>
-                  <EditOutlined/>
+                  <EditOutlined />
                   修改
                 </Space>
               </a>
-              <Divider type="vertical"/>
+              <Divider type="vertical" />
               <Popconfirm onConfirm={() => refRemove([row.roleId])} title="确定删除吗">
                 <a href="#" hidden={auth('system:dict:remove')}>
                   <Space>
-                    <CloseOutlined/>
+                    <CloseOutlined />
                     删除
                   </Space>
                 </a>
@@ -420,8 +415,8 @@ const Role: React.FC = () => {
         rowKey="roleId"
         columns={columns}
         request={async (params) => {
-          const {data} = await pageQuery(params);
-          const {records, total} = data;
+          const { data } = await pageQuery(params);
+          const { records, total } = data;
           return Promise.resolve({
             data: records,
             success: true,
@@ -429,9 +424,14 @@ const Role: React.FC = () => {
           });
         }}
         rowSelection={{}}
-        toolBarRender={(action, {selectedRowKeys}) => [
-          <Button key={'addTTool'} type="default" hidden={auth('system:dict:insert')} onClick={refPost}>
-            <PlusOutlined/>
+        toolBarRender={(action, { selectedRowKeys }) => [
+          <Button
+            key={'addTTool'}
+            type="default"
+            hidden={auth('system:dict:insert')}
+            onClick={refPost}
+          >
+            <PlusOutlined />
             新增
           </Button>,
           <Popconfirm
@@ -445,7 +445,7 @@ const Role: React.FC = () => {
               type="primary"
               danger
             >
-              <DeleteOutlined/>
+              <DeleteOutlined />
               批量删除
             </Button>
           </Popconfirm>,
@@ -459,7 +459,7 @@ const Role: React.FC = () => {
             }}
           >
             <Button type="default">
-              <FundProjectionScreenOutlined/>
+              <FundProjectionScreenOutlined />
               导出数据
             </Button>
           </Popconfirm>,
@@ -477,7 +477,7 @@ const Role: React.FC = () => {
       >
         <Form name="Role" form={form}>
           <Form.Item hidden {...formItemLayout} label="角色ID" name="roleId" initialValue={0}>
-            <Input/>
+            <Input />
           </Form.Item>
 
           <Row>
@@ -485,17 +485,17 @@ const Role: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="角色名称"
                 name="roleName"
-                rules={[{required: true, message: '角色名称不能为空'}]}
+                rules={[{ required: true, message: '角色名称不能为空' }]}
               >
-                <Input placeholder="角色名称"/>
+                <Input placeholder="角色名称" />
               </Form.Item>
             </Col>
 
@@ -503,17 +503,17 @@ const Role: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="权限字符"
                 name="roleKey"
-                rules={[{required: true, message: '权限字符不能为空'}]}
+                rules={[{ required: true, message: '权限字符不能为空' }]}
               >
-                <Input placeholder="权限字符"/>
+                <Input placeholder="权限字符" />
               </Form.Item>
             </Col>
           </Row>
@@ -523,18 +523,18 @@ const Role: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="角色顺序"
                 name="roleSort"
                 initialValue={0}
-                rules={[{required: true, message: '角色顺序不能为空'}]}
+                rules={[{ required: true, message: '角色顺序不能为空' }]}
               >
-                <InputNumber placeholder="角色顺序"/>
+                <InputNumber placeholder="角色顺序" />
               </Form.Item>
             </Col>
 
@@ -542,10 +542,10 @@ const Role: React.FC = () => {
               <Form.Item
                 {...{
                   labelCol: {
-                    sm: {span: 8},
+                    sm: { span: 8 },
                   },
                   wrapperCol: {
-                    sm: {span: 16},
+                    sm: { span: 16 },
                   },
                 }}
                 label="角色状态"
@@ -609,7 +609,7 @@ const Role: React.FC = () => {
           )}
 
           <Form.Item {...formItemLayout} label="备注" name="remark">
-            <TextArea placeholder="请输入内容"/>
+            <TextArea placeholder="请输入内容" />
           </Form.Item>
         </Form>
       </Modal>
