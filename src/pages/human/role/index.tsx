@@ -202,10 +202,8 @@ const Role: React.FC<{}> = () => {
                 menuId: number
                 menuType: String
             }) => {
-                // 显示数据只需要C类型权限
-                if (menu.menuType == 'F') {
-                    keys.push(menu.menuId)
-                }
+                // 显示数据只需要
+                keys.push(menu.menuId)
                 // 所有初始化数据都必须提交
                 finalkeys.push(menu.menuId)
             })
