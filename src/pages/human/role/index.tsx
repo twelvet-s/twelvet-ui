@@ -542,7 +542,6 @@ const Role: React.FC<{}> = () => {
                         <Tree
                             showLine
                             checkable
-                            height={150}
                             onCheck={(checkedKeys: any, halfChecked: any) => {
 
                                 // 显示在页面的数据
