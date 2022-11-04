@@ -1,5 +1,5 @@
 # twelvet
-# JDK >= 17
+
 [![AUR](https://img.shields.io/github/license/twelvet-s/twelvet)](https://gitee.com/twelvet/twelvet/blob/master/LICENSE)
 [![](https://img.shields.io/badge/Author-TwelveT-orange.svg)](https://www.twelvet.cn)
 [![](https://img.shields.io/badge/version-2.6.0-success)](https://gitee.com/twelvet/twelvet)
@@ -8,10 +8,10 @@
 
 一款基于Spring Cloud Alibaba的权限管理系统，集成市面上流行库，可以作用为快速开发的一个框架使用
 
-一套以微服务架构的脚手架,使用Spring Cloud Alibaba系列进行架构,学习并了解它将能快速掌握微服务核心基础。 
+一套以微服务架构的脚手架,使用Spring Cloud Alibaba系列进行架构,学习并了解它将能快速掌握微服务核心基础。
 此项目是为了减少业务代码的重复轮子,它具有一个系统该有的通用性核心业务代码,无论是微服务还是单体,都是通用的业务
 但更多的,是为了学习微服务的理念以及开发 您可以使用它进行网站管理后台，网站会员中心，CMS，CRM，OA等待系统的开发,
-当然,不仅仅是一些小系统,我们可以生产更多的服务模块,不断完善项目。 
+当然,不仅仅是一些小系统,我们可以生产更多的服务模块,不断完善项目。
 
 系统初心是为了能够更快地完成业务的需求，带来更好的体验、更多的时间。它将会用于孵化一些实用的功能点。
 我们希望它们是轻量级，可移植性高的功能插件。
