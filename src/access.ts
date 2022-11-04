@@ -6,7 +6,7 @@ export default function access(initialState: { currentUser?: API.CurrentUser | u
   return {
     canAdmin: currentUser && currentUser.access === 'admin',
     hasAuthority:(permission: string): boolean=>{
-      return currentUser && currentUser.permissions && currentUser.permissions.indexOf(permission) > -1
+      return currentUser && currentUser.permissions && (currentUser.permissions.indexOf(permission) > -1 || currentUser.permissions.indexOf('*:*:*') > -1)
     },
     hasRole:(role: string): boolean=>{
       return currentUser && currentUser.roles && currentUser.roles.indexOf(role) > -1

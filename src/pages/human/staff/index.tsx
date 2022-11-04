@@ -693,7 +693,7 @@ const Staff: React.FC<{}> = () => {
                                 <Select >
                                     <Select.Option value={'0'}>男</Select.Option>
                                     <Select.Option value={'1'}>女</Select.Option>
-                                    <Select.Option value={2}>保密</Select.Option>
+                                    <Select.Option value={'2'}>保密</Select.Option>
                                 </Select >
                             </Form.Item>
                         </Col>
