@@ -54,6 +54,13 @@ export default [
                     name: 'dfs',
                     path: '/system/dfs',
                     component: './System/Dfs'
+                },
+                {
+                    title: '令牌管理',
+                    icon: 'icon-dfs',
+                    name: 'token',
+                    path: '/system/token',
+                    component: './System/Token'
                 }
             ]
         },
