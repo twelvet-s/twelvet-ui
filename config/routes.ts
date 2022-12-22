@@ -78,7 +78,7 @@ export default [
                 icon: 'icon-token',
                 name: 'token',
                 path: '/system/token',
-                component: './System/Token'
+                component: './system/token'
             }
         ]
     },

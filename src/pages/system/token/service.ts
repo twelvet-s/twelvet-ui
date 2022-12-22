@@ -1,4 +1,4 @@
-import { request } from '@umijs/max'
+import { request } from 'umi'
 
 // 请求的控制器名称
 const controller = "/system";
