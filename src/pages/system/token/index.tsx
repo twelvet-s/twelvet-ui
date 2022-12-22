@@ -111,8 +111,7 @@ const Token: React.FC = () => {
   ];
 
   return (
-    <PageContainer>
-      <ProTable<SystemToken.PageListItem, SystemToken.PageParams>
+    <ProTable<SystemToken.PageListItem, SystemToken.PageParams>
         {...proTableConfigs}
         pagination={{
           // 是否允许每页大小更改
@@ -135,7 +134,6 @@ const Token: React.FC = () => {
         formRef={formRef}
         rowSelection={{}}
       />
-    </PageContainer>
   );
 };
 
