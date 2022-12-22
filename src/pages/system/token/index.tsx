@@ -1,14 +1,13 @@
 import React, {useRef, useState} from 'react';
 
-import type {ProColumns, ActionType} from '@ant-design/pro-components';
-import {PageContainer, ProTable} from '@ant-design/pro-components';
-import {proTableConfigs} from '@/setting';
-import {CloseOutlined} from '@ant-design/icons';
-import {message, Popconfirm, Space} from 'antd';
-import {pageQuery, remove} from './service';
-import type {FormInstance} from 'antd/lib/form';
-import {isArray} from 'lodash';
-import {system, auth} from '@/utils/twelvet';
+import ProTable from '@ant-design/pro-table'
+import proTableConfigs from '@/components/TwelveT/ProTable/proTableConfigs'
+import { CloseOutlined } from '@ant-design/icons'
+import { message, Popconfirm, Space } from 'antd'
+import { pageQuery, remove } from './service'
+import type { FormInstance } from 'antd/lib/form'
+import { isArray } from 'lodash'
+import { system, auth } from '@/utils/twelvet'
 
 /**
  * Token令牌管理
