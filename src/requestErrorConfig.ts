@@ -110,6 +110,8 @@ export const errorConfig: RequestConfig = {
         } = error.response;
         if (status === 504) {
           message.error('服务无响应');
+        } if (status === 401) {
+          return logout()
         } else {
           message.error(msg);
         }

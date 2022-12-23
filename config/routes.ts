@@ -57,7 +57,7 @@ export default [
                 },
                 {
                     title: '令牌管理',
-                    icon: 'icon-dfs',
+                    icon: 'icon-token',
                     name: 'token',
                     path: '/system/token',
                     component: './System/Token'
