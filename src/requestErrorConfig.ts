@@ -111,6 +111,7 @@ export const errorConfig: RequestConfig = {
         if (status === 504) {
           message.error('服务无响应');
         } if (status === 401) {
+          message.warn('Token已失效,请重新登录！');
           return logout()
         } else {
           message.error(msg);
