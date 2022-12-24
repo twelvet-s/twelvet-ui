@@ -78,7 +78,7 @@ const Panel: React.FC = () => {
                                 <li>Spring Authorization Server</li>
                                 <li>Spring Cloud Alibaba</li>
                                 <li>Nacos</li>
-                                <li>RabbitMQ</li>
+                                <li>RocketMQ</li>
                                 <li>...</li>
                             </ul>
                         </Col>
