@@ -75,10 +75,10 @@ const Panel: React.FC = () => {
                             <h3>后端技术</h3>
                             <ul style={{ padding: 0 }}>
                                 <li>Spring Boot</li>
+                                <li>Spring Authorization Server</li>
                                 <li>Spring Cloud Alibaba</li>
                                 <li>Nacos</li>
                                 <li>RabbitMQ</li>
-                                <li>Fast DFS</li>
                                 <li>...</li>
                             </ul>
                         </Col>
