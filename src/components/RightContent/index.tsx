@@ -1,53 +1,55 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { SelectLang, useModel } from '@umijs/max';
-import { Space } from 'antd';
 import React from 'react';
-import HeaderSearch from '../HeaderSearch';
 import Avatar from './AvatarDropdown';
-import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 
-const GlobalHeaderRight: React.FC = () => {
+  const className = useEmotionCss(() => {
+    return {
+      display: 'flex',
+      height: '48px',
+      marginLeft: 'auto',
+      overflow: 'hidden',
+      gap: 8,
+    };
+  });
+
+  const actionClassName = useEmotionCss(({ token }) => {
+    return {
+      display: 'flex',
+      float: 'right',
+      height: '48px',
+      marginLeft: 'auto',
+      overflow: 'hidden',
+      cursor: 'pointer',
+      padding: '0 12px',
+      borderRadius: token.borderRadius,
+      '&:hover': {
+        backgroundColor: token.colorBgTextHover,
+      },
+    };
+  });
+
   const { initialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
     return null;
   }
-
-  const { navTheme, layout } = initialState.settings;
-  let className = styles.right;
-
-  if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
-    className = `${styles.right}  ${styles.dark}`;
-  }
-  return (
-    <Space className={className}>
-      <HeaderSearch
-        className={`${styles.action} ${styles.search}`}
-        placeholder="站内搜索"
-        defaultValue="umi ui"
-        options={[
-          {
-            label: <a href="https://www.twelvet.cn/" target={'_blank'} rel="noreferrer">twelvet</a>,
-            value: 'twelvet',
-          },
-        ]}
-      // onSearch={value => {
-      //   console.log('input', value);
-      // }}
-      />
+return (
+  <div className={className}>
       <span
-        className={styles.action}
+        className={actionClassName}
         onClick={() => {
           window.open('http://cloud.twelvet.cn/api/doc.html');
         }}
       >
         <QuestionCircleOutlined />
       </span>
-      <Avatar menu />
-      <SelectLang className={styles.action} />
-    </Space>
-  );
-};
+      <Avatar />
+      <SelectLang className={actionClassName} />
+    </div>
+);
+
 export default GlobalHeaderRight;

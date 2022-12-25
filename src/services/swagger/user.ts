@@ -76,13 +76,13 @@ export async function createUsersWithListInput(body: API.User[], options?: { [ke
   });
 }
 
-/** Logs user into the system GET /login */
+/** Logs user into the system GET /user/login */
 export async function loginUser(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.loginUserParams,
   options?: { [key: string]: any },
 ) {
-  return request<string>('/login', {
+  return request<string>('/user/login', {
     method: 'GET',
     params: {
       ...params,
