@@ -43,7 +43,7 @@ export default () => {
     </Menu>
   );
   return (
-    <HeaderDropdown overlay={menuHeaderDropdown}>
+    <HeaderDropdown menu={menuHeaderDropdown}>
       <Button>hover 展示菜单</Button>
     </HeaderDropdown>
   );
