@@ -19,7 +19,7 @@ const History = () => {
           <li>Umi4</li>
           <li>修正所有ts警告，全面拥抱ts</li>
           <li>优化前端登录逻辑兼容</li>
-          <li>升级Nacos到最新版2.1.1</li>
+          <li>升级Nacos到最新版2.2.1</li>
           <li>升级pom依赖</li>
           <li>其他细节优化</li>
         </ol>
