@@ -15,6 +15,8 @@ const History = () => {
           <li>Nacos2.2.x</li>
           <li>Spring Cloud Alibaba 2022</li>
           <li>新增令牌管理</li>
+          <li>全新UI，Antd-Pro V6</li>
+          <li>Umi4</li>
           <li>修正所有ts警告，全面拥抱ts</li>
           <li>优化前端登录逻辑兼容</li>
           <li>升级Nacos到最新版2.1.1</li>
