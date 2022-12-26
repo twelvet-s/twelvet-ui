@@ -6,6 +6,7 @@ import Avatar from './AvatarDropdown';
 
 export type SiderTheme = 'light' | 'dark';
 
+const GlobalHeaderRight: React.FC = () => {
   const className = useEmotionCss(() => {
     return {
       display: 'flex',
@@ -37,8 +38,9 @@ export type SiderTheme = 'light' | 'dark';
   if (!initialState || !initialState.settings) {
     return null;
   }
-return (
-  <div className={className}>
+
+  return (
+    <div className={className}>
       <span
         className={actionClassName}
         onClick={() => {
@@ -50,6 +52,6 @@ return (
       <Avatar />
       <SelectLang className={actionClassName} />
     </div>
-);
-
+  );
+};
 export default GlobalHeaderRight;
