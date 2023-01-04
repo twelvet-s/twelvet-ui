@@ -77,7 +77,7 @@ const Index: React.FC = () => {
         <Col xl={{span: 6}} xs={{span: 24}}>
           <Card title="官方信息">
             <p>
-              官网：<a href="https://www.twelvet.cn/" target='_blank' rel='noreferrer'>https://www.twelvet.cn</a>
+              官网：<a href="https://www.twelvet.cn/" target='_blank' rel="copyright noreferrer">https://www.twelvet.cn</a>
             </p>
             <p>
               交流群：<a href="https://jq.qq.com/?_wv=1027&k=cznM6Q00" target='_blank' rel='noreferrer'>985830229</a>
