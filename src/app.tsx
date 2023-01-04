@@ -21,14 +21,14 @@ const loginPath = '/login';
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: any;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: any;
 }> {
   const fetchUserInfo = async () => {
     try {
       const {user = {}, menus, roles, permissions, code, msg} = await getCurrentUser()
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg)
       }
 
