@@ -23,7 +23,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           distribution: zulu
-          cache: yarn
 
       - name: Build
         run: |
