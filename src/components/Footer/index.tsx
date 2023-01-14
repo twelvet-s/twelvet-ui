@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
         {
             key: 'Github',
             title: <GithubOutlined />,
-            href: 'https://gitee.com/twelvet/twelvet',
+            href: 'https://github.com/twelvet-s/twelvet',
             blankTarget: true,
         },
         {
