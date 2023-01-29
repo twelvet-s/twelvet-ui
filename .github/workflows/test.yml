@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 18.x ]
+        node-version: [ 16.x ]
 
     steps:
       - uses: actions/checkout@v3
@@ -23,3 +23,4 @@ jobs:
       - name: Build
         run: |
           yarn
+          yarn build
