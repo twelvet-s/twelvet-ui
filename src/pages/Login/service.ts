@@ -39,6 +39,16 @@ export async function getCurrentUser(): Promise<any> {
 }
 
 /**
+ * 获取当前用户菜单路由
+ * @returns
+ */
+export async function getRouters(): Promise<any> {
+    return request(`system/menu/getRouters`, {
+        method: 'GET'
+    })
+}
+
+/**
  * 刷新令牌
  */
 export async function refreshToken() {
