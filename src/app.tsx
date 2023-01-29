@@ -8,7 +8,7 @@ import RightContent from '@/components/RightContent'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { RequestOptionsInit } from 'umi-request'
 import TWT from './setting'
-import { getCurrentUser, refreshToken as refreshTokenService } from './pages/login/service'
+import { getCurrentUser, getRouters, refreshToken as refreshTokenService } from './pages/login/service'
 import Footer from './components/TwelveT/Footer'
 import { logout, setAuthority } from './utils/twelvet'
 
@@ -30,16 +30,18 @@ export async function getInitialState(): Promise<{
 }> {
     const fetchUserInfo = async () => {
         try {
-            const { user = {}, menus = {}, roles, permissions, code, msg } = await getCurrentUser()
-            if (code != 200) {
+            const { user = {}, roles, permissions, code, msg } = await getCurrentUser()
+            if (code !== 200) {
                 return message.error(msg)
             }
 
             localStorage.setItem(TWT.preAuthorize, JSON.stringify(permissions))
 
+            const { data } = await getRouters()
+
             return {
                 user,
-                menus,
+                menus: data,
                 roles,
                 permissions
             }
@@ -224,7 +226,7 @@ const responseHeaderInterceptor = async (response: Response, options: RequestOpt
         });
         // 跳转到登陆页
         // return router.replace('/user/login');
-    } else if  (jsonData && jsonData.code === 403) {
+    } else if (jsonData && jsonData.code === 403) {
         notification.error({
             message: jsonData.msg,
         });
