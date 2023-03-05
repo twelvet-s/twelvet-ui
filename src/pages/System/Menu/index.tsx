@@ -419,10 +419,10 @@ const Menu: React.FC = () => {
           {menuType != `F` && (
             <Row>
               <Col sm={12} xs={24}>
-                <Form.Item {...formItemLayout} label="是否外链" name="isFrame" initialValue={0}>
+                <Form.Item {...formItemLayout} label="是否外链" name="isFrame" initialValue={'1'}>
                   <Radio.Group>
-                    <Radio value={1}>是</Radio>
-                    <Radio value={0}>否</Radio>
+                    <Radio value={'0'}>是</Radio>
+                    <Radio value={'1'}>否</Radio>
                   </Radio.Group>
                 </Form.Item>
               </Col>
