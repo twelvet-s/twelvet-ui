@@ -101,7 +101,7 @@ export const makeTree = (params: {
     }
 
     // 无需判断直接返回
-    if (!rootId && rootId != 0) {
+    if (!rootId && rootId !== 0) {
       return true;
     }
 

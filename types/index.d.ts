@@ -92,7 +92,7 @@ export namespace API {
     success: boolean;
   };
 
-  /** POST /api/login/account */
+  /** POST /api/login/Account */
   export type POST_API_LOGIN_ACCOUNT_QUERY = {
     /** example:  123 */
     token: string;
@@ -105,14 +105,14 @@ export namespace API {
     password: string;
     /** example: true */
     autoLogin: boolean;
-    /** example: account */
+    /** example: Account */
     type: string;
   };
 
   export type POST_API_LOGIN_ACCOUNT_RES = {
     /** example: ok */
     status: string;
-    /** example: account */
+    /** example: Account */
     type: string;
     /** example: admin */
     currentAuthority: string;

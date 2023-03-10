@@ -47,7 +47,7 @@ const MonitorRedis: React.FC = () => {
               </ProDescriptions.Item>
 
               <ProDescriptions.Item label="运行模式">
-                {redisData?.info.redis_mode == "standalone" ? "单机" : "集群"}
+                {redisData?.info.redis_mode === "standalone" ? "单机" : "集群"}
               </ProDescriptions.Item>
 
               <ProDescriptions.Item label="端口">
@@ -75,7 +75,7 @@ const MonitorRedis: React.FC = () => {
               </ProDescriptions.Item>
 
               <ProDescriptions.Item label="AOF是否开启">
-                {redisData?.info.aof_enabled == "0" ? "否" : "是"}
+                {redisData?.info.aof_enabled === "0" ? "否" : "是"}
               </ProDescriptions.Item>
 
               <ProDescriptions.Item label="RDB是否成功">

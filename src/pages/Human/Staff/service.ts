@@ -44,7 +44,6 @@ export async function update(params: Record<string, any>) {
  * @param params 修改密码
  */
 export async function updatePassword(params: Record<string, any>) {
-    debugger
     return request(`${controller}/resetPwd`, {
         method: 'PUT',
         data: {

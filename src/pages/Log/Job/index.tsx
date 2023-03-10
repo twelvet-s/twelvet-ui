@@ -97,7 +97,7 @@ const Login: React.FC = () => {
         return true;
       }
       const {code, msg} = await remove(jobLogIds.join(','));
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 

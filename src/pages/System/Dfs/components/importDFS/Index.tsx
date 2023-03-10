@@ -48,7 +48,7 @@ const ImportDFS: React.FC<{
 
             const { code, msg } = await uploadFile(formData)
 
-            if (code != 200) {
+            if (code !== 200) {
                 return message.error(msg)
             }
 

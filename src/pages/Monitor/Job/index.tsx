@@ -110,7 +110,7 @@ const Job: React.FC = () => {
       };
 
       const {code, msg} = await run(params);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
       message.success(msg);
@@ -137,7 +137,7 @@ const Job: React.FC = () => {
       }
 
       const {code, msg} = await remove(params);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -175,8 +175,8 @@ const Job: React.FC = () => {
           // 开启加载中
           setLoadingModal(true);
           // ID为0则insert，否则将update
-          const {code, msg} = fields.jobId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
+          const {code, msg} = fields.jobId === 0 ? await insert(fields) : await update(fields);
+          if (code !== 200) {
             return message.error(msg);
           }
 

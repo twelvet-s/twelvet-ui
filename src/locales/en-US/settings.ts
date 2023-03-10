@@ -30,7 +30,7 @@ export default {
   'app.settings.security.phone-description': 'Bound phone',
   'app.settings.security.question': 'Security Question',
   'app.settings.security.question-description':
-    'The security question is not set, and the security policy can effectively protect the account security',
+    'The security question is not set, and the security policy can effectively protect the Account security',
   'app.settings.security.email': 'Backup Email',
   'app.settings.security.email-description': 'Bound Email',
   'app.settings.security.mfa': 'MFA Device',
@@ -40,11 +40,11 @@ export default {
   'app.settings.security.set': 'Set',
   'app.settings.security.bind': 'Bind',
   'app.settings.binding.taobao': 'Binding Taobao',
-  'app.settings.binding.taobao-description': 'Currently unbound Taobao account',
+  'app.settings.binding.taobao-description': 'Currently unbound Taobao Account',
   'app.settings.binding.alipay': 'Binding Alipay',
-  'app.settings.binding.alipay-description': 'Currently unbound Alipay account',
+  'app.settings.binding.alipay-description': 'Currently unbound Alipay Account',
   'app.settings.binding.dingding': 'Binding DingTalk',
-  'app.settings.binding.dingding-description': 'Currently unbound DingTalk account',
+  'app.settings.binding.dingding-description': 'Currently unbound DingTalk Account',
   'app.settings.binding.bind': 'Bind',
   'app.settings.notification.password': 'Account Password',
   'app.settings.notification.password-description':

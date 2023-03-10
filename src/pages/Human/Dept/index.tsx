@@ -56,7 +56,7 @@ const Dept: React.FC = () => {
   const putData = async () => {
     try {
       const {code, msg, data} = await list({});
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -91,7 +91,7 @@ const Dept: React.FC = () => {
     // 更新数据
     putData();
 
-    if (deptId != 0) {
+    if (deptId !== 0) {
       const field: Record<string, any> = {parentId: deptId};
       // 设置表单数据
       form.setFieldsValue(field);
@@ -127,7 +127,7 @@ const Dept: React.FC = () => {
   const refRemove = async (row: Record<string, any>) => {
     try {
       const {code, msg} = await remove(row.deptId);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -159,7 +159,7 @@ const Dept: React.FC = () => {
           // 开启加载中
           setLoadingModal(true);
           // deptId为0则insert，否则将update
-          const {msg} = fields.deptId == 0 ? await insert(fields) : await update(fields);
+          const {msg} = fields.deptId === 0 ? await insert(fields) : await update(fields);
 
           message.success(msg);
 

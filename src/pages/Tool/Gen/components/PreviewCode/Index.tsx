@@ -42,7 +42,7 @@ const PreviewCode: React.FC<{
    * 初始化数据信息
    */
   useEffect(() => {
-    if (info.tableId != 0) {
+    if (info.tableId !== 0) {
       refGetInfo(info.tableId)
     }
   }, [info.tableId])

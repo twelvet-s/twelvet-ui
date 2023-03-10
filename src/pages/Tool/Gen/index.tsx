@@ -59,7 +59,7 @@ const Gen: React.FC = () => {
         return true;
       }
       const { code, msg } = await remove(tableIds);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -78,7 +78,7 @@ const Gen: React.FC = () => {
   const refSynchDb = async (tableName: string) => {
     try {
       const { code, msg } = await synchDb(tableName);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 

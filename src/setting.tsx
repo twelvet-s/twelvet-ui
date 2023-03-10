@@ -49,7 +49,7 @@ const TWT: any = {
   urlPrefix,
   action: `${urlPrefix}/`,
   uploadUrl: `${urlPrefix}/dfs/commonUpload`,
-  static: 'http://static.twelvet.cn',
+  static: 'https://static.twelvet.cn',
 };
 
 export default TWT;

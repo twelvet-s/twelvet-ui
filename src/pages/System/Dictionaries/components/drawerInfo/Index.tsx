@@ -90,7 +90,7 @@ const DrawerInfo: React.FC<{
   const refPut = async (row: Record<string, any>) => {
     try {
       const {code, msg, data} = await getBydictCode(row.dictCode);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
       // 赋值表单数据
@@ -155,7 +155,7 @@ const DrawerInfo: React.FC<{
           setLoadingModal(true);
 
           // ID为0则insert，否则将update
-          const {msg} = fields.dictCode == 0 ? await insert(fields) : await update(fields);
+          const {msg} = fields.dictCode === 0 ? await insert(fields) : await update(fields);
 
           message.success(msg);
 

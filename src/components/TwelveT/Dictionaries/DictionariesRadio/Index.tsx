@@ -21,7 +21,7 @@ const DictionariesRadio: React.FC<{
     const makeTree = async () => {
         try {
             const { code, msg, data } = await getDictionariesType(type)
-            if (code != 200) {
+            if (code !== 200) {
                 return message.error(msg)
             }
 

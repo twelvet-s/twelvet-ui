@@ -136,8 +136,8 @@ const Post: React.FC = () => {
           // 开启加载中
           setLoadingModal(true);
           // ID为0则insert，否则将update
-          const {code, msg} = modal.title == '新增' ? await insert(fields) : await update(fields);
-          if (code != 200) {
+          const {code, msg} = modal.title === '新增' ? await insert(fields) : await update(fields);
+          if (code !== 200) {
             return message.error(msg);
           }
 
@@ -281,7 +281,7 @@ const Post: React.FC = () => {
       >
         <Form name="Client" form={form}>
           <Form.Item {...formItemLayout} label="编号" name="clientId">
-            <Input placeholder="编号" disabled={modal.title == '修改'}/>
+            <Input placeholder="编号" disabled={modal.title === '修改'}/>
           </Form.Item>
 
           <Form.Item

@@ -76,7 +76,7 @@ const Dictionaries: React.FC = () => {
   const refPut = async (row: Record<string, any>) => {
     try {
       const {code, msg, data} = await getBydictId(row.dictId);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
       // 赋值表单数据
@@ -141,8 +141,8 @@ const Dictionaries: React.FC = () => {
           setLoadingModal(true);
 
           // ID为0则insert，否则将update
-          const {code, msg} = fields.dictId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
+          const {code, msg} = fields.dictId === 0 ? await insert(fields) : await update(fields);
+          if (code !== 200) {
             return message.error(msg);
           }
 
@@ -171,7 +171,7 @@ const Dictionaries: React.FC = () => {
   const clear = async () => {
     try {
       const {code, msg} = await clearCache();
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
       message.success(msg);

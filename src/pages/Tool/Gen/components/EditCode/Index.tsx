@@ -150,7 +150,7 @@ const EditCode: React.FC<{
         setFormInfo(tableData.info.columns)
 
         // 配置链表参数
-        if (tableData.info.tplCategory == 'sub') {
+        if (tableData.info.tplCategory === 'sub') {
           tableData.info.subTable = [
             tableData.info.subTableName,
             tableData.info.subTableFkName
@@ -253,7 +253,7 @@ const EditCode: React.FC<{
 
 
               // 树表查询
-              if (params.tplCategory == 'tree') {
+              if (params.tplCategory === 'tree') {
 
                 params.params = {
                   treeCode: params.treeCode,
@@ -263,7 +263,7 @@ const EditCode: React.FC<{
 
               }
 
-              if (params.tplCategory == 'sub') {
+              if (params.tplCategory === 'sub') {
                 const subTable = params.subTable
                 params.subTableName = subTable[0]
                 params.subTableFkName = subTable[1]
@@ -401,7 +401,7 @@ const EditCode: React.FC<{
   ]
 
   useEffect(() => {
-    if (info.tableId != 0) {
+    if (info.tableId !== 0) {
       refGetInfo(info.tableId)
     }
   }, [info.tableId])

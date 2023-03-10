@@ -46,6 +46,7 @@
     "not ie <= 10"
   ],
   "dependencies": {
+    "antd-img-crop": "^4.8.0",
     "echarts": "^5.3.3",
     "@ant-design/icons": "^4.8.0",
     "@ant-design/pro-components": "^2.3.57",

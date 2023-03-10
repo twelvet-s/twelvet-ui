@@ -98,7 +98,7 @@ const Staff: React.FC = () => {
   const makeDept = async () => {
     try {
       const { code, msg, data } = await treeSelect();
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -121,7 +121,7 @@ const Staff: React.FC = () => {
     const postTees: Record<string, any>[] = new Array<Record<string, any>>();
     // 制作岗位数据
     posts.filter((item: { postName: string; postId: number }) => {
-      postTees.push({
+      return postTees.push({
         title: item.postName,
         key: item.postId,
         value: item.postId,
@@ -133,7 +133,7 @@ const Staff: React.FC = () => {
     const roleTees: Record<string, any>[] = new Array<Record<string, any>>();
     // 制作岗位数据
     roles.filter((item: { roleName: string; roleId: number }) => {
-      roleTees.push({
+      return roleTees.push({
         title: item.roleName,
         key: item.roleId,
         value: item.roleId,
@@ -159,7 +159,7 @@ const Staff: React.FC = () => {
   const refPut = async (row: Record<string, any>) => {
     try {
       const { code, msg, data } = await getByStaffId(row.userId);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -174,7 +174,7 @@ const Staff: React.FC = () => {
       const postTree: Record<string, any>[] = new Array<Record<string, any>>();
       // 制作岗位数据
       posts.filter((item: { postName: string; postId: number }) => {
-        postTree.push({
+        return postTree.push({
           title: item.postName,
           key: item.postId,
           value: item.postId,
@@ -186,7 +186,7 @@ const Staff: React.FC = () => {
       const roleTree: Record<string, any>[] = new Array<Record<string, any>>();
       // 制作岗位数据
       roles.filter((item: { roleName: string; roleId: number }) => {
-        roleTree.push({
+        return roleTree.push({
           title: item.roleName,
           key: item.roleId,
           value: item.roleId,
@@ -262,8 +262,8 @@ const Staff: React.FC = () => {
           // 开启加载中
           setLoadingModal(true);
           // ID为0则insert，否则将update
-          const { code, msg } = fields.userId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
+          const { code, msg } = fields.userId === 0 ? await insert(fields) : await update(fields);
+          if (code !== 200) {
             return message.error(msg);
           }
 
@@ -297,9 +297,8 @@ const Staff: React.FC = () => {
           setLoadingModal(true);
 
           // ID为0则insert，否则将update
-          debugger;
           const { code, msg } = await updatePassword(fields);
-          if (code != 200) {
+          if (code !== 200) {
             return message.error(msg);
           }
 

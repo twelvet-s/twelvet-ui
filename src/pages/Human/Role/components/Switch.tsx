@@ -19,7 +19,7 @@ const RoleSwitch: React.FC<{
       setLoading(true);
       const params: { roleId: number, status: string } = {roleId: 0, status: "0"}
       params.roleId = props.row.roleId;
-      params.status = checked == '1' ? '0' : '1'
+      params.status = checked === '1' ? '0' : '1'
       const {msg} = await changeStatus(params);
 
       if (checked === '1') {
@@ -40,7 +40,7 @@ const RoleSwitch: React.FC<{
     <Switch
       loading={loading}
       onClick={toggle}
-      checked={checked == '0'}
+      checked={checked === '0'}
     />
   )
 }

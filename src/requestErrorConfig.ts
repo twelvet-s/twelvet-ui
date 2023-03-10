@@ -33,7 +33,7 @@ const refreshToken = async (
   // 续签失败将要求重新登录
   const res = await refreshTokenService();
 
-  if (res.code == 400) {
+  if (res.code === 400) {
     notification.error({
       message: `续签失败`,
       description: `续签失败,请重新登录`,
@@ -145,7 +145,7 @@ export const errorConfig: RequestConfig = {
 
       // 拦截请求配置，进行个性化处理。
       let url = config?.url;
-      if (url?.indexOf('/api') == 0) {
+      if (url?.indexOf('/api') === 0) {
         url = url.slice(4);
       }
       return {

@@ -48,7 +48,7 @@ const DrawerInfo: React.FC<{
 
       const { code, msg } = await importTable(selectedRowKeys);
 
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
       message.success(msg);

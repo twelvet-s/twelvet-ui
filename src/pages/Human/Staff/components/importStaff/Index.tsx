@@ -48,7 +48,7 @@ const DeptSearch: React.FC<{
       formData.append('cover', `${cover}`)
 
       const {code, msg} = await importData(formData)
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg)
       }
       message.success(msg)
@@ -112,10 +112,10 @@ const DeptSearch: React.FC<{
             }) => {
               if (
                 // xls
-                file.type == 'application/vnd.ms-excel'
+                file.type === 'application/vnd.ms-excel'
                 ||
                 // xlsx
-                file.type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
               ) {
                 // 加入数组
                 if (file.originFileObj) {

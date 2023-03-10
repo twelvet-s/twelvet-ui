@@ -137,8 +137,8 @@ const Post: React.FC = () => {
           // 开启加载中
           setLoadingModal(true);
           // ID为0则insert，否则将update
-          const {code, msg} = fields.postId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
+          const {code, msg} = fields.postId === 0 ? await insert(fields) : await update(fields);
+          if (code !== 200) {
             return message.error(msg);
           }
 

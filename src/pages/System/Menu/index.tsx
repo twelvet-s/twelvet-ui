@@ -61,7 +61,7 @@ const Menu: React.FC = () => {
   const putData = async () => {
     try {
       const {code, msg, data} = await list({});
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -112,7 +112,7 @@ const Menu: React.FC = () => {
       // 更新菜单数据
       putData();
       const {code, msg, data} = await getInfo(row.menuId);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
       // 赋值表单数据
@@ -135,7 +135,7 @@ const Menu: React.FC = () => {
   const refRemove = async (row: Record<string, any>) => {
     try {
       const {code, msg} = await remove(row.menuId);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -169,7 +169,7 @@ const Menu: React.FC = () => {
           // 开启加载中
           setLoadingModal(true);
           // menuId为0则insert，否则将update
-          const {msg} = fields.menuId == 0 ? await insert(fields) : await update(fields);
+          const {msg} = fields.menuId === 0 ? await insert(fields) : await update(fields);
 
           message.success(msg);
 
@@ -258,7 +258,7 @@ const Menu: React.FC = () => {
       render: (_, row) => {
         return (
           <>
-            {(row.menuType == `M` || row.menuType == `C`) && (
+            {(row.menuType === `M` || row.menuType === `C`) && (
               <>
                 <a onClick={() => refPost(row)} hidden={auth('system:menu:insert')}>
                   <Space>
@@ -382,7 +382,7 @@ const Menu: React.FC = () => {
             </Radio.Group>
           </Form.Item>
 
-          {menuType != 'F' && (
+          {menuType !== 'F' && (
             <Form.Item
               label="菜单图标"
               name="icon"
@@ -416,7 +416,7 @@ const Menu: React.FC = () => {
             </Col>
           </Row>
 
-          {menuType != `F` && (
+          {menuType !== `F` && (
             <Row>
               <Col sm={12} xs={24}>
                 <Form.Item {...formItemLayout} label="是否外链" name="isFrame" initialValue={'1'}>

@@ -120,7 +120,7 @@ const Role: React.FC = () => {
   const getDeptDataById = async (roleId: number) => {
     try {
       const { code, msg, data } = await roleDeptTreeSelectByDeptId(roleId);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -137,7 +137,7 @@ const Role: React.FC = () => {
   const getMenuData = async () => {
     try {
       const { code, msg, data } = await roleMenuTreeSelect();
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
       setMenuData(data);
@@ -152,7 +152,7 @@ const Role: React.FC = () => {
   const getDeptData = async () => {
     try {
       const { code, msg, data } = await roleDeptTreeSelect();
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 
@@ -184,7 +184,7 @@ const Role: React.FC = () => {
       getMenuDataById(roleId);
       getDeptDataById(roleId);
       const { code, msg, data } = await getByroleId(roleId);
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
       // 赋值表单数据
@@ -262,8 +262,8 @@ const Role: React.FC = () => {
           fields.deptIds = checkdDeptData;
 
           // ID为0则insert，否则将update
-          const { code, msg } = fields.roleId == 0 ? await insert(fields) : await update(fields);
-          if (code != 200) {
+          const { code, msg } = fields.roleId === 0 ? await insert(fields) : await update(fields);
+          if (code !== 200) {
             return message.error(msg);
           }
 
@@ -376,7 +376,7 @@ const Role: React.FC = () => {
       render: (_, row) => {
         // 不允许操作admin
         return (
-          row.roleKey != 'admin' && (
+          row.roleKey !== 'admin' && (
             <>
               <a onClick={() => refPut(row.roleId)} hidden={auth('system:dict:update')}>
                 <Space>

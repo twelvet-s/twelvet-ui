@@ -93,7 +93,7 @@ const LogLogin: React.FC = () => {
         return true;
       }
       const {code, msg} = await remove(infoIds.join(','));
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg);
       }
 

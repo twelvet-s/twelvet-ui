@@ -27,7 +27,7 @@ const Details: React.FC<{
       }
 
       const {code, msg, data} = await getByJobId({jobId: jobId})
-      if (code != 200) {
+      if (code !== 200) {
         return message.error(msg)
       }
 
@@ -73,19 +73,19 @@ const Details: React.FC<{
         </Descriptions.Item>
 
         <Descriptions.Item label="任务状态">
-          {descriptions.status == '0' && '正常'}
-          {descriptions.status == '1' && '停止'}
+          {descriptions.status === '0' && '正常'}
+          {descriptions.status === '1' && '停止'}
         </Descriptions.Item>
 
         <Descriptions.Item label="是否并发">
-          {descriptions.concurrent == "0" ? '允许' : '禁止'}
+          {descriptions.concurrent === "0" ? '允许' : '禁止'}
         </Descriptions.Item>
 
         <Descriptions.Item label="执行策略">
-          {descriptions.misfirePolicy == '0' && '默认策略'}
-          {descriptions.misfirePolicy == '1' && '立即执行'}
-          {descriptions.misfirePolicy == '2' && '执行一次'}
-          {descriptions.misfirePolicy == '3' && '放弃执行'}
+          {descriptions.misfirePolicy === '0' && '默认策略'}
+          {descriptions.misfirePolicy === '1' && '立即执行'}
+          {descriptions.misfirePolicy === '2' && '执行一次'}
+          {descriptions.misfirePolicy === '3' && '放弃执行'}
         </Descriptions.Item>
 
         <Descriptions.Item label="调用目标方法">
