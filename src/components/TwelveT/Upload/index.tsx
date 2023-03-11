@@ -5,6 +5,7 @@ import TWT from '@/setting'
 import { UploadChangeParam } from 'antd/lib/upload'
 import { RcFile, UploadFile } from 'antd/lib/upload/interface'
 import ImgCrop from 'antd-img-crop'
+import { getCurrentUser } from '@/pages/Login/service'
 
 /**
  * 上传组件
@@ -21,6 +22,14 @@ const Upload: React.FC<UploadType> = (props) => {
         files: []
     })
 
+    const { previewVisible, previewImage, files } = state
+
+    const { maxCount, action, listType, title, name, accept, imgCrop = false } = props
+
+    const local = localStorage.getItem(TWT.accessToken);
+
+    let { access_token } = local ? JSON.parse(local) : { access_token: '' };
+
     useEffect(() => {
         const { images } = props
         if (images && images?.length > 0) {
@@ -30,6 +39,7 @@ const Upload: React.FC<UploadType> = (props) => {
                     name: `${TWT.static}${file}`,
                     status: 'done',
                     url: `${TWT.static}${file}`,
+                    thumbUrl: `${TWT.static}${file}`,
                 }
             })
             setState({
@@ -40,35 +50,13 @@ const Upload: React.FC<UploadType> = (props) => {
     }, [props])
 
     /**
-     * 获取文件流
-     * @param file
-     */
-    const getBase64 = (file: Blob) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader()
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    }
-
-    /**
      * 查看文件详情
      * @param file
      */
     const handlePreview = async (file: any) => {
-
-        if (props.listType && props.listType !== 'picture-card') {
-            return false
-        }
-
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
-
         setState({
             ...state,
-            previewImage: file.url || file.preview,
+            previewImage: file.thumbUrl,
             previewVisible: true,
             // previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
         });
@@ -78,7 +66,7 @@ const Upload: React.FC<UploadType> = (props) => {
      * 处理发生改变
      * @param param
      */
-    const handleChange = ({ fileList }: UploadChangeParam<UploadFile>) => {
+    const handleChange = async ({ fileList }: UploadChangeParam<UploadFile>) => {
         // 获取最后一张文件
         const file: Array<UploadFile> = fileList.slice(-1)
 
@@ -91,7 +79,8 @@ const Upload: React.FC<UploadType> = (props) => {
 
             // 续签失败将要求重新登录
             if (code == 401) {
-                // TODO 续签
+                // 续签
+                await getCurrentUser()
             }
 
             if (code === 200) {
@@ -101,6 +90,7 @@ const Upload: React.FC<UploadType> = (props) => {
                     }
                     // 设置文件url
                     f.url = `${TWT.static}${imgPath}`
+                    f.thumbUrl = `${TWT.static}${imgPath}`
                     return f
                 })
 
@@ -133,7 +123,12 @@ const Upload: React.FC<UploadType> = (props) => {
                     f.status = 'error'
                     return f
                 })
-                message.error(msg)
+                if (code === 401) {
+                    message.error('Token过期，已续签，请重新上传')
+                } else {
+                    message.error(msg)
+                }
+
             }
         }
 
@@ -151,19 +146,12 @@ const Upload: React.FC<UploadType> = (props) => {
             }
         }
 
+        // 需要不断设置，不然无法感知变化
         setState({
             ...state,
             files: fileList
         })
     }
-
-    const { previewVisible, previewImage, files } = state
-
-    const { maxCount, action, listType, title, name, accept, imgCrop = false } = props
-
-    const local = localStorage.getItem(TWT.accessToken);
-
-    const { access_token } = local ? JSON.parse(local) : { access_token: '' };
 
     const upload = (
         <UploadAntd

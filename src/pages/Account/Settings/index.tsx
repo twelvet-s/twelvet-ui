@@ -8,11 +8,16 @@ import UserInfo from './components/UserInfo'
 import RestPassword from './components/RestPassword'
 import './styles.less'
 import Upload from '@/components/TwelveT/Upload'
+import { flushSync } from 'react-dom'
+import { getCurrentUser, getRouters } from '@/pages/Login/service'
+import { useModel } from '@umijs/max'
 
 /**
  * 个人资料设置
  */
 const UserSettings: React.FC = () => {
+
+    const { initialState, setInitialState } = useModel('@@initialState');
 
     // 用户信息
     const [userInfo, setUserInfo] = useState<{
@@ -78,6 +83,31 @@ const UserSettings: React.FC = () => {
                                 images={[
                                     userInfo.user.avatar
                                 ]}
+                                // 重新渲染个人信息
+                                success={async () => {
+                                    const { user = {}, roles, permissions } = await getCurrentUser();
+                                    const { data } = await getRouters()
+                                    const userInfo = {
+                                        user,
+                                        menus: data,
+                                        roles,
+                                        permissions
+                                    }
+                                    if (userInfo) {
+                                        flushSync(() => {
+                                            setInitialState((s) => ({
+                                                ...s,
+                                                // 用户信息
+                                                currentUser: {
+                                                    user: userInfo.user,
+                                                    menus: userInfo.menus,
+                                                    permissions: userInfo.permissions,
+                                                    roles: userInfo.roles
+                                                }
+                                            }));
+                                        })
+                                    }
+                                }}
                             />
                         </div>
 
