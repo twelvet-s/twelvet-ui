@@ -58,8 +58,6 @@ const Upload: React.FC<UploadType> = (props) => {
      */
     const handlePreview = async (file: any) => {
 
-        console.log(file)
-
         if (props.listType && props.listType !== 'picture-card') {
             return false
         }
@@ -77,13 +75,85 @@ const Upload: React.FC<UploadType> = (props) => {
     };
 
     /**
-     * 上传后
+     * 处理发生改变
      * @param param
      */
-    const handleChange = (info: UploadChangeParam<UploadFile>) => {
+    const handleChange = ({ fileList }: UploadChangeParam<UploadFile>) => {
+        // 获取最后一张文件
+        const file: Array<UploadFile> = fileList.slice(-1)
+
+        if (file.length > 0 && file[0].response) {
+
+            const uploadFile: UploadFile = file[0]
+            const { code, msg, imgUrl, data } = uploadFile.response
+
+            const imgPath = imgUrl ? imgUrl : data
+
+            // 续签失败将要求重新登录
+            if (code == 401) {
+                // TODO 续签
+            }
+
+            if (code === 200) {
+                fileList.map(f => {
+                    if (f.uid != uploadFile.uid) {
+                        return f
+                    }
+                    // 设置文件url
+                    f.url = `${TWT.static}${imgPath}`
+                    return f
+                })
+
+                // 存在Form事件将改变值
+                if (props.onChange) {
+                    if (props.maxCount === 1) {
+                        // 单文件将直接设置为当前响应地址
+                        props.onChange(imgPath)
+                    } else {
+                        const values = fileList.map(v => {
+                            return v.url
+                        })
+
+                        props.onChange(values)
+                    }
+                }
+
+                // 上传成功后需要执行的方法
+                if (props.success) {
+                    props.success()
+                }
+
+                message.success(msg)
+            } else {
+                fileList.map(f => {
+                    if (f.uid != uploadFile.uid) {
+                        return f
+                    }
+                    // 将状态改为错误
+                    f.status = 'error'
+                    return f
+                })
+                message.error(msg)
+            }
+        }
+
+        // 数据为空时需清空数据
+        if (fileList.length === 0) {
+            if (props.onChange) {
+                if (props.maxCount === 1) {
+                    if (fileList.length === 0) {
+                        // 清空数据
+                        props.onChange()
+                    }
+                } else {
+                    props.onChange([])
+                }
+            }
+        }
+
         setState({
             ...state,
-            files: info.fileList
+            files: fileList
         })
     }
 
@@ -110,7 +180,7 @@ const Upload: React.FC<UploadType> = (props) => {
             action={`${action}`}
             // 查看触发
             onPreview={handlePreview}
-            // 处理文件上传完成后
+            // 处理文件上传完成后，onChange只执行问题：https://github.com/ant-design/ant-design/issues/2423
             onChange={handleChange}
         >
             {/* 小于可上数显示上传按钮 */}
