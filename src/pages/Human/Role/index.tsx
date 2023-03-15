@@ -69,11 +69,10 @@ const Role: React.FC = () => {
   const [form] = Form.useForm();
 
   const [menuData, setMenuData] = useState<DataNode[]>();
-  const [checkdMenuData, setCheckdMenuData] = useState<Key[]>([]);
-  const [finalCheckdMenuData, setFinalCheckdMenuData] = useState<Key[]>([]);
+  const [checkedMenuData, setCheckedMenuData] = useState<Key[]>([]);
 
   const [deptData, setDeptData] = useState<DataNode[]>();
-  const [checkdDeptData, setCheckdDeptData] = useState<Key[]>([]);
+  const [checkedDeptData, setCheckedDeptData] = useState<Key[]>([]);
 
   // 权限范围
   const [dataScope, setDataScope] = useState<string>();
@@ -90,22 +89,15 @@ const Role: React.FC = () => {
       // 显示数据
       const keys: Key[] = [];
 
-      // 最终提交数据
-      const finalkeys: Key[] = [];
-
       // 初始化选中菜单数据
       checkedMenus.map((menu: { menuId: number; menuType: string }) => {
         // 显示数据
         keys.push(menu.menuId);
-        // 所有初始化数据都必须提交
-        finalkeys.push(menu.menuId);
+        return false
       });
 
-      // 初始最终提交数据
-      setFinalCheckdMenuData(finalkeys);
-
       // 显示数据
-      setCheckdMenuData(keys);
+      setCheckedMenuData(keys);
 
       // 设置菜单数据
       setMenuData(menus);
@@ -124,7 +116,7 @@ const Role: React.FC = () => {
         return message.error(msg);
       }
 
-      setCheckdDeptData(data.checkedKeys);
+      setCheckedDeptData(data.checkedKeys);
       setDeptData(data.depts);
     } catch (e) {
       system.error(e);
@@ -237,10 +229,10 @@ const Role: React.FC = () => {
   const handleCancel = () => {
     setModal({ title: '', visible: false });
 
-    setCheckdDeptData([]);
+    setCheckedDeptData([]);
     setDeptData([]);
 
-    setCheckdMenuData([]);
+    setCheckedMenuData([]);
     setMenuData([]);
 
     form.resetFields();
@@ -257,9 +249,9 @@ const Role: React.FC = () => {
           // 开启加载中
           setLoadingModal(true);
           // 设置菜单权限
-          fields.menuIds = finalCheckdMenuData;
+          fields.menuIds = checkedMenuData;
           // 设置数据权限
-          fields.deptIds = checkdDeptData;
+          fields.deptIds = checkedDeptData;
 
           // ID为0则insert，否则将update
           const { code, msg } = fields.roleId === 0 ? await insert(fields) : await update(fields);
@@ -564,17 +556,12 @@ const Role: React.FC = () => {
             <Tree
               showLine
               checkable
-              onCheck={(checkedKeys: any, halfChecked: any) => {
+              onCheck={(checkedKeys: any) => {
                 // 显示在页面的数据
-                setCheckdMenuData(checkedKeys);
-
-                // 解决无法选中未完全选中时，无法获取父ID
-                const keys = [...checkedKeys, ...halfChecked.halfCheckedKeys];
-                // 最终提交数据需加上父ID
-                setFinalCheckdMenuData(keys);
+                setCheckedMenuData(checkedKeys);
               }}
               // 默认选中的数据
-              checkedKeys={checkdMenuData}
+              checkedKeys={checkedMenuData}
               treeData={menuData}
             />
           </Form.Item>
@@ -599,9 +586,9 @@ const Role: React.FC = () => {
                 checkable
                 height={150}
                 onCheck={(checkedKeys: any) => {
-                  setCheckdDeptData(checkedKeys);
+                  setCheckedDeptData(checkedKeys);
                 }}
-                checkedKeys={checkdDeptData}
+                checkedKeys={checkedDeptData}
                 treeData={deptData}
               />
             </Form.Item>
