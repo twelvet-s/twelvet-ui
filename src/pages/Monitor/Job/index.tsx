@@ -248,7 +248,7 @@ const Job: React.FC = () => {
       render: (_, row) => {
         return (
           <>
-            <a onClick={() => refPut(row.jobId)} hidden={auth('system:dict:update')}>
+            <a onClick={() => refPut(row.jobId)} hidden={auth('monitor:job:update')}>
               <Space>
                 <EditOutlined/>
                 修改
@@ -280,7 +280,7 @@ const Job: React.FC = () => {
             </a>
             <Divider type="vertical"/>
             <Popconfirm onConfirm={() => refRemove([row.jobId])} title="是否删除">
-              <a href="#" hidden={auth('system:dict:remove')}>
+              <a href="#" hidden={auth('monitor:job:remove')}>
                 <Space>
                   <DeleteOutlined/>
                   删除
@@ -318,7 +318,7 @@ const Job: React.FC = () => {
         }}
         rowSelection={{}}
         toolBarRender={(action, {selectedRowKeys}) => [
-          <Button key={'addTool'} hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
+          <Button key={'addTool'} hidden={auth('monitor:job:insert')} type="default" onClick={refPost}>
             <PlusOutlined/>
             新增
           </Button>,

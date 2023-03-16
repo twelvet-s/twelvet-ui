@@ -98,7 +98,7 @@ const Token: React.FC = () => {
         return (
           <>
             <Popconfirm onConfirm={() => refRemove([row.accessToken])} title="确定强退吗">
-              <a href="#" hidden={auth('system:dict:remove')}>
+              <a href="#" hidden={auth('system:token:remove')}>
                 <Space>
                   <CloseOutlined/>
                   强退

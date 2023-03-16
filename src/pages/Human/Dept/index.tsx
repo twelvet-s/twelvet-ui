@@ -221,7 +221,7 @@ const Dept: React.FC = () => {
       render: (_, row) => {
         return (
           <>
-            <a onClick={() => refPost(row.deptId)} hidden={auth('system:dict:insert')}>
+            <a onClick={() => refPost(row.deptId)} hidden={auth('system:dept:insert')}>
               <Space>
                 <PlusOutlined/>
                 新增
@@ -229,7 +229,7 @@ const Dept: React.FC = () => {
             </a>
             <Divider type="vertical"/>
 
-            <a onClick={() => refPut(row.deptId)} hidden={auth('system:dict:update')}>
+            <a onClick={() => refPut(row.deptId)} hidden={auth('system:dept:update')}>
               <Space>
                 <EditOutlined/>
                 修改
@@ -238,7 +238,7 @@ const Dept: React.FC = () => {
             <Divider type="vertical"/>
 
             <Popconfirm onConfirm={() => refRemove(row)} title="确定删除吗">
-              <a href="#" hidden={auth('system:dict:remove')}>
+              <a href="#" hidden={auth('system:dept:remove')}>
                 <Space>
                   <CloseOutlined/>
                   删除

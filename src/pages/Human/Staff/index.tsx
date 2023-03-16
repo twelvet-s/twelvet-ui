@@ -397,7 +397,7 @@ const Staff: React.FC = () => {
       render: (_, row) => {
         return (
           <>
-            <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
+            <a onClick={() => refPut(row)} hidden={auth('system:user:update')}>
               <Space>
                 <EditOutlined />
                 修改
@@ -405,7 +405,7 @@ const Staff: React.FC = () => {
             </a>
             <Divider type="vertical" />
             <Popconfirm onConfirm={() => refRemove([row.userId])} title="确定删除吗">
-              <a href="#" hidden={auth('system:dict:remove')}>
+              <a href="#" hidden={auth('system:user:remove')}>
                 <Space>
                   <CloseOutlined />
                   删除
@@ -446,7 +446,7 @@ const Staff: React.FC = () => {
         toolBarRender={(action, { selectedRowKeys }) => [
           <Button
             key={'addTool'}
-            hidden={auth('system:dict:insert')}
+            hidden={auth('system:user:insert')}
             type="default"
             onClick={refPost}
           >
@@ -477,14 +477,14 @@ const Staff: React.FC = () => {
               });
             }}
           >
-            <Button type="default" hidden={auth('system:dict:export')}>
+            <Button type="default" hidden={auth('system:user:export')}>
               <FundProjectionScreenOutlined />
               导出数据
             </Button>
           </Popconfirm>,
           <Button
             key={'importTool'}
-            hidden={auth('system:dict:import')}
+            hidden={auth('system:user:import')}
             type="primary"
             onClick={() => {
               setImportStaffVisible(true);

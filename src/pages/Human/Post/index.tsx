@@ -208,7 +208,7 @@ const Post: React.FC = () => {
       render: (_, row) => {
         return (
           <>
-            <a onClick={() => refPut(row.postId)} hidden={auth('system:dict:update')}>
+            <a onClick={() => refPut(row.postId)} hidden={auth('system:post:update')}>
               <Space>
                 <EditOutlined/>
                 修改
@@ -216,7 +216,7 @@ const Post: React.FC = () => {
             </a>
             <Divider type="vertical"/>
             <Popconfirm onConfirm={() => refRemove([row.postId])} title="确定删除吗">
-              <a href="#" hidden={auth('system:dict:remove')}>
+              <a href="#" hidden={auth('system:post:remove')}>
                 <Space>
                   <CloseOutlined/>
                   删除
@@ -254,7 +254,7 @@ const Post: React.FC = () => {
         }}
         rowSelection={{}}
         toolBarRender={(action, {selectedRowKeys}) => [
-          <Button key={'addTool'} type="default" onClick={refPost} hidden={auth('system:dict:insert')}>
+          <Button key={'addTool'} type="default" onClick={refPost} hidden={auth('system:post:insert')}>
             <PlusOutlined/>
             新增
           </Button>,
@@ -282,7 +282,7 @@ const Post: React.FC = () => {
               });
             }}
           >
-            <Button type="default" hidden={auth('system:dict:export')}>
+            <Button type="default" hidden={auth('system:post:export')}>
               <FundProjectionScreenOutlined/>
               导出数据
             </Button>

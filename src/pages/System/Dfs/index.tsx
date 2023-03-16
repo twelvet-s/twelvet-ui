@@ -115,7 +115,7 @@ const DFS: React.FC = () => {
             </a>
             <Divider type="vertical"/>
             <Popconfirm onConfirm={() => refRemove([row.fileId])} title="确定删除吗">
-              <a href="#" hidden={auth('system:dict:remove')}>
+              <a href="#" hidden={auth('system:dfs:remove')}>
                 <Space>
                   <CloseOutlined/>
                   删除

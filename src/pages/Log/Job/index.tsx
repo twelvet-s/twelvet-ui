@@ -141,7 +141,7 @@ const Login: React.FC = () => {
             title="是否删除选中数据"
           >
             <Button
-              hidden={auth('system:dict:remove')}
+              hidden={auth('system:operlog:remove')}
               disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
               type="primary"
               danger
@@ -159,7 +159,7 @@ const Login: React.FC = () => {
             }}
             title="是否导出数据"
           >
-            <Button type="default" hidden={auth('system:dict:export')}>
+            <Button type="default" hidden={auth('system:operlog:export')}>
               <FundProjectionScreenOutlined/>
               导出数据
             </Button>
