@@ -105,7 +105,7 @@ const Panel: React.FC = () => {
                             </a>
                         </Col>
                         <Col className={styles.topSpace} xxl={{ span: 12 }} xl={{ span: 24 }} xs={{ span: 24 }}>
-                            <a target='_blank' href="https://www.twelvet.cn/" rel="noreferrer">
+                            <a target='_blank' href="https://twelvet.cn/" rel="noreferrer">
                                 <Button type='default'>
                                     <HomeOutlined />
                                     官方网站

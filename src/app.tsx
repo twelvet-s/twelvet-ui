@@ -88,7 +88,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     links: isDev
       ? [
-        <a key='docs' href="https://www.twelvet.cn/docs/" target="_blank" rel="noreferrer">
+        <a key='docs' href="https://twelvet.cn/docs/" target="_blank" rel="noreferrer">
           <QuestionCircleOutlined />
           <span>官方文档</span>
         </a>,

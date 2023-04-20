@@ -77,7 +77,7 @@ const Index: React.FC = () => {
         <Col xl={{span: 6}} xs={{span: 24}}>
           <Card title="官方信息">
             <p>
-              官网：<a href="https://www.twelvet.cn/" target='_blank' rel="copyright noreferrer">https://www.twelvet.cn</a>
+              官网：<a href="https://twelvet.cn/" target='_blank' rel="copyright noreferrer">https://twelvet.cn</a>
             </p>
             <p>
               交流群：<a href="https://jq.qq.com/?_wv=1027&k=cznM6Q00" target='_blank' rel='noreferrer'>985830229</a>
@@ -94,7 +94,7 @@ const Index: React.FC = () => {
 
         <Col xl={{span: 8}} xs={{span: 24}}>
           <Card title="捐赠支持（用于演示站/维护项目）">
-            <Image src='https://www.twelvet.cn/assets/images/pay.png'/>
+            <Image src='https://twelvet.cn/assets/images/pay.png'/>
           </Card>
         </Col>
       </Row>

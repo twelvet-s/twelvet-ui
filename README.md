@@ -1,7 +1,7 @@
 # twelvet
 
 [![AUR](https://img.shields.io/github/license/twelvet-s/twelvet)](https://github.com/twelvet-s/twelvet/blob/master/LICENSE)
-[![](https://img.shields.io/badge/Author-TwelveT-orange.svg)](https://www.twelvet.cn)
+[![](https://img.shields.io/badge/Author-TwelveT-orange.svg)](https://twelvet.cn)
 [![](https://img.shields.io/badge/version-2.7.5-success)](https://gitee.com/twelvet/twelvet)
 [![GitHub stars](https://img.shields.io/github/stars/twelvet-s/twelvet.svg?style=social&label=Stars)](https://github.com/twelvet-s/twelvet/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/twelvet-s/twelvet.svg?style=social&label=Fork)](https://github.com/twelvet-s/twelvet/network/members)
@@ -21,9 +21,9 @@
 
 前端源码：https://github.com/twelvet-s/twelvet-ui
 
-技术文档：https://www.twelvet.cn/docs/
+技术文档：https://twelvet.cn/docs/
 
-官方博客：https://www.twelvet.cn
+官方博客：https://twelvet.cn
 
 ## 系统模块
 
@@ -80,16 +80,16 @@ com.twelvet
 
 <table>
     <tr>
-        <td><img src="https://www.twelvet.cn/assets/images/twelvet/1.png"/></td>
-        <td><img src="https://www.twelvet.cn/assets/images/twelvet/2.png"/></td>
+        <td><img src="https://twelvet.cn/assets/images/twelvet/1.png"/></td>
+        <td><img src="https://twelvet.cn/assets/images/twelvet/2.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://www.twelvet.cn/assets/images/twelvet/3.png"/></td>
-        <td><img src="https://www.twelvet.cn/assets/images/twelvet/4.png"/></td>
+        <td><img src="https://twelvet.cn/assets/images/twelvet/3.png"/></td>
+        <td><img src="https://twelvet.cn/assets/images/twelvet/4.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://www.twelvet.cn/assets/images/twelvet/5.png"/></td>
-        <td><img src="https://www.twelvet.cn/assets/images/twelvet/6.png"/></td>
+        <td><img src="https://twelvet.cn/assets/images/twelvet/5.png"/></td>
+        <td><img src="https://twelvet.cn/assets/images/twelvet/6.png"/></td>
     </tr>
 </table>
 

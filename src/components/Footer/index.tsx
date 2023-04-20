@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
         {
             key: 'TwelveT',
             title: 'TwelveT',
-            href: 'https://www.twelvet.cn',
+            href: 'https://twelvet.cn',
             blankTarget: true,
         },
         {
@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
         {
             key: '开发文档',
             title: '开发文档',
-            href: 'https://www.twelvet.cn/docs',
+            href: 'https://twelvet.cn/docs',
             blankTarget: true,
         },
     ]}
