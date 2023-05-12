@@ -2,7 +2,7 @@ const { NODE_ENV } = process.env;
 
 const isDev: boolean = NODE_ENV === 'development';
 
-const REQUEST_URI = isDev ? 'http://localhost:8080' : 'http://cloud.twelvet.cn/api'
+const REQUEST_URI = isDev ? 'http://localhost:8080' : 'http://api.twelvet.cn'
 /**
  * proTable默认配置
  */
