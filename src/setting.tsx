@@ -1,8 +1,8 @@
 const { NODE_ENV } = process.env;
 
 const isDev: boolean = NODE_ENV === 'development';
-const urlPrefix: string = '/api';
 
+const REQUEST_URI = isDev ? 'http://localhost:8080' : 'http://cloud.twelvet.cn/api'
 /**
  * proTable默认配置
  */
@@ -38,6 +38,8 @@ export const proTableConfigs = {
 };
 
 const TWT: any = {
+  // 请求API
+  requestUri: REQUEST_URI,
   // OAuth2
   accessToken: 'TWT_access_token',
   refreshToken: 'TWT_refresh_token',
@@ -45,10 +47,8 @@ const TWT: any = {
   preAuthorize: 'TWT_pre_authorize',
   // 是否dev模式
   isDev,
-  // api请求前缀
-  urlPrefix,
-  action: `${urlPrefix}/`,
-  uploadUrl: `${urlPrefix}/dfs/commonUpload`,
+  action: `${REQUEST_URI}/`,
+  uploadUrl: `${REQUEST_URI}/dfs/commonUpload`,
   static: 'https://static.twelvet.cn',
 };
 

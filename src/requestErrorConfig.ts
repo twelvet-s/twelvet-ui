@@ -144,13 +144,12 @@ export const errorConfig: RequestConfig = {
       }
 
       // 拦截请求配置，进行个性化处理。
-      let url = config?.url;
-      if (url?.indexOf('/api') === 0) {
-        url = url.slice(4);
-      }
+      const url = config?.url;
+      const requestUri = TWT.requestUri.endsWith('/') ? TWT.requestUri.slice(0, -1) : TWT.requestUri
       return {
         ...config,
-        url: url?.charAt(0) === '/' ? `/api${url}` : `/api/${url}`,
+        // 设置请求URI
+        url: url?.charAt(0) === '/' ? `${requestUri}${url}` : `${requestUri}/${url}`,
         headers: authHeader,
       };
     },
