@@ -1,17 +1,18 @@
 import Footer from '@/components/Footer';
-import RightContent from '@/components/RightContent';
+import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { PageLoading } from '@ant-design/pro-components';
 import { errorConfig } from './requestErrorConfig';
 import { SettingDrawer } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from '@umijs/max';
+import { RunTimeLayoutConfig, SelectLang } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { message } from 'antd';
 import TWT from './setting';
 import { getCurrentUser, getRouters } from './pages/Login/service';
 import { system } from "@/utils/twelvet";
+import { Question } from './components/RightContent';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
@@ -67,7 +68,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     // 渲染菜单数据
     menuDataRender: () => initialState?.currentUser?.menus ? initialState?.currentUser?.menus : [],
-    rightContentRender: () => <RightContent />,
+    actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    avatarProps: {
+      src: `${TWT.static}${initialState?.currentUser?.user?.avatar}`,
+      title: <AvatarName />,
+      render: (_, avatarChildren) => {
+        return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
+      },
+    },
     disableContentMargin: false,
     // 水印设置
     /*waterMarkProps: {
