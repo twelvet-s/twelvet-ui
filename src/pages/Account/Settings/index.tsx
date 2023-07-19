@@ -1,23 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 
-import { PageContainer } from '@ant-design/pro-components'
-import { Card, Col, Row, Space, Tabs } from 'antd'
-import { FieldTimeOutlined, ForkOutlined, MailOutlined, PhoneOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
-import { getUserProfile, updateAvatar } from './service'
+import {PageContainer} from '@ant-design/pro-components'
+import {Card, Col, Row, Space, Tabs} from 'antd'
+import {
+    FieldTimeOutlined,
+    ForkOutlined,
+    MailOutlined,
+    PhoneOutlined,
+    TeamOutlined,
+    UserOutlined
+} from '@ant-design/icons'
+import {getUserProfile, updateAvatar} from './service'
 import UserInfo from './components/UserInfo'
 import RestPassword from './components/RestPassword'
 import './styles.less'
 import Upload from '@/components/TwelveT/Upload'
-import { flushSync } from 'react-dom'
-import { getCurrentUser, getRouters } from '@/pages/Login/service'
-import { useModel } from '@umijs/max'
+import {flushSync} from 'react-dom'
+import {getCurrentUser, getRouters} from '@/pages/Login/service'
+import {useModel} from '@umijs/max'
 
 /**
  * 个人资料设置
  */
 const UserSettings: React.FC = () => {
 
-    const { initialState, setInitialState } = useModel('@@initialState');
+    const {initialState, setInitialState} = useModel('@@initialState');
 
     // 用户信息
     const [userInfo, setUserInfo] = useState<{
@@ -54,7 +61,7 @@ const UserSettings: React.FC = () => {
 
     // 获取个人信息
     const getInfo = async () => {
-        const { data } = await getUserProfile()
+        const {data} = await getUserProfile()
 
         setUserInfo({
             user: data.user,
@@ -70,7 +77,7 @@ const UserSettings: React.FC = () => {
     return (
         <PageContainer>
             <Row gutter={[20, 20]}>
-                <Col xl={{ span: 8 }} xs={{ span: 24 }}>
+                <Col xl={{span: 8}} xs={{span: 24}}>
                     <Card title="个人信息">
                         <div className="text-center">
                             <Upload
@@ -85,8 +92,8 @@ const UserSettings: React.FC = () => {
                                 ]}
                                 // 重新渲染个人信息
                                 success={async () => {
-                                    const { user = {}, roles, permissions } = await getCurrentUser();
-                                    const { data } = await getRouters()
+                                    const {user = {}, roles, permissions} = await getCurrentUser();
+                                    const {data} = await getRouters()
                                     const userInfo = {
                                         user,
                                         menus: data,
@@ -114,7 +121,7 @@ const UserSettings: React.FC = () => {
                         <ul className="list-group list-group-striped">
                             <li className="list-group-item">
                                 <Space>
-                                    <UserOutlined />
+                                    <UserOutlined/>
                                     用户名称
                                 </Space>
 
@@ -122,38 +129,39 @@ const UserSettings: React.FC = () => {
                             </li>
                             <li className="list-group-item">
                                 <Space>
-                                    <PhoneOutlined />
+                                    <PhoneOutlined/>
                                     手机号码
                                 </Space>
                                 <div className="pull-right">{userInfo.user.phonenumber}</div>
                             </li>
                             <li className="list-group-item">
                                 <Space>
-                                    <MailOutlined />
+                                    <MailOutlined/>
                                     用户邮箱
                                 </Space>
                                 <div className="pull-right">{userInfo.user.email}</div>
                             </li>
                             <li className="list-group-item">
                                 <Space>
-                                    <ForkOutlined />
+                                    <ForkOutlined/>
                                     所属部门
                                 </Space>
                                 {
-                                    userInfo.user.dept ? <div className="pull-right">{userInfo.user.dept.deptName} / {userInfo.postGroup}</div> : ''
+                                    userInfo.user.dept ? <div
+                                        className="pull-right">{userInfo.user.dept.deptName} / {userInfo.postGroup}</div> : ''
                                 }
 
                             </li>
                             <li className="list-group-item">
                                 <Space>
-                                    <TeamOutlined />
+                                    <TeamOutlined/>
                                     所属角色
                                 </Space>
                                 <div className="pull-right">{userInfo.roleGroup}</div>
                             </li>
                             <li className="list-group-item">
                                 <Space>
-                                    <FieldTimeOutlined />
+                                    <FieldTimeOutlined/>
                                     创建时间
                                 </Space>
                                 <div className="pull-right">{userInfo.user.createTime}</div>
@@ -162,7 +170,7 @@ const UserSettings: React.FC = () => {
                     </Card>
                 </Col>
 
-                <Col xl={{ span: 16 }} xs={{ span: 24 }}>
+                <Col xl={{span: 16}} xs={{span: 24}}>
                     <Card title="基本资料">
                         <Tabs
                             defaultActiveKey={`basicInformation`}
@@ -177,13 +185,13 @@ const UserSettings: React.FC = () => {
                                                 nickName: userInfo.user.nickName,
                                                 sex: userInfo.user.sex,
                                             }
-                                        } />
+                                        }/>
                                     ),
                                 },
                                 {
                                     key: 'changePassword',
                                     label: `修改密码`,
-                                    children: <RestPassword />,
+                                    children: <RestPassword/>,
                                 },
                             ]}
                         />

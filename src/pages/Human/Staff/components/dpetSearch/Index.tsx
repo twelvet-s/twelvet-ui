@@ -5,39 +5,39 @@ import {system} from '@/utils/twelvet'
 
 const DeptSearch: React.FC = props => {
 
-  // 部门数据
-  const [depts, setDepts] = useState<Record<string, any>[]>([{}])
+    // 部门数据
+    const [depts, setDepts] = useState<Record<string, any>[]>([{}])
 
-  const makeDept = async () => {
-    try {
-      const {data} = await treeSelect()
+    const makeDept = async () => {
+        try {
+            const {data} = await treeSelect()
 
-      setDepts(data)
+            setDepts(data)
 
-    } catch (e) {
-      system.error(e)
+        } catch (e) {
+            system.error(e)
+        }
     }
-  }
 
-  useEffect(() => {
-    makeDept()
-  }, [])
+    useEffect(() => {
+        makeDept()
+    }, [])
 
-  return (
-    <>
-      <TreeSelect
-        // 必须设置props，否则无法取值Search
-        {...props}
-        placeholder={"部门"}
-        allowClear
-        showSearch
-        treeLine
-        treeNodeFilterProp="title"
-        treeNodeLabelProp='title'
-        treeData={depts}
-      />
-    </>
-  )
+    return (
+        <>
+            <TreeSelect
+                // 必须设置props，否则无法取值Search
+                {...props}
+                placeholder={"部门"}
+                allowClear
+                showSearch
+                treeLine
+                treeNodeFilterProp="title"
+                treeNodeLabelProp='title'
+                treeData={depts}
+            />
+        </>
+    )
 }
 
 export default DeptSearch

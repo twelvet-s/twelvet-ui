@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 import * as echarts from 'echarts'
 import styles from './styles.less'
 import React from 'react'
-import { Card } from 'antd'
+import {Card} from 'antd'
 
 /**
  * 扇形图
@@ -29,11 +29,11 @@ const BarChart: React.FC = () => {
                 radius: [15, 95],
                 center: ['50%', '38%'],
                 data: [
-                    { value: 200, name: 'Industries' },
-                    { value: 240, name: 'Technology' },
-                    { value: 149, name: 'Forex' },
-                    { value: 60, name: 'Gold' },
-                    { value: 70, name: 'Forecasts' }
+                    {value: 200, name: 'Industries'},
+                    {value: 240, name: 'Technology'},
+                    {value: 149, name: 'Forex'},
+                    {value: 60, name: 'Gold'},
+                    {value: 70, name: 'Forecasts'}
                 ],
                 animationEasing: 'cubicInOut',
                 animationDuration: 2600

@@ -1,5 +1,5 @@
-import { request } from '@umijs/max'
-import { download, upload } from '@/utils/twelvet'
+import {request} from '@umijs/max'
+import {download, upload} from '@/utils/twelvet'
 
 // 请求的控制器名称
 const controller = "/system/user";
@@ -39,6 +39,7 @@ export async function update(params: Record<string, any>) {
         },
     });
 }
+
 /**
  * 修改密码
  * @param params 修改密码

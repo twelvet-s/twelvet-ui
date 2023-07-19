@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 import * as echarts from 'echarts'
 import styles from './styles.less'
 import React from 'react'
-import { Card } from 'antd'
+import {Card} from 'antd'
 
 /**
  * 扇形图
@@ -11,7 +11,7 @@ const CommandStatsChart: React.FC<{ commandStats: {} | undefined }> = (props) =>
 
     let commandStatsChart: HTMLDivElement;
 
-    const { commandStats } = props
+    const {commandStats} = props
 
     // 第一次渲染时执行
     useEffect(() => {
@@ -56,7 +56,7 @@ const CommandStatsChart: React.FC<{ commandStats: {} | undefined }> = (props) =>
             <div
                 ref={(ref: HTMLDivElement) => commandStatsChart = ref}
                 className={styles.commandStatsChart}
-             />
+            />
         </Card>
 
     )

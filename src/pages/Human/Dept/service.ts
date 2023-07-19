@@ -1,4 +1,4 @@
-import { request } from '@umijs/max'
+import {request} from '@umijs/max'
 
 // 请求的控制器名称
 const controller = "/system/dept";
@@ -18,7 +18,7 @@ export async function insert(params: Record<string, any>) {
 
 /**
  * 删除部门
- * @param menuId 部门ID 
+ * @param menuId 部门ID
  */
 export async function remove(menuId: number) {
     return request(`${controller}/${menuId}`, {
@@ -54,7 +54,7 @@ export async function list(params: Record<string, any>) {
 
 /**
  * 根据部门ID获取信息
- * @param menuId 部门ID 
+ * @param menuId 部门ID
  */
 export async function getInfo(menuId: number) {
     return request(`${controller}/${menuId}`, {

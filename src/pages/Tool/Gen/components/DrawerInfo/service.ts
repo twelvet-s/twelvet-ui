@@ -1,4 +1,4 @@
-import { request } from '@umijs/max'
+import {request} from '@umijs/max'
 import type {Key} from 'antd/lib/table/interface'
 
 // 请求的控制器名称
@@ -21,7 +21,7 @@ export async function pageQuery(params: Record<string, any>) {
  * 导入数据 Data
  * @param selectedRowKeys
  */
- export async function importTable(selectedRowKeys: Key[]) {
+export async function importTable(selectedRowKeys: Key[]) {
     return request(`${controller}/importTable?tables=${selectedRowKeys}`, {
         method: 'POST',
     });

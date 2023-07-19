@@ -9,12 +9,12 @@ const controller = "/system/loginInfo";
  * @param params 搜索参数
  */
 export async function pageQuery(params: Record<string, any>) {
-  return request(`${controller}/pageQuery`, {
-    method: 'GET',
-    params: {
-      ...params
-    },
-  });
+    return request(`${controller}/pageQuery`, {
+        method: 'GET',
+        params: {
+            ...params
+        },
+    });
 }
 
 /**
@@ -22,9 +22,9 @@ export async function pageQuery(params: Record<string, any>) {
  * @param infoIds
  */
 export async function remove(infoIds: string) {
-  return request(`${controller}/${infoIds}`, {
-    method: 'DELETE',
-  });
+    return request(`${controller}/${infoIds}`, {
+        method: 'DELETE',
+    });
 }
 
 /**
@@ -32,5 +32,5 @@ export async function remove(infoIds: string) {
  * @param params
  */
 export async function exportExcel(params?: Record<string, any>) {
-  download(`${controller}/export`, params);
+    download(`${controller}/export`, params);
 }

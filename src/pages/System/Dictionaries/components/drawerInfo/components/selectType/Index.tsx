@@ -8,47 +8,47 @@ import {system} from '@/utils/twelvet'
  */
 const DrawerInfo: React.FC<any> = (props) => {
 
-  const {Option} = Select
+    const {Option} = Select
 
-  const [treeData, setTreeData] = useState<React.ReactNode[]>([])
+    const [treeData, setTreeData] = useState<React.ReactNode[]>([])
 
-  const makeTree = async () => {
-    try {
-      const {data} = await optionSelect()
+    const makeTree = async () => {
+        try {
+            const {data} = await optionSelect()
 
-      // 制作数据
-      const tree: React.ReactNode[] = []
-      data.map((item: {
-        dictId: number
-        dictType: string
-        dictName: string
-      }) => {
-        tree.push(
-          <Option key={item.dictId} value={item.dictType}>{item.dictName}</Option>
-        )
-      })
+            // 制作数据
+            const tree: React.ReactNode[] = []
+            data.map((item: {
+                dictId: number
+                dictType: string
+                dictName: string
+            }) => {
+                tree.push(
+                    <Option key={item.dictId} value={item.dictType}>{item.dictName}</Option>
+                )
+            })
 
-      setTreeData(tree)
+            setTreeData(tree)
 
-    } catch (e) {
-      system.error(e)
+        } catch (e) {
+            system.error(e)
+        }
     }
-  }
 
-  useEffect(() => {
-    makeTree()
-  }, [])
+    useEffect(() => {
+        makeTree()
+    }, [])
 
-  return (
-    <Select
-      {...props}
-      placeholder='字典名称'
-      showSearch
-      allowClear
-    >
-      {treeData}
-    </Select>
-  )
+    return (
+        <Select
+            {...props}
+            placeholder='字典名称'
+            showSearch
+            allowClear
+        >
+            {treeData}
+        </Select>
+    )
 
 }
 

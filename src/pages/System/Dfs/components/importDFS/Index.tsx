@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { message, Upload, Modal, Button } from 'antd'
-import { system } from '@/utils/twelvet'
-import { InboxOutlined } from '@ant-design/icons'
+import React, {useEffect, useState} from 'react'
+import {message, Upload, Modal, Button} from 'antd'
+import {system} from '@/utils/twelvet'
+import {InboxOutlined} from '@ant-design/icons'
 import styles from './index.less'
-import type { RcFile } from 'antd/lib/upload'
-import { uploadFile } from './service'
+import type {RcFile} from 'antd/lib/upload'
+import {uploadFile} from './service'
 
 const ImportDFS: React.FC<{
     visible: boolean
@@ -20,15 +20,15 @@ const ImportDFS: React.FC<{
 
     const [uploadLoading, setUploadLoading] = useState<boolean>(false)
 
-    const { Dragger } = Upload
+    const {Dragger} = Upload
 
     useEffect(() => {
         setVisibleModal(props.visible)
     }, [props.visible])
 
     /**
-    * 上传数据
-    */
+     * 上传数据
+     */
     const handleUpload = async () => {
         try {
 
@@ -46,7 +46,7 @@ const ImportDFS: React.FC<{
                 formData.append('files', file);
             });
 
-            const { code, msg } = await uploadFile(formData)
+            const {code, msg} = await uploadFile(formData)
 
             if (code !== 200) {
                 return message.error(msg)
@@ -119,7 +119,7 @@ const ImportDFS: React.FC<{
                     }}
                 >
                     <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
+                        <InboxOutlined/>
                     </p>
                     <p className="ant-upload-text">
                         将文件拖拽到此处，或<span className={styles.clickColor}>点击上传</span>

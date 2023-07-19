@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, {useEffect} from 'react'
 
-import { ProForm, ProFormRadio, ProFormText } from '@ant-design/pro-components'
-import { Form, message } from 'antd'
-import { updateUserProfile } from '../service'
-import { system } from '@/utils/twelvet'
-import { FormattedMessage } from '@umijs/max'
+import {ProForm, ProFormRadio, ProFormText} from '@ant-design/pro-components'
+import {Form, message} from 'antd'
+import {updateUserProfile} from '../service'
+import {system} from '@/utils/twelvet'
+import {FormattedMessage} from '@umijs/max'
 
 /**
  * 用户资料设置
@@ -25,7 +25,7 @@ const UserInfo: React.FC<{
 
     /**
      * 修改信息
-     * @param data 修改数据 
+     * @param data 修改数据
      */
     const save = async (data: {
         nickName: string;
@@ -35,7 +35,7 @@ const UserInfo: React.FC<{
     }) => {
 
         try {
-            const { code, msg } = await updateUserProfile(data)
+            const {code, msg} = await updateUserProfile(data)
 
             if (code !== 200) {
                 return message.error(msg);
@@ -52,8 +52,9 @@ const UserInfo: React.FC<{
             form={form}
             onFinish={save}
         >
-            <ProFormText hidden name='username' label="用户名称" placeholder="用户名称" />
-            <ProFormText rules={[{ required: true, message: '请输入用户昵称' }]} name='nickName' label="用户昵称" placeholder="用户昵称" />
+            <ProFormText hidden name='username' label="用户名称" placeholder="用户名称"/>
+            <ProFormText rules={[{required: true, message: '请输入用户昵称'}]} name='nickName' label="用户昵称"
+                         placeholder="用户昵称"/>
             <ProFormText rules={[
                 {
                     required: true, message: '请输入手机号码'
@@ -67,16 +68,16 @@ const UserInfo: React.FC<{
                         />
                     ),
                 },
-            ]} name='phonenumber' label="手机号码" placeholder="手机号码" />
+            ]} name='phonenumber' label="手机号码" placeholder="手机号码"/>
             <ProFormText rules={[
-                { required: true, message: '请输入邮箱' },
+                {required: true, message: '请输入邮箱'},
                 {
                     pattern: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/,
                     message: '不合法的邮箱地址',
                 },
-            ]} name='email' label="邮箱" placeholder="邮箱" />
+            ]} name='email' label="邮箱" placeholder="邮箱"/>
             <ProFormRadio.Group
-                rules={[{ required: true, message: '请选择性别' }]}
+                rules={[{required: true, message: '请选择性别'}]}
                 name='sex'
                 label="性别"
                 options={[

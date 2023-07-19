@@ -10,36 +10,36 @@
  * @doc https://umijs.org/docs/guides/proxy
  */
 export default {
-  dev: {
-    // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
-    '/api/': {
-      // 要代理的地址
-      //target: 'http://cloud.twelvet.cn/api',
-      target: 'http://localhost:8080',
-      // 配置了这个可以从 http 代理到 https
-      // 依赖 origin 的功能可能需要这个，比如 cookie
-      changeOrigin: true,
-      pathRewrite: {
-        '^/api': '',
-      },
+    dev: {
+        // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
+        '/api/': {
+            // 要代理的地址
+            //target: 'http://cloud.twelvet.cn/api',
+            target: 'http://localhost:8080',
+            // 配置了这个可以从 http 代理到 https
+            // 依赖 origin 的功能可能需要这个，比如 cookie
+            changeOrigin: true,
+            pathRewrite: {
+                '^/api': '',
+            },
+        },
     },
-  },
-  /**
-   * @name 详细的代理配置
-   * @doc https://github.com/chimurai/http-proxy-middleware
-   */
-  test: {
-    '/api/': {
-      target: 'https://proapi.azurewebsites.net',
-      changeOrigin: true,
-      pathRewrite: { '^': '' },
+    /**
+     * @name 详细的代理配置
+     * @doc https://github.com/chimurai/http-proxy-middleware
+     */
+    test: {
+        '/api/': {
+            target: 'https://proapi.azurewebsites.net',
+            changeOrigin: true,
+            pathRewrite: {'^': ''},
+        },
     },
-  },
-  pre: {
-    '/api/': {
-      target: 'your pre url',
-      changeOrigin: true,
-      pathRewrite: { '^': '' },
+    pre: {
+        '/api/': {
+            target: 'your pre url',
+            changeOrigin: true,
+            pathRewrite: {'^': ''},
+        },
     },
-  },
 };

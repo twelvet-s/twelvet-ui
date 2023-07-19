@@ -1,5 +1,5 @@
-import { GithubOutlined, HomeOutlined } from '@ant-design/icons'
-import { Button, Card, Col, Divider, Row, Tag } from 'antd'
+import {GithubOutlined, HomeOutlined} from '@ant-design/icons'
+import {Button, Card, Col, Divider, Row, Tag} from 'antd'
 import React from 'react'
 import styles from './styles.less'
 
@@ -12,41 +12,42 @@ const Panel: React.FC = () => {
             <div>
                 领取阿里云通用云产品1888优惠券：
                 ☛☛
-                <a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=jcjwnfv3" target='_blank' rel="noreferrer">
+                <a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=jcjwnfv3" target='_blank'
+                   rel="noreferrer">
                     阿里云推广大使
                 </a>
-                <Divider type='vertical' />
+                <Divider type='vertical'/>
                 <a href="https://www.aliyun.com/1111/new?userCode=jcjwnfv3" target='_blank' rel="noreferrer">
                     服务器秒杀
                 </a>
                 ☚☚
             </div>
-            <Divider />
+            <Divider/>
             <div>
                 腾讯云服务器秒杀区：
                 ☛☛
                 <a href="https://curl.qcloud.com/cAvXfLWI" target='_blank' rel="noreferrer">
                     新用户优惠券
                 </a>
-                <Divider type='vertical' />
+                <Divider type='vertical'/>
                 <a href="https://curl.qcloud.com/VrLWYkZI" target='_blank' rel="noreferrer">
                     服务器秒杀
                 </a>
                 ☚☚
             </div>
-            <Divider />
+            <Divider/>
             <h1>
                 TwelveT 微服务
-                <Divider type="vertical" />
+                <Divider type="vertical"/>
                 <a target='_blank' href="https://github.com/twelvet-s/twelvet" rel="noreferrer">
-                    <Tag icon={<GithubOutlined />} color='success'>
+                    <Tag icon={<GithubOutlined/>} color='success'>
                         免费开源
                     </Tag>
                 </a>
             </h1>
 
             <Row gutter={[70, 30]}>
-                <Col md={{ span: 16 }} sm={{ span: 24 }} xs={{ span: 24 }}>
+                <Col md={{span: 16}} sm={{span: 24}} xs={{span: 24}}>
                     <p>一款基于Spring Cloud Alibaba的权限管理系统，集成市面上流行库，可以作用为快速开发的一个框架使用。</p>
 
                     <p>
@@ -68,12 +69,12 @@ const Panel: React.FC = () => {
                     </p>
                 </Col>
 
-                <Col md={{ span: 8 }} sm={{ span: 24 }} xs={{ span: 24 }}>
+                <Col md={{span: 8}} sm={{span: 24}} xs={{span: 24}}>
                     <h2>技术选型</h2>
                     <Row>
-                        <Col md={{ span: 16 }} sm={{ span: 24 }} xs={{ span: 24 }}>
+                        <Col md={{span: 16}} sm={{span: 24}} xs={{span: 24}}>
                             <h3>后端技术</h3>
-                            <ul style={{ padding: 0 }}>
+                            <ul style={{padding: 0}}>
                                 <li>Spring Boot</li>
                                 <li>Spring Authorization Server</li>
                                 <li>Spring Cloud Alibaba</li>
@@ -83,9 +84,9 @@ const Panel: React.FC = () => {
                             </ul>
                         </Col>
 
-                        <Col md={{ span: 8 }} sm={{ span: 24 }} xs={{ span: 24 }}>
+                        <Col md={{span: 8}} sm={{span: 24}} xs={{span: 24}}>
                             <h3>前端技术</h3>
-                            <ul style={{ padding: 0 }}>
+                            <ul style={{padding: 0}}>
                                 <li>React</li>
                                 <li>Umi</li>
                                 <li>Antd</li>
@@ -96,18 +97,18 @@ const Panel: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col className={styles.topSpace} xxl={{ span: 12 }} xl={{ span: 24 }} xs={{ span: 24 }}>
+                        <Col className={styles.topSpace} xxl={{span: 12}} xl={{span: 24}} xs={{span: 24}}>
                             <a target='_blank' href="https://github.com/twelvet-s/twelvet" rel="noreferrer">
                                 <Button type='primary'>
-                                    <GithubOutlined />
+                                    <GithubOutlined/>
                                     GitHub
                                 </Button>
                             </a>
                         </Col>
-                        <Col className={styles.topSpace} xxl={{ span: 12 }} xl={{ span: 24 }} xs={{ span: 24 }}>
+                        <Col className={styles.topSpace} xxl={{span: 12}} xl={{span: 24}} xs={{span: 24}}>
                             <a target='_blank' href="https://twelvet.cn/" rel="noreferrer">
                                 <Button type='default'>
-                                    <HomeOutlined />
+                                    <HomeOutlined/>
                                     官方网站
                                 </Button>
                             </a>
@@ -115,7 +116,7 @@ const Panel: React.FC = () => {
                     </Row>
                 </Col>
             </Row>
-        </Card >
+        </Card>
     )
 }
 
