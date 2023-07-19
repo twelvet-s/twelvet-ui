@@ -299,7 +299,7 @@ const Menu: React.FC = () => {
                 rowKey="menuId"
                 columns={columns}
                 // 处理响应的数据
-                postData={(postDataSource) => {
+                postData={(postDataSource?: any) => {
                     return makeTree({
                         dataSource: postDataSource,
                         id: 'menuId',
