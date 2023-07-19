@@ -63,9 +63,19 @@ export async function getInitialState(): Promise<{
   };
 }
 
-// ProLayout 支持的api https://procomponents.ant.design/components/layout
+// ProLayout 支持的api https://procomponents.ant.design/components/layout，需要定制化的可以查看。
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    // 自定义头的 render 方法
+    // headerRender: () => {
+    //   return 'headerRender test'
+    // },
+    // 自定义菜单的 render 方法
+    // menuRender: () => {
+    //   return 'menuRender test'
+    // },
+    // 自定义底部
+    footerRender: () => <Footer />,
     // 渲染菜单数据
     menuDataRender: () => initialState?.currentUser?.menus ? initialState?.currentUser?.menus : [],
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
@@ -81,7 +91,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     /*waterMarkProps: {
       content: initialState?.currentUser?.user?.username,
     },*/
-    footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
