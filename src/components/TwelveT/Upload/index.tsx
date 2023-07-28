@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react'
-import {message, Modal, Upload as UploadAntd} from 'antd'
-import {UploadType} from './data'
+import React, { useEffect, useState } from 'react'
+import { message, Modal, Upload as UploadAntd } from 'antd'
+import { UploadType } from './data'
 import TWT from '@/setting'
-import {UploadChangeParam} from 'antd/lib/upload'
-import {RcFile, UploadFile} from 'antd/lib/upload/interface'
+import { UploadChangeParam } from 'antd/lib/upload'
+import { UploadFile } from 'antd/lib/upload/interface'
 import ImgCrop from 'antd-img-crop'
-import {getCurrentUser} from '@/pages/Login/service'
+import { getCurrentUser } from '@/pages/Login/service'
 
 /**
  * 上传组件
@@ -22,16 +22,16 @@ const Upload: React.FC<UploadType> = (props) => {
         files: []
     })
 
-    const {previewVisible, previewImage, files} = state
+    const { previewVisible, previewImage, files } = state
 
-    const {maxCount, action, listType, title, name, accept, imgCrop = false} = props
+    const { maxCount, action, listType, title, name, accept, imgCrop = false } = props
 
     const local = localStorage.getItem(TWT.accessToken);
 
-    let {access_token} = local ? JSON.parse(local) : {access_token: ''};
+    let { access_token } = local ? JSON.parse(local) : { access_token: '' };
 
     useEffect(() => {
-        const {images} = props
+        const { images } = props
         if (images && images?.length > 0) {
             const list: any = images.map((file: string) => {
                 return {
@@ -66,26 +66,26 @@ const Upload: React.FC<UploadType> = (props) => {
      * 处理发生改变
      * @param param
      */
-    const handleChange = async ({fileList}: UploadChangeParam<UploadFile>) => {
+    const handleChange = async ({ fileList }: UploadChangeParam<UploadFile>) => {
         // 获取最后一张文件
         const file: Array<UploadFile> = fileList.slice(-1)
 
         if (file.length > 0 && file[0].response) {
 
             const uploadFile: UploadFile = file[0]
-            const {code, msg, imgUrl, data} = uploadFile.response
+            const { code, msg, imgUrl, data } = uploadFile.response
 
             const imgPath = imgUrl ? imgUrl : data
 
             // 续签失败将要求重新登录
-            if (code == 401) {
+            if (code === 401) {
                 // 续签
                 await getCurrentUser()
             }
 
             if (code === 200) {
                 fileList.map(f => {
-                    if (f.uid != uploadFile.uid) {
+                    if (f.uid !== uploadFile.uid) {
                         return f
                     }
                     // 设置文件url
@@ -116,7 +116,7 @@ const Upload: React.FC<UploadType> = (props) => {
                 message.success(msg)
             } else {
                 fileList.map(f => {
-                    if (f.uid != uploadFile.uid) {
+                    if (f.uid !== uploadFile.uid) {
                         return f
                     }
                     // 将状态改为错误
@@ -201,11 +201,11 @@ const Upload: React.FC<UploadType> = (props) => {
                 title={'详情'}
                 footer={null}
                 onCancel={() => {
-                    setState({...state, previewVisible: false})
+                    setState({ ...state, previewVisible: false })
                 }}
             >
-                <img alt="example" style={{width: '100%'}}
-                     src={previewImage.indexOf("http") !== -1 ? previewImage : `${TWT.static}${previewImage}`}/>
+                <img alt="example" style={{ width: '100%' }}
+                    src={previewImage.indexOf("http") !== -1 ? previewImage : `${TWT.static}${previewImage}`} />
             </Modal>
         </>
     )
