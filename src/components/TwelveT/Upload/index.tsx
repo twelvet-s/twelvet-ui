@@ -1,37 +1,36 @@
-import React, { useEffect, useState } from 'react'
-import { message, Modal, Upload as UploadAntd } from 'antd'
-import { UploadType } from './data'
-import TWT from '@/setting'
-import { UploadChangeParam } from 'antd/lib/upload'
-import { UploadFile } from 'antd/lib/upload/interface'
-import ImgCrop from 'antd-img-crop'
-import { getCurrentUser } from '@/pages/Login/service'
+import React, { useEffect, useState } from 'react';
+import { message, Modal, Upload as UploadAntd } from 'antd';
+import { UploadType } from './data';
+import TWT from '@/setting';
+import { UploadChangeParam } from 'antd/lib/upload';
+import { UploadFile } from 'antd/lib/upload/interface';
+import ImgCrop from 'antd-img-crop';
+import { getCurrentUser } from '@/pages/Login/service';
 
 /**
  * 上传组件
  */
 const Upload: React.FC<UploadType> = (props) => {
-
     const [state, setState] = useState<{
-        previewImage: string,
-        previewVisible: boolean,
-        files: any[]
+        previewImage: string;
+        previewVisible: boolean;
+        files: any[];
     }>({
         previewImage: '',
         previewVisible: false,
-        files: []
-    })
+        files: [],
+    });
 
-    const { previewVisible, previewImage, files } = state
+    const { previewVisible, previewImage, files } = state;
 
-    const { maxCount, action, listType, title, name, accept, imgCrop = false } = props
+    const { maxCount, action, listType, title, name, accept, imgCrop = false } = props;
 
     const local = localStorage.getItem(TWT.accessToken);
 
     let { access_token } = local ? JSON.parse(local) : { access_token: '' };
 
     useEffect(() => {
-        const { images } = props
+        const { images } = props;
         if (images && images?.length > 0) {
             const list: any = images.map((file: string) => {
                 return {
@@ -40,14 +39,14 @@ const Upload: React.FC<UploadType> = (props) => {
                     status: 'done',
                     url: `${TWT.static}${file}`,
                     thumbUrl: `${TWT.static}${file}`,
-                }
-            })
+                };
+            });
             setState({
                 ...state,
-                files: list
-            })
+                files: list,
+            });
         }
-    }, [props])
+    }, [props]);
 
     /**
      * 查看文件详情
@@ -68,67 +67,65 @@ const Upload: React.FC<UploadType> = (props) => {
      */
     const handleChange = async ({ fileList }: UploadChangeParam<UploadFile>) => {
         // 获取最后一张文件
-        const file: Array<UploadFile> = fileList.slice(-1)
+        const file: Array<UploadFile> = fileList.slice(-1);
 
         if (file.length > 0 && file[0].response) {
+            const uploadFile: UploadFile = file[0];
+            const { code, msg, imgUrl, data } = uploadFile.response;
 
-            const uploadFile: UploadFile = file[0]
-            const { code, msg, imgUrl, data } = uploadFile.response
-
-            const imgPath = imgUrl ? imgUrl : data
+            const imgPath = imgUrl ? imgUrl : data;
 
             // 续签失败将要求重新登录
             if (code === 401) {
                 // 续签
-                await getCurrentUser()
+                await getCurrentUser();
             }
 
             if (code === 200) {
-                fileList.map(f => {
+                fileList.map((f) => {
                     if (f.uid !== uploadFile.uid) {
-                        return f
+                        return f;
                     }
                     // 设置文件url
-                    f.url = `${TWT.static}${imgPath}`
-                    f.thumbUrl = `${TWT.static}${imgPath}`
-                    return f
-                })
+                    f.url = `${TWT.static}${imgPath}`;
+                    f.thumbUrl = `${TWT.static}${imgPath}`;
+                    return f;
+                });
 
                 // 存在Form事件将改变值
                 if (props.onChange) {
                     if (props.maxCount === 1) {
                         // 单文件将直接设置为当前响应地址
-                        props.onChange(imgPath)
+                        props.onChange(imgPath);
                     } else {
-                        const values = fileList.map(v => {
-                            return v.url
-                        })
+                        const values = fileList.map((v) => {
+                            return v.url;
+                        });
 
-                        props.onChange(values)
+                        props.onChange(values);
                     }
                 }
 
                 // 上传成功后需要执行的方法
                 if (props.success) {
-                    props.success()
+                    props.success();
                 }
 
-                message.success(msg)
+                message.success(msg);
             } else {
-                fileList.map(f => {
+                fileList.map((f) => {
                     if (f.uid !== uploadFile.uid) {
-                        return f
+                        return f;
                     }
                     // 将状态改为错误
-                    f.status = 'error'
-                    return f
-                })
+                    f.status = 'error';
+                    return f;
+                });
                 if (code === 401) {
-                    message.error('Token过期，已续签，请重新上传')
+                    message.error('Token过期，已续签，请重新上传');
                 } else {
-                    message.error(msg)
+                    message.error(msg);
                 }
-
             }
         }
 
@@ -138,10 +135,10 @@ const Upload: React.FC<UploadType> = (props) => {
                 if (props.maxCount === 1) {
                     if (fileList.length === 0) {
                         // 清空数据
-                        props.onChange()
+                        props.onChange();
                     }
                 } else {
-                    props.onChange([])
+                    props.onChange([]);
                 }
             }
         }
@@ -149,17 +146,17 @@ const Upload: React.FC<UploadType> = (props) => {
         // 需要不断设置，不然无法感知变化
         setState({
             ...state,
-            files: fileList
-        })
-    }
+            files: fileList,
+        });
+    };
 
     const upload = (
         <UploadAntd
             headers={{
-                Authorization: `Bearer ${access_token}`
+                Authorization: `Bearer ${access_token}`,
             }}
             accept={accept}
-            method='POST'
+            method="POST"
             name={name ? name : 'file'}
             fileList={state.files}
             // 最大上传数量
@@ -174,42 +171,44 @@ const Upload: React.FC<UploadType> = (props) => {
             {/* 小于可上数显示上传按钮 */}
             {files.length < maxCount && (title ? title : 'upload')}
         </UploadAntd>
-    )
+    );
 
     return (
         <>
-            {
-                imgCrop && (
-                    <ImgCrop {...{
+            {imgCrop && (
+                <ImgCrop
+                    {...{
                         modalTitle: `剪裁`,
                         rotate: true,
-                        grid: true
-                    }}>
-                        {upload}
-                    </ImgCrop>
-                )
-            }
+                        grid: true,
+                    }}
+                >
+                    {upload}
+                </ImgCrop>
+            )}
 
-            {
-                !imgCrop && (
-                    upload
-                )
-            }
+            {!imgCrop && upload}
 
             <Modal
                 open={previewVisible}
                 title={'详情'}
                 footer={null}
                 onCancel={() => {
-                    setState({ ...state, previewVisible: false })
+                    setState({ ...state, previewVisible: false });
                 }}
             >
-                <img alt="example" style={{ width: '100%' }}
-                    src={previewImage.indexOf("http") !== -1 ? previewImage : `${TWT.static}${previewImage}`} />
+                <img
+                    alt="example"
+                    style={{ width: '100%' }}
+                    src={
+                        previewImage.indexOf('http') !== -1
+                            ? previewImage
+                            : `${TWT.static}${previewImage}`
+                    }
+                />
             </Modal>
         </>
-    )
+    );
+};
 
-}
-
-export default Upload
+export default Upload;

@@ -1,4 +1,4 @@
-import {Collapse} from 'antd';
+import { Collapse } from 'antd';
 import styles from './styles.less';
 
 /**
@@ -6,7 +6,17 @@ import styles from './styles.less';
  */
 const History = () => {
     return (
-        <Collapse defaultActiveKey={10} className={styles.historyOl}>
+        <Collapse defaultActiveKey={11} className={styles.historyOl}>
+            <Collapse.Panel header="v3.0.5 - 2023-7-31" key={11}>
+                <ol>
+                    <li>即将全面切换JDK 17，预备JDK 21虚拟线程</li>
+                    <li>Spring Cloud Alibaba 兼容 Spring Boot3 Releases</li>
+                    <li>采用spring-boot-starter-oauth2-authorization-server实现权限</li>
+                    <li>JDK 8将停止更新进入维护阶段</li>
+                    <li>修复代码生成器，兼容Antd Pro</li>
+                    <li>修复已知BUG</li>
+                </ol>
+            </Collapse.Panel>
             <Collapse.Panel header="v3.0.0 - 2023-1-22" key={10}>
                 <ol>
                     <li>升级Spring Boot3</li>

@@ -95,7 +95,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
     }
 
     const menuItems = [
-        ...([
+        ...[
             // {
             //     key: 'center',
             //     icon: <UserOutlined />,
@@ -109,7 +109,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
             {
                 type: 'divider' as const,
             },
-        ]),
+        ],
         {
             key: 'logout',
             icon: <LogoutOutlined />,
