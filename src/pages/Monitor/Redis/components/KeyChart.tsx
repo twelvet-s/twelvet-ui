@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import * as echarts from 'echarts'
 import styles from './styles.less';
 import React from 'react';
-import {Card} from 'antd';
+import { Card } from 'antd';
 
 /**
  * 折线图
@@ -10,7 +10,7 @@ import {Card} from 'antd';
 const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
 
     // 图表参数
-    const {dbSize, time} = props
+    const { dbSize, time } = props
 
     const [timeData, setTimeData] = useState<string[]>([])
     const [dbSizeData, setDbSizeData] = useState<number[]>([])

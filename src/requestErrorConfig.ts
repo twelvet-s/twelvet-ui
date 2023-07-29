@@ -100,35 +100,40 @@ export const errorConfig: RequestConfig = {
         // 错误接收及处理
         errorHandler: async (error: any, opts: any) => {
             if (opts?.skipErrorHandler) throw error;
-            if (error.response) {
-                // Axios 的错误
-                // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-                //message.error('Response status:', error.response.status);
-                try {
+            try {
+                if (error.response) {
+                    // Axios 的错误
+                    // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
+                    //message.error('Response status:', error.response.status);
+
                     const {
                         data: { msg },
                         status,
                     } = error.response;
                     if (status === 504) {
                         message.error('服务无响应');
+                        throw error;
                     }
                     if (status === 401) {
                         message.warning('Token已失效,请重新登录！');
                         return logout();
                     } else {
                         message.error(msg);
+                        throw error;
                     }
-                } catch (error) {
-                    system.error(error);
-                    message.error('无法链接API，请联系管理！');
+                } else if (error.request) {
+                    // 请求已经成功发起，但没有收到响应
+                    // \`error.request\` 在浏览器中是 XMLHttpRequest 的实例，
+                    // 而在node.js中是 http.ClientRequest 的实例
+                    message.error('None response! Please retry.');
+                    throw error;
+                } else {
+                    // 发送请求时出了点问题
+                    throw error;
                 }
-            } else if (error.request) {
-                // 请求已经成功发起，但没有收到响应
-                // \`error.request\` 在浏览器中是 XMLHttpRequest 的实例，
-                // 而在node.js中是 http.ClientRequest 的实例
-                message.error('None response! Please retry.');
-            } else {
-                // 发送请求时出了点问题
+            } catch (error) {
+                system.error(error);
+                message.error('无法链接API，请联系管理！');
             }
         },
     },

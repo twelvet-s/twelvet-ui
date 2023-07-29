@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import * as echarts from 'echarts'
 import styles from './styles.less';
 import React from 'react';
-import {Card} from 'antd';
+import { Card } from 'antd';
 
 
 /**
@@ -11,7 +11,7 @@ import {Card} from 'antd';
 const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, time: string }> = props => {
 
     // 图表参数
-    const {usedmemory, time} = props
+    const { usedmemory, time } = props
 
     const [timeData, setTimeData] = useState<string[]>([])
     const [usedmemoryData, setUsedmemoryData] = useState<number[]>([])
