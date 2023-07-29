@@ -179,8 +179,8 @@ const Upload: React.FC<UploadType> = (props) => {
                 <ImgCrop
                     {...{
                         modalTitle: `剪裁`,
-                        rotate: true,
-                        grid: true,
+                        rotationSlider: true,
+                        showGrid: true,
                     }}
                 >
                     {upload}
