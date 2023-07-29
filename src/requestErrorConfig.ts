@@ -1,10 +1,10 @@
-﻿import type {RequestOptions} from '@@/plugin-request/request';
-import type {RequestConfig} from '@umijs/max';
-import {request} from '@umijs/max';
-import {message, notification} from 'antd';
-import {refreshToken as refreshTokenService} from './pages/Login/service';
+﻿import type { RequestOptions } from '@@/plugin-request/request';
+import type { RequestConfig } from '@umijs/max';
+import { request } from '@umijs/max';
+import { message, notification } from 'antd';
+import { refreshToken as refreshTokenService } from './pages/Login/service';
 import TWT from './setting';
-import {logout, setAuthority} from './utils/twelvet';
+import { logout, setAuthority, system } from './utils/twelvet';
 
 // 与后端约定的响应数据格式
 interface ResponseStructure {
@@ -63,7 +63,7 @@ const refreshToken = async (
  */
 const responseHeaderInterceptor = (response: any) => {
     const {
-        data: {code},
+        data: { code },
         config,
     } = response;
 
@@ -71,7 +71,7 @@ const responseHeaderInterceptor = (response: any) => {
 
     // 处理401状态
     if (code === 401) {
-        const {data, params, method, url, responseType} = config;
+        const { data, params, method, url, responseType } = config;
         // 执行刷新token
         newResponse = refreshToken(url, method, responseType, data, params);
         return newResponse;
@@ -89,11 +89,11 @@ export const errorConfig: RequestConfig = {
     errorConfig: {
         // 错误抛出
         errorThrower: (res) => {
-            const {code, data, msg} = res as unknown as ResponseStructure;
+            const { code, data, msg } = res as unknown as ResponseStructure;
             if (code !== 200) {
                 const error: any = new Error(msg);
                 error.name = 'BizError';
-                error.info = {code, msg, data};
+                error.info = { code, msg, data };
                 throw error; // 抛出自制的错误
             }
         },
@@ -104,18 +104,23 @@ export const errorConfig: RequestConfig = {
                 // Axios 的错误
                 // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
                 //message.error('Response status:', error.response.status);
-                const {
-                    data: {msg},
-                    status,
-                } = error.response;
-                if (status === 504) {
-                    message.error('服务无响应');
-                }
-                if (status === 401) {
-                    message.warning('Token已失效,请重新登录！');
-                    return logout()
-                } else {
-                    message.error(msg);
+                try {
+                    const {
+                        data: { msg },
+                        status,
+                    } = error.response;
+                    if (status === 504) {
+                        message.error('服务无响应');
+                    }
+                    if (status === 401) {
+                        message.warning('Token已失效,请重新登录！');
+                        return logout();
+                    } else {
+                        message.error(msg);
+                    }
+                } catch (error) {
+                    system.error(error);
+                    message.error('无法链接API，请联系管理！');
                 }
             } else if (error.request) {
                 // 请求已经成功发起，但没有收到响应
@@ -133,11 +138,11 @@ export const errorConfig: RequestConfig = {
         (config: RequestOptions) => {
             const local = localStorage.getItem(TWT.accessToken);
 
-            const {access_token} = local ? JSON.parse(local) : {access_token: ''};
+            const { access_token } = local ? JSON.parse(local) : { access_token: '' };
 
             let authHeader;
             if (!config.headers?.Authorization) {
-                authHeader = {...config.headers, Authorization: `Bearer ${access_token}`};
+                authHeader = { ...config.headers, Authorization: `Bearer ${access_token}` };
             } else {
                 authHeader = {
                     ...config.headers,
@@ -146,7 +151,9 @@ export const errorConfig: RequestConfig = {
 
             // 拦截请求配置，进行个性化处理。
             const url = config?.url;
-            const requestUri = TWT.requestUri.endsWith('/') ? TWT.requestUri.slice(0, -1) : TWT.requestUri
+            const requestUri = TWT.requestUri.endsWith('/')
+                ? TWT.requestUri.slice(0, -1)
+                : TWT.requestUri;
             return {
                 ...config,
                 // 设置请求URI
