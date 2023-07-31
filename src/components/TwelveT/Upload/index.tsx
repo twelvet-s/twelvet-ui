@@ -30,8 +30,19 @@ const Upload: React.FC<UploadType> = (props) => {
     let { access_token } = local ? JSON.parse(local) : { access_token: '' };
 
     useEffect(() => {
-        const { images } = props;
-        if (images && images?.length > 0) {
+        const { images, value } = props;
+        if (value) {
+            setState({
+                ...state,
+                files: [{
+                    uid: '-1',
+                    name: `${TWT.static}${value}`,
+                    status: 'done',
+                    url: `${TWT.static}${value}`,
+                    thumbUrl: `${TWT.static}${value}`,
+                }],
+            });
+        } else if (images && images?.length > 0) {
             const list: any = images.map((file: string) => {
                 return {
                     uid: '-1',

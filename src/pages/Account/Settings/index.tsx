@@ -24,7 +24,7 @@ import {useModel} from '@umijs/max'
  */
 const UserSettings: React.FC = () => {
 
-    const {initialState, setInitialState} = useModel('@@initialState');
+    const {setInitialState} = useModel('@@initialState');
 
     // 用户信息
     const [userInfo, setUserInfo] = useState<{
@@ -94,6 +94,8 @@ const UserSettings: React.FC = () => {
                                 success={async () => {
                                     const {user = {}, roles, permissions} = await getCurrentUser();
                                     const {data} = await getRouters()
+                                    // 更新信息
+                                    getInfo()
                                     const userInfo = {
                                         user,
                                         menus: data,
