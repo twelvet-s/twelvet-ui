@@ -1,6 +1,6 @@
 import TWT from '@/setting';
-import {isArray} from 'lodash';
-import {request, history} from '@umijs/max';
+import { isArray } from 'lodash';
+import { request, history } from '@umijs/max';
 
 /**
  * 系统日志输出
@@ -187,6 +187,24 @@ export const reductionMenuList = (
 };
 
 /**
+ * 获取文件名称
+ * @param contentDisposition 响应头信息
+ * @returns 名称
+ */
+const getFileNameFromContentDisposition = (contentDisposition: string) => {
+    const regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    const matches = regex.exec(contentDisposition);
+    if (matches != null && matches[1]) {
+        let fileName = matches[1].replace(/['"]/g, '');
+        // 解码文件名，如果有需要的话
+        fileName = decodeURIComponent(fileName);
+        fileName = fileName.replace('utf-8', '')
+        return fileName;
+    }
+    return null;
+}
+
+/**
  * 通用下载方法
  * @param url 地址
  * @param params 参数
@@ -213,10 +231,10 @@ export const download = (url: string, params?: Record<string, any>, filename?: s
                 if (!contentDisposition) {
                     return response.data;
                 }
-                const name = contentDisposition.split('filename=');
-                if (isArray(name)) {
+                const name = getFileNameFromContentDisposition(contentDisposition)
+                if (name) {
                     // 获取并还原编码
-                    currentFileName = decodeURIComponent(name[1]);
+                    currentFileName = name;
                 } else {
                     currentFileName = 'unknown';
                 }
