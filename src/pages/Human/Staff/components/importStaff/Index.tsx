@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react'
-import {message, Upload, Modal, Checkbox, Button} from 'antd'
-import {system} from '@/utils/twelvet'
-import {InboxOutlined} from '@ant-design/icons'
+import React, { useEffect, useState } from 'react'
+import { message, Upload, Modal, Checkbox, Button } from 'antd'
+import { system } from '@/utils/twelvet'
+import { InboxOutlined } from '@ant-design/icons'
 import styles from './index.less'
-import type {RcFile} from 'antd/lib/upload'
-import {importData, exportTemplate} from './../../service'
+import type { RcFile } from 'antd/lib/upload'
+import { importData, exportTemplate } from './../../service'
 
 const DeptSearch: React.FC<{
     visible: boolean
@@ -22,7 +22,7 @@ const DeptSearch: React.FC<{
 
     const [uploadLoading, setUploadLoading] = useState<boolean>(false)
 
-    const {Dragger} = Upload
+    const { Dragger } = Upload
 
     useEffect(() => {
         setVisibleModal(props.visible)
@@ -40,14 +40,15 @@ const DeptSearch: React.FC<{
             const formData = new FormData();
 
             // 添加Excel数据源
-            excelFiles.forEach((file: RcFile) => {
-                formData.append('files', file);
-            });
+            // excelFiles.forEach((file: RcFile) => {
+            //     formData.append('files', file);
+            // });
+            formData.append('file', excelFiles[0])
 
             // 设置是否覆盖参数
             formData.append('cover', `${cover}`)
 
-            const {code, msg} = await importData(formData)
+            const { code, msg } = await importData(formData)
             if (code !== 200) {
                 return message.error(msg)
             }
@@ -97,13 +98,13 @@ const DeptSearch: React.FC<{
                     application/vnd.ms-excel"
                     name="staff"
                     // 支持多文件上传
-                    multiple
+                    // multiple
                     // 文件列表
                     fileList={excelFiles}
                     onChange={(info) => {
                         const fileList: any[] = info.fileList
 
-                        const files: any[] = []
+                        let files: any[] = []
 
                         fileList.forEach((file: {
                             type: string
@@ -119,9 +120,11 @@ const DeptSearch: React.FC<{
                             ) {
                                 // 加入数组
                                 if (file.originFileObj) {
-                                    files.push(file.originFileObj)
+                                    // files.push(file.originFileObj)
+                                    files = [file.originFileObj]
                                 } else {
-                                    files.push(file)
+                                    // files.push(file)
+                                    files = [file]
                                 }
                             } else {
                                 message.error(`${file.name} is not a Excel file`)
@@ -138,7 +141,7 @@ const DeptSearch: React.FC<{
                     }}
                 >
                     <p className="ant-upload-drag-icon">
-                        <InboxOutlined/>
+                        <InboxOutlined />
                     </p>
                     <p className="ant-upload-text">
                         将文件拖拽到此处，或<span className={styles.clickColr}>点击上传</span>
