@@ -39,7 +39,7 @@ const Panel: React.FC = () => {
             <h1>
                 TwelveT 微服务
                 <Divider type="vertical"/>
-                <a target='_blank' href="https://github.com/twelvet-/twelvet" rel="noreferrer">
+                <a target='_blank' href="https://github.com/twelvet-projects/twelvet" rel="noreferrer">
                     <Tag icon={<GithubOutlined/>} color='success'>
                         免费开源
                     </Tag>
