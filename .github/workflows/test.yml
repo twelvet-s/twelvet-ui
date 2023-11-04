@@ -2,8 +2,8 @@ name: test
 
 on:
     workflow_dispatch:
-    # push:
-    #   branches: [ "master" ]
+    push:
+        branches: ['master']
 
 jobs:
     build:
@@ -11,18 +11,18 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [ 18.x ]
+                node-version: [18.x]
 
         steps:
-            -   uses: actions/checkout@v3
+            - uses: actions/checkout@v3
 
-            -   name: Use Node.js ${{ matrix.node-version }}
-                uses: actions/setup-node@v3
-                with:
-                    node-version: ${{ matrix.node-version }}
-                    distribution: zulu
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  distribution: zulu
 
-            -   name: Build
-                run: |
-                    yarn
-                    yarn build
+            - name: Build
+              run: |
+                  yarn
+                  yarn build
