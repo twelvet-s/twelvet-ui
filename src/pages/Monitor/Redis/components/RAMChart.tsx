@@ -11,73 +11,57 @@ import { Card } from 'antd';
 const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, time: string }> = props => {
 
     // 图表参数
-    const { usedmemory, time } = props
-
-    const [timeData, setTimeData] = useState<string[]>([])
-    const [usedmemoryData, setUsedmemoryData] = useState<number[]>([])
+    const { usedmemory } = props
 
     const config: Record<string, any> = {
-        xAxis: {
-            data: [],
-            boundaryGap: false,
-            axisTick: {
-                show: false
+        series: [
+            {
+                type: 'gauge',
+                axisLine: {
+                    lineStyle: {
+                        width: 30,
+                        color: [
+                            [0.3, '#67e0e3'],
+                            [0.7, '#37a2da'],
+                            [1, '#fd666d']
+                        ]
+                    }
+                },
+                pointer: {
+                    itemStyle: {
+                        color: 'auto'
+                    }
+                },
+                axisTick: {
+                    distance: -30,
+                    length: 8,
+                    lineStyle: {
+                        color: '#fff',
+                        width: 2
+                    }
+                },
+                splitLine: {
+                    distance: -30,
+                    length: 30,
+                    lineStyle: {
+                        color: '#fff',
+                        width: 4
+                    }
+                },
+                axisLabel: {
+                    color: 'inherit',
+                    distance: 40,
+                    fontSize: 15
+                },
+                detail: {
+                    valueAnimation: true,
+                    formatter: '{value} M',
+                    color: 'inherit'
+                },
+                data: [
+
+                ]
             }
-        },
-        grid: {
-            left: 10,
-            right: 10,
-            bottom: 20,
-            top: 30,
-            containLabel: true
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'cross'
-            },
-            padding: [5, 10]
-        },
-        yAxis: {
-            axisTick: {
-                show: false
-            },
-        },
-        legend: {},
-        series: [{
-            name: '分配内存',
-            itemStyle: {
-                // 上方显示数值
-                show: true,
-                color: '#FF005A',
-                lineStyle: {
-                    color: '#FF005A',
-                    width: 2
-                }
-            },
-            smooth: true,
-            type: 'line',
-            data: [],
-            animationDuration: 2000,
-            animationEasing: 'cubicInOut',
-        },
-            // {
-            //     name: '消耗峰值',
-            //     itemStyle: {
-            //         normal: {
-            //             color: '#FF005A',
-            //             lineStyle: {
-            //                 color: '#FF005A',
-            //                 width: 2
-            //             }
-            //         }
-            //     },
-            //     smooth: true,
-            //     type: 'line',
-            //     data: [],
-            //     animationDuration: 2000,
-            //     animationEasing: 'cubicInOut',
-            // },
         ]
 
     }
@@ -90,28 +74,11 @@ const LineChart: React.FC<{ usedmemory: number, usedMemoryPeakHuman: number, tim
 
         const ctr = instance || lineChart
 
-        // 时间
-        if (timeData.length >= 6) {
-            timeData.shift();
-        }
-        const timeTemp = [...timeData, time]
-        config.xAxis.data.push(...timeTemp)
-        setTimeData(timeTemp)
-
         // 分配内存
-        if (usedmemoryData.length >= 6) {
-            usedmemoryData.shift();
-        }
-        const usedmemoryDataTemp = [...usedmemoryData, usedmemory]
-        config.series[0].data.push(...usedmemoryDataTemp)
-        setUsedmemoryData(usedmemoryDataTemp)
-
-
-        // 消耗峰值
-        // const usedMemoryPeakHumanDataTemp = [...usedMemoryPeakHumanData, usedMemoryPeakHuman]
-        // console.log(usedMemoryPeakHumanDataTemp)
-        // config.series[1].data.push(...usedMemoryPeakHumanDataTemp)
-        // setUsedMemoryPeakHumanData(usedMemoryPeakHumanDataTemp)
+        config.series[0].data = [{
+            value: usedmemory,
+            name: '内存消耗'
+        }]
 
         // 设置数据
         ctr.setOption(config)

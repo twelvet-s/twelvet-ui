@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 
-import {query} from './service'
-import {Card, Col, Row} from 'antd'
+import { query } from './service'
+import { Card, Col, Row } from 'antd'
 import CommandStatsChart from './components/CommandStatsChart'
-import {PageContainer, ProDescriptions} from '@ant-design/pro-components'
+import { PageContainer, ProDescriptions } from '@ant-design/pro-components'
 import RAMChart from './components/RAMChart'
 import KeyChart from './components/KeyChart'
 
@@ -15,27 +15,27 @@ const MonitorRedis: React.FC = () => {
      * 设置数据
      */
     const getInfo = async () => {
-        const {data} = await query()
+        const { data } = await query()
         setRedisData(data)
     }
 
     // 第一次渲染时执行
     useEffect(() => {
         getInfo()
-        const timer = setInterval(() => {
-            getInfo()
-        }, 3000)
+        // const timer = setInterval(() => {
+        //     getInfo()
+        // }, 3000)
 
-        return () => {
-            clearInterval(timer)
-        }
+        // return () => {
+        //     clearInterval(timer)
+        // }
     }, [])
 
     return (
         <PageContainer>
             <Row gutter={[20, 20]}>
 
-                <Col md={{span: 16}} xs={{span: 24}}>
+                <Col md={{ span: 16 }} xs={{ span: 24 }}>
                     <Card title="基本信息">
                         <ProDescriptions
                             column={2}
@@ -90,11 +90,11 @@ const MonitorRedis: React.FC = () => {
                     </Card>
                 </Col>
 
-                <Col md={{span: 8}} xs={{span: 24}}>
-                    <CommandStatsChart commandStats={redisData?.commandStats}/>
+                <Col md={{ span: 8 }} xs={{ span: 24 }}>
+                    <CommandStatsChart commandStats={redisData?.commandStats} />
                 </Col>
 
-                <Col md={{span: 12}} xs={{span: 24}}>
+                <Col md={{ span: 12 }} xs={{ span: 24 }}>
                     {redisData?.info.usedmemory}
                     <RAMChart
                         usedmemory={parseFloat(redisData?.info.used_memory_human)}
@@ -103,7 +103,7 @@ const MonitorRedis: React.FC = () => {
                     />
                 </Col>
 
-                <Col md={{span: 12}} xs={{span: 24}}>
+                <Col md={{ span: 12 }} xs={{ span: 24 }}>
                     <KeyChart
                         dbSize={redisData?.dbSize}
                         time={redisData?.time}

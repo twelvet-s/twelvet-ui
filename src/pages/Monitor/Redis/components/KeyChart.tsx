@@ -16,49 +16,21 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
     const [dbSizeData, setDbSizeData] = useState<number[]>([])
 
     const config: Record<string, any> = {
-        xAxis: {
-            data: [],
-            boundaryGap: false,
-            axisTick: {
-                show: false
-            }
-        },
-        grid: {
-            left: 10,
-            right: 10,
-            bottom: 20,
-            top: 30,
-            containLabel: true
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'cross'
-            },
-            padding: [5, 10]
-        },
-        yAxis: {
-            axisTick: {
-                show: false
-            }
-        },
-        legend: {},
-        series: [{
-            name: 'key数量',
-            itemStyle: {
-                color: '#FF005A',
-                lineStyle: {
-                    color: '#FF005A',
-                    width: 2
+        series: [
+            {
+                name: 'Pressure',
+                type: 'gauge',
+                progress: {
+                    show: true
                 },
+                detail: {
+                    valueAnimation: true,
+                    formatter: '{value}'
+                },
+                data: [
 
-            },
-            smooth: true,
-            type: 'line',
-            data: [],
-            animationDuration: 2000,
-            animationEasing: 'cubicInOut',
-        },
+                ]
+            }
         ]
 
     }
@@ -71,21 +43,10 @@ const LineChart: React.FC<{ dbSize: number, time: string }> = props => {
 
         const ctr = instance || lineChart
 
-        // 时间
-        if (timeData.length >= 6) {
-            timeData.shift();
-        }
-        const timeTemp = [...timeData, time]
-        config.xAxis.data.push(...timeTemp)
-        setTimeData(timeTemp)
-
-        // 分配内存
-        if (dbSizeData.length >= 6) {
-            dbSizeData.shift();
-        }
-        const dbSizeTemp = [...dbSizeData, dbSize]
-        config.series[0].data.push(...dbSizeTemp)
-        setDbSizeData(dbSizeTemp)
+        config.series[0].data = [{
+            value: dbSize,
+            name: 'Key数量'
+        }]
         // 设置数据
         ctr.setOption(config)
         ctr.hideLoading()
