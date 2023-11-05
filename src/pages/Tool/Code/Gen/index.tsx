@@ -1,7 +1,7 @@
-import React, {useRef, useState} from 'react';
-import type {ActionType, ProColumns} from '@ant-design/pro-components';
-import {ProTable, PageContainer} from '@ant-design/pro-components';
-import {proTableConfigs} from '@/setting';
+import React, { useRef, useState } from 'react'
+import type { ActionType, ProColumns } from '@ant-design/pro-components'
+import { ProTable, PageContainer } from '@ant-design/pro-components'
+import { proTableConfigs } from '@/setting'
 import {
     CloseOutlined,
     CloudSyncOutlined,
@@ -10,31 +10,31 @@ import {
     EyeOutlined,
     FileZipOutlined,
     SyncOutlined,
-} from '@ant-design/icons';
-import type {FormInstance} from 'antd';
-import {Button, Divider, message, Popconfirm, Space} from 'antd';
-import {batchGenCode, pageQuery, remove, synchDb} from './service';
-import {system} from '@/utils/twelvet';
-import DrawerInfo from './components/DrawerInfo/Index';
-import PreviewCode from './components/PreviewCode/Index';
-import EditCode from './components/EditCode/Index';
+} from '@ant-design/icons'
+import type { FormInstance } from 'antd'
+import { Button, Divider, message, Popconfirm, Space } from 'antd'
+import { batchGenCode, pageQuery, remove, synchDb } from './service'
+import { system } from '@/utils/twelvet'
+import DrawerInfo from './components/DrawerInfo/Index'
+import PreviewCode from './components/PreviewCode/Index'
+import EditCode from './components/EditCode/Index'
 
 /**
  * 代码生成器
  */
 const Gen: React.FC = () => {
-    const acForm = useRef<ActionType>();
+    const acForm = useRef<ActionType>()
 
-    const formRef = useRef<FormInstance>();
+    const formRef = useRef<FormInstance>()
 
     const [state] = useState<ToolGen.State>({
         pageSize: 10,
-    });
+    })
 
-    const [drawerInfoVisible, setDrawerInfoVisible] = useState<boolean>(false);
+    const [drawerInfoVisible, setDrawerInfoVisible] = useState<boolean>(false)
 
     const [previewCodeVisible, setPreviewCodeVisible] = useState<{
-        tableId: number;
+        tableId: number
         visible: boolean;
     }>({
         tableId: 0,
@@ -58,7 +58,7 @@ const Gen: React.FC = () => {
             if (!tableIds) {
                 return true;
             }
-            const {code, msg} = await remove(tableIds);
+            const { code, msg } = await remove(tableIds);
             if (code !== 200) {
                 return message.error(msg);
             }
@@ -77,7 +77,7 @@ const Gen: React.FC = () => {
      */
     const refSynchDb = async (tableName: string) => {
         try {
-            const {code, msg} = await synchDb(tableName);
+            const { code, msg } = await synchDb(tableName);
             if (code !== 200) {
                 return message.error(msg);
             }
@@ -141,11 +141,11 @@ const Gen: React.FC = () => {
                             }
                         >
                             <Space>
-                                <EyeOutlined/>
+                                <EyeOutlined />
                                 预览
                             </Space>
                         </a>
-                        <Divider type="vertical"/>
+                        <Divider type="vertical" />
                         <a
                             href="#"
                             onClick={() =>
@@ -156,33 +156,33 @@ const Gen: React.FC = () => {
                             }
                         >
                             <Space>
-                                <EditOutlined/>
+                                <EditOutlined />
                                 编辑
                             </Space>
                         </a>
-                        <Divider type="vertical"/>
+                        <Divider type="vertical" />
                         <Popconfirm onConfirm={() => refRemove([record.tableId])} title="确定删除吗">
                             <a href="#">
                                 <Space>
-                                    <CloseOutlined/>
+                                    <CloseOutlined />
                                     删除
                                 </Space>
                             </a>
                         </Popconfirm>
-                        <Divider type="vertical"/>
+                        <Divider type="vertical" />
                         <Popconfirm onConfirm={() => refSynchDb(record.tableName)} title="确定强制同步结构吗">
                             <a href="#">
                                 <Space>
-                                    <SyncOutlined spin/>
+                                    <SyncOutlined spin />
                                     同步
                                 </Space>
                             </a>
                         </Popconfirm>
-                        <Divider type="vertical"/>
+                        <Divider type="vertical" />
                         <Popconfirm onConfirm={() => batchGenCode([record.tableName])} title="确定生成吗">
                             <a href="#">
                                 <Space>
-                                    <FileZipOutlined/>
+                                    <FileZipOutlined />
                                     生成代码
                                 </Space>
                             </a>
@@ -208,8 +208,8 @@ const Gen: React.FC = () => {
                 rowKey="tableId"
                 columns={columns}
                 request={async (params) => {
-                    const {data} = await pageQuery(params);
-                    const {records, total} = data;
+                    const { data } = await pageQuery(params);
+                    const { records, total } = data;
                     return Promise.resolve({
                         data: records,
                         success: true,
@@ -217,7 +217,7 @@ const Gen: React.FC = () => {
                     });
                 }}
                 rowSelection={{}}
-                toolBarRender={(action, {selectedRowKeys, selectedRows}) => [
+                toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
                     <Button
                         key={'importTool'}
                         type="primary"
@@ -225,7 +225,7 @@ const Gen: React.FC = () => {
                             setDrawerInfoVisible(true);
                         }}
                     >
-                        <CloudSyncOutlined/>
+                        <CloudSyncOutlined />
                         导入数据
                     </Button>,
                     <Popconfirm
@@ -242,7 +242,7 @@ const Gen: React.FC = () => {
                         title="是否批量生成"
                     >
                         <Button disabled={!(selectedRowKeys && selectedRowKeys.length > 0)} type="default">
-                            <FileZipOutlined/>
+                            <FileZipOutlined />
                             批量生成
                         </Button>
                     </Popconfirm>,
@@ -257,7 +257,7 @@ const Gen: React.FC = () => {
                             type="primary"
                             danger
                         >
-                            <DeleteOutlined/>
+                            <DeleteOutlined />
                             批量删除
                         </Button>
                     </Popconfirm>,

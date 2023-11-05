@@ -39,9 +39,9 @@ export default [
                 name: 'settings',
                 icon: 'icon-settings',
                 path: '/account/settings',
-                component: './Account/Settings'
-            }
-        ]
+                component: './Account/Settings',
+            },
+        ],
     },
     {
         title: '系统管理',
@@ -54,37 +54,37 @@ export default [
                 icon: 'icon-menu',
                 name: 'menu',
                 path: '/system/menu',
-                component: './System/Menu'
+                component: './System/Menu',
             },
             {
                 title: '字典管理',
                 icon: 'icon-dictionaries',
                 name: 'dictionaries',
                 path: '/system/dictionaries',
-                component: './System/Dictionaries'
+                component: './System/Dictionaries',
             },
             {
                 title: 'OAuth2终端',
                 icon: 'icon-client',
                 name: 'client',
                 path: '/system/client',
-                component: './System/Client'
+                component: './System/Client',
             },
             {
                 title: '分布式文件管理',
                 icon: 'icon-dfs',
                 name: 'dfs',
                 path: '/system/dfs',
-                component: './System/Dfs'
+                component: './System/Dfs',
             },
             {
                 title: '令牌管理',
                 icon: 'icon-token',
                 name: 'token',
                 path: '/system/token',
-                component: './System/Token'
-            }
-        ]
+                component: './System/Token',
+            },
+        ],
     },
     // 跳转
     {
@@ -102,16 +102,16 @@ export default [
                 icon: 'icon-job',
                 name: 'job',
                 path: '/monitor/redis',
-                component: './Monitor/Redis'
+                component: './Monitor/Redis',
             },
             {
                 title: '定时任务',
                 icon: 'icon-job',
                 name: 'job',
                 path: '/monitor/job',
-                component: './Monitor/Job'
+                component: './Monitor/Job',
             },
-        ]
+        ],
     },
     // 跳转
     {
@@ -129,30 +129,30 @@ export default [
                 icon: 'icon-team',
                 name: 'staffManagement',
                 path: '/human/staff',
-                component: './Human/Staff'
+                component: './Human/Staff',
             },
             {
                 title: '角色管理',
                 icon: 'icon-role',
                 name: 'role',
                 path: '/human/role',
-                component: './Human/Role'
+                component: './Human/Role',
             },
             {
                 title: '岗位管理',
                 icon: 'icon-post',
                 name: 'post',
                 path: '/human/post',
-                component: './Human/Post'
+                component: './Human/Post',
             },
             {
                 title: '部门管理',
                 icon: 'icon-dept',
                 name: 'dept',
                 path: '/human/dept',
-                component: './Human/Dept'
-            }
-        ]
+                component: './Human/Dept',
+            },
+        ],
     },
     /*{
         title: '个人账号',
@@ -192,23 +192,23 @@ export default [
                 name: 'operation',
                 icon: 'icon-log-operation',
                 path: '/log/operation',
-                component: './Log/Operation'
+                component: './Log/Operation',
             },
             {
                 title: '登录日志',
                 name: 'login',
                 icon: 'icon-log-login',
                 path: '/log/login',
-                component: './Log/Login'
+                component: './Log/Login',
             },
             {
                 title: '定时任务日志',
                 name: 'job',
                 icon: 'icon-log-job',
                 path: '/log/job',
-                component: './Log/Job'
-            }
-        ]
+                component: './Log/Job',
+            },
+        ],
     },
     // 跳转
     {
@@ -222,12 +222,35 @@ export default [
         path: '/tool',
         routes: [
             {
-                title: '代码生成器',
+                title: '开发平台',
                 icon: 'icon-gen-code',
                 name: 'gen',
-                path: '/tool/gen',
-                component: './Tool/Gen'
+                path: '/tool/code',
+                routes: [
+                    {
+                        title: '数据源',
+                        icon: 'icon-gen-ds_conf',
+                        name: 'ds_conf',
+                        path: '/tool/code/ds_conf',
+                        component: './Tool/Code/DsConf',
+                    },
+                    {
+                        title: '代码生成器',
+                        icon: 'icon-gen-code',
+                        name: 'code',
+                        path: '/tool/code/gen',
+                        component: './Tool/Code/Gen',
+                    },
+                    {
+                        title: '字段管理',
+                        icon: 'icon-gen-Type',
+                        name: 'type',
+                        path: '/tool/code/type',
+                        component: './Tool/Code/Type',
+                    },
+                ],
             },
+
             // {
             //     title: '图形化编辑器',
             //     name: 'graphicalEditor',
@@ -257,10 +280,10 @@ export default [
             //         },
             //     ]
             // }
-        ]
+        ],
     },
     {
         path: '*',
         component: './404',
     },
-]
+];

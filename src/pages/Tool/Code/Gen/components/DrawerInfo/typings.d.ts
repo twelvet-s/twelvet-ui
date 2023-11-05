@@ -10,6 +10,7 @@ declare namespace ToolGenDrawerInfo {
      * 搜索参数
      */
     type PageParams = {
+        dsName: string;
         tableName: string;
         tableComment: string;
         current: number;

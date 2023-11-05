@@ -24,7 +24,7 @@ declare namespace HumanRole {
         roleId: number;
         roleName: string;
         roleKey: string;
-        roleSort: string;
+        roleSort: number;
         status: string;
         createTime: Date;
     };

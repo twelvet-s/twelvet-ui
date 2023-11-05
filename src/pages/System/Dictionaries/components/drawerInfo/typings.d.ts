@@ -22,7 +22,7 @@ declare namespace SystemDictionariesDrawerinfo {
         dictCode: string;
         dictName: string;
         dictValue: string;
-        dictSort: string;
+        dictSort: number;
         status: string;
         remark: string;
         createTime: Date;

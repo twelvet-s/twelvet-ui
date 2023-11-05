@@ -1,26 +1,23 @@
-import React, {useEffect, useState} from 'react'
-import {CheckboxOptionType, message, Radio} from 'antd'
-import {getDictionariesType} from './service'
-import {system} from '@/utils/twelvet'
+import React, { useEffect, useState } from 'react'
+import { CheckboxOptionType, message, Radio, RadioChangeEvent } from 'antd'
+import { getDictionariesType } from './service'
+import { system } from '@/utils/twelvet'
 
 /**
  * 字典模块数据管理类型选择器
  */
 const DictionariesRadio: React.FC<{
     type: string
+    onChange?: (e: RadioChangeEvent) => void
 }> = (props) => {
 
     const [treeData, setTreeData] = useState<Array<CheckboxOptionType | string>>([])
 
-    const {type} = props
-
-    useEffect(() => {
-        makeTree()
-    }, [])
+    const { type } = props
 
     const makeTree = async () => {
         try {
-            const {code, msg, data} = await getDictionariesType(type)
+            const { code, msg, data } = await getDictionariesType(type)
             if (code !== 200) {
                 return message.error(msg)
             }
@@ -33,8 +30,9 @@ const DictionariesRadio: React.FC<{
                 dictLabel: string
             }) => {
                 tree.push(
-                    {label: item.dictLabel, value: item.dictValue}
+                    { label: item.dictLabel, value: item.dictValue }
                 )
+                return false
             })
 
             setTreeData(tree)
@@ -43,6 +41,11 @@ const DictionariesRadio: React.FC<{
             system.error(e)
         }
     }
+
+    useEffect(() => {
+        makeTree()
+    }, [])
+
 
     return (
         <Radio.Group

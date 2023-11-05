@@ -24,7 +24,7 @@ declare namespace HumanPost {
         postId: number;
         postCode: string;
         postName: string;
-        postSort: string;
+        postSort: number;
         status: string;
         createTime: Date;
     };

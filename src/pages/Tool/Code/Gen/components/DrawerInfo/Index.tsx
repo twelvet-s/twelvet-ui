@@ -1,13 +1,14 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 
-import {ProTable} from '@ant-design/pro-components';
-import type {ActionType, ProColumns} from '@ant-design/pro-components';
-import {proTableConfigs} from '@/setting';
-import {Button, Divider, Drawer, message} from 'antd';
-import type {FormInstance} from 'antd/lib/form';
-import {pageQuery, importTable} from './service';
-import {system} from '@/utils/twelvet';
-import type {Key} from 'antd/lib/table/interface';
+import { ProTable } from '@ant-design/pro-components';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { proTableConfigs } from '@/setting';
+import { Button, Divider, Drawer, message } from 'antd';
+import type { FormInstance } from 'antd/lib/form';
+import { pageQuery, importTable } from './service';
+import { system } from '@/utils/twelvet';
+import type { Key } from 'antd/lib/table/interface';
+import DsConfSearch from './DsConfSearch/Index';
 
 /**
  * 数据导入
@@ -26,14 +27,18 @@ const DrawerInfo: React.FC<{
 
     const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
+    // 当前选择的数据库名称
+    const [dsName, setDsName] = useState<string>('master')
+
     const [loading, setLoading] = useState<boolean>(false);
 
-    const {visible, onClose} = props;
+    const { visible, onClose } = props;
 
     /**
      * 关闭抽屉
      */
     const close = () => {
+        setDsName('master')
         if (!loading) {
             onClose();
         }
@@ -46,7 +51,7 @@ const DrawerInfo: React.FC<{
         try {
             setLoading(true);
 
-            const {code, msg} = await importTable(selectedRowKeys);
+            const { code, msg } = await importTable(dsName, selectedRowKeys);
 
             if (code !== 200) {
                 return message.error(msg);
@@ -62,6 +67,14 @@ const DrawerInfo: React.FC<{
 
     // Form参数
     const columns: ProColumns<ToolGenDrawerInfo.PageListItem>[] = [
+        {
+            title: '数据源',
+            ellipsis: true,
+            width: 200,
+            dataIndex: 'dsName',
+            hideInTable: true,
+            renderFormItem: () => <DsConfSearch />,
+        },
         {
             title: '表名称',
             ellipsis: true,
@@ -109,7 +122,7 @@ const DrawerInfo: React.FC<{
                     }}
                 >
                     <Button onClick={() => close()}>取消</Button>
-                    <Divider type="vertical"/>
+                    <Divider type="vertical" />
                     <Button loading={loading} type="primary" onClick={() => importTableRef()}>
                         导入
                     </Button>
@@ -130,8 +143,21 @@ const DrawerInfo: React.FC<{
                 rowKey="tableName"
                 columns={columns}
                 request={async (params) => {
-                    const {data} = await pageQuery(params);
-                    const {records, total} = data;
+                    // 设置当前使用的库
+                    if (params.dsName) {
+                        setDsName(params.dsName)
+                    }
+                    const { code, msg, data } = await pageQuery(params);
+
+                    if (code !== 200) {
+                        message.error(msg)
+                        return Promise.resolve({
+                            data: [],
+                            success: true,
+                            total: 0,
+                        });
+                    }
+                    const { records, total } = data;
                     return Promise.resolve({
                         data: records,
                         success: true,

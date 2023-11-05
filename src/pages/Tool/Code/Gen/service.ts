@@ -1,8 +1,8 @@
-import {request} from '@umijs/max'
-import {download} from '@/utils/twelvet'
+import { request } from '@umijs/max';
+import { download } from '@/utils/twelvet';
 
 // 请求的控制器名称
-const controller = "/gen";
+const controller = '/gen';
 
 /**
  * 获取分页 Data
@@ -12,7 +12,7 @@ export async function pageQuery(params: Record<string, any>) {
     return request(`${controller}/pageQuery`, {
         method: 'GET',
         params: {
-            ...params
+            ...params,
         },
     });
 }
@@ -43,4 +43,15 @@ export async function synchDb(tableName: string) {
  */
 export async function batchGenCode(tableNames: string[]) {
     return download(`${controller}/batchGenCode?tables=${tableNames}`);
+}
+
+/**
+ * 查询数据源列表
+ * @param query 查询参数
+ */
+export function listConf(query: { [key: string]: any }) {
+    return request(`/gen/ds_conf/list`, {
+        method: `get`,
+        params: query,
+    });
 }
