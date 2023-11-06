@@ -242,11 +242,33 @@ export default [
                         component: './Tool/Code/Gen',
                     },
                     {
-                        title: '字段管理',
-                        icon: 'icon-gen-Type',
-                        name: 'type',
-                        path: '/tool/code/type',
-                        component: './Tool/Code/Type',
+                        title: '元数据管理',
+                        icon: 'icon-gen-metadata',
+                        name: 'metadata',
+                        path: '/tool/code/metadata',
+                        routes: [
+                            {
+                                title: '字段管理',
+                                icon: 'icon-gen-metadata-type',
+                                name: 'type',
+                                path: '/tool/code/metadata/type',
+                                component: './Tool/Code/Metadata/Type',
+                            },
+                            {
+                                title: '模板管理',
+                                icon: 'icon-gen-metadata-template',
+                                name: 'template',
+                                path: '/tool/code/metadata/group',
+                                component: './Tool/Code/Metadata/Template',
+                            },
+                            {
+                                title: '模板分组',
+                                icon: 'icon-gen-metadata-template_group',
+                                name: 'template_group',
+                                path: '/tool/code/metadata/template_group',
+                                component: './Tool/Code/Metadata/TemplateGroup',
+                            },
+                        ]
                     },
                 ],
             },

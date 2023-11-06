@@ -388,7 +388,7 @@ const Conf: React.FC = () => {
                                 rules={[{ required: true, message: '密码不能为空' }]}
                                 name="password"
                             >
-                                <Input.Password onChange={() => setSubmitPassword(0)} />
+                                <Input.Password autoComplete={'new-password'} onChange={() => setSubmitPassword(0)} />
                             </Form.Item>
 
                             {
