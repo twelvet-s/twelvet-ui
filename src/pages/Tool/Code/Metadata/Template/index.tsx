@@ -128,9 +128,7 @@ const Template: React.FC = () => {
      */
     const handleCancel = () => {
         setModal({ title: "", visible: false })
-
         form.resetFields()
-
     }
 
     /**
