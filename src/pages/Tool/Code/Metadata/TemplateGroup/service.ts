@@ -2,13 +2,13 @@ import {request} from '@umijs/max'
 import {download} from '@/utils/twelvet'
 
 // 请求的控制器名称
-const controller = "/gen/template_group";
+const controller = "/gen/templateGroup";
 
 /**
- * 查询模板分组关联列表
+ * 查询模板分组列表
  * @param query 查询参数
  */
-export function pageQueryTemplate_group(query: { [key: string]: any }) {
+export function pageQueryGroup(query: { [key: string]: any }) {
     return request(`${controller}/pageQuery`, {
         method: `get`,
         params: query
@@ -16,20 +16,20 @@ export function pageQueryTemplate_group(query: { [key: string]: any }) {
 }
 
 /**
- * 查询模板分组关联详细
+ * 查询模板分组详细
  * @param 主键
  */
-export function getTemplate_group(groupId: string | number) {
-    return request(`${controller}/${groupId}`, {
+export function getGroup(id: string | number) {
+    return request(`${controller}/${id}`, {
         method: `get`
     })
 }
 
 /**
- * 新增模板分组关联
+ * 新增模板分组
  * @param data 数据参数
  */
-export function addTemplate_group(data: { [key: string]: any }) {
+export function addGroup(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `post`,
         data: data
@@ -37,10 +37,10 @@ export function addTemplate_group(data: { [key: string]: any }) {
 }
 
 /**
- * 修改模板分组关联
+ * 修改模板分组
  * @param data 数据参数
  */
-export function updateTemplate_group(data: { [key: string]: any }) {
+export function updateGroup(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `put`,
         data: data
@@ -48,11 +48,11 @@ export function updateTemplate_group(data: { [key: string]: any }) {
 }
 
 /**
- * 删除模板分组关联
+ * 删除模板分组
  * @param 主键
  */
-export function delTemplate_group(groupId: string | number) {
-    return request(`${controller}/${groupId}`, {
+export function delGroup(id: string | number) {
+    return request(`${controller}/${id}`, {
         method: `delete`
     })
 }
@@ -61,6 +61,18 @@ export function delTemplate_group(groupId: string | number) {
  * 导出数据
  * @param params
  */
-export async function exportTemplate_group(params?: { [key: string]: any }) {
+export async function exportGroup(params?: { [key: string]: any }) {
     return download(`${controller}/export`, params);
+}
+
+
+/**
+ * 查询模板列表
+ * @param query 查询参数
+ */
+export function listQueryTemplate(query: { [key: string]: any }) {
+    return request(`${controller}/queryTemplateList`, {
+        method: `get`,
+        params: query
+    })
 }

@@ -258,7 +258,7 @@ export default [
                                 title: '模板管理',
                                 icon: 'icon-gen-metadata-template',
                                 name: 'template',
-                                path: '/tool/code/metadata/group',
+                                path: '/tool/code/metadata/template',
                                 component: './Tool/Code/Metadata/Template',
                             },
                             {

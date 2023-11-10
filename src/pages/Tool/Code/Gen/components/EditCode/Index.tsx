@@ -16,11 +16,13 @@ import {
     Select,
     Tabs,
     TreeSelect,
+    TabsProps,
 } from 'antd';
 import Form from 'antd/lib/form';
 import { getInfo, getMenus, getOptionSelect, putGen } from './service';
 import { makeTree, system } from '@/utils/twelvet';
 import TagList from './TagList';
+import TemplateGroupSearch from './TemplateGroupSearch/Index';
 
 /**
  * 生成代码编辑
@@ -32,14 +34,26 @@ const EditCode: React.FC<{
     };
     onClose: () => void;
 }> = (props) => {
+
+    /**
+     * 主子表类型模板
+     */
+    const TPL_SUB = 2
+
+    /**
+     * 树表类型模板
+     */
+    const TPL_TREE = 3
+
+    // 生成模板切换
+    const [tplGroupId, setTplGroupId] = useState<number>();
+
+
     const acForm = useRef<ActionType>();
 
     const formRef = useRef<FormInstance>();
 
     const [loading, setLoading] = useState<boolean>(true);
-
-    // 生成模板切换
-    const [tplCategory, setTplCategory] = useState<string>();
 
     const { info, onClose } = props;
 
@@ -55,7 +69,7 @@ const EditCode: React.FC<{
 
     const [tableForm] = Form.useForm();
 
-    const [tablesInfo, setTablesInfo] = useState<{}>({});
+    const [tablesInfo, setTablesInfo] = useState({});
 
     // 菜单数据源
     const [menuTree, setMenuTree] = useState<Record<string, any>[]>([]);
@@ -158,16 +172,15 @@ const EditCode: React.FC<{
 
             await getInfo(tableId).then(async ({ data: tableData }) => {
                 setDataSource(tableData.rows);
-
                 // 设置生成模板初始数据
-                setTplCategory(tableData.info.tplCategory);
+                setTplGroupId(tableData.info.tplGroupId);
+
 
                 // 制作联动表数据
-
                 setFormInfo(tableData.info.columns);
 
                 // 配置链表参数
-                if (tableData.info.tplCategory === 'sub') {
+                if (tableData.info.tplGroupId === TPL_SUB) {
                     tableData.info.subTable = [
                         tableData.info.subTableName,
                         tableData.info.subTableFkName,
@@ -200,13 +213,14 @@ const EditCode: React.FC<{
                     );
 
                     await getOptionSelect().then(async ({ data: optionSelectData }) => {
-                        const infos = {};
+                        const infos: any = {};
                         optionSelectData.map((item: { dictName: string; dictType: string }) => {
                             const dictType = item.dictType;
                             infos[dictType] = {
                                 text: `${item.dictName}：${dictType}`,
                                 status: 'Default',
                             };
+                            return true
                         });
                         setTablesInfo(infos);
                     });
@@ -243,6 +257,7 @@ const EditCode: React.FC<{
                             item.isList = item.isList ? item.isList[0] : null;
                             item.isQuery = item.isQuery ? item.isQuery[0] : null;
                             item.isRequired = item.isRequired ? item.isRequired[0] : null;
+                            return false
                         });
 
                         // 配置参数
@@ -255,7 +270,7 @@ const EditCode: React.FC<{
                         }
 
                         // 树表查询
-                        if (params.tplCategory === 'tree') {
+                        if (params.tplGroupId === TPL_TREE) {
                             params.params = {
                                 treeCode: params.treeCode,
                                 treeName: params.treeName,
@@ -263,7 +278,7 @@ const EditCode: React.FC<{
                             };
                         }
 
-                        if (params.tplCategory === 'sub') {
+                        if (params.tplGroupId === TPL_SUB) {
                             const subTable = params.subTable;
                             params.subTableName = subTable[0];
                             params.subTableFkName = subTable[1];
@@ -556,7 +571,7 @@ const EditCode: React.FC<{
                         <Col md={12} sm={24} xs={24}>
                             <Form.Item
                                 {...formItemLayout}
-                                name="tplCategory"
+                                name="tplGroupId"
                                 label={'生成模板'}
                                 rules={[
                                     {
@@ -565,16 +580,7 @@ const EditCode: React.FC<{
                                     },
                                 ]}
                             >
-                                <Select
-                                    onChange={(value: string) => {
-                                        // 切换数据显示
-                                        setTplCategory(value);
-                                    }}
-                                >
-                                    <Select.Option value="crud">单表（增删改查）</Select.Option>
-                                    <Select.Option value="tree">树表（增删改查）</Select.Option>
-                                    <Select.Option value="sub">主子表（增删改查）</Select.Option>
-                                </Select>
+                                <TemplateGroupSearch onChange={setTplGroupId} />
                             </Form.Item>
                         </Col>
 
@@ -661,7 +667,7 @@ const EditCode: React.FC<{
                         </Col>
                     </Row>
 
-                    {tplCategory === `sub` && (
+                    {tplGroupId === TPL_SUB && (
                         <>
                             <Divider plain>关联信息</Divider>
 
@@ -678,14 +684,16 @@ const EditCode: React.FC<{
                                             },
                                         ]}
                                     >
-                                        <Cascader options={formTables} expandTrigger="hover" />
+                                        <Cascader showSearch options={formTables} expandTrigger="hover" />
                                     </Form.Item>
                                 </Col>
                             </Row>
                         </>
-                    )}
+                    )
 
-                    {tplCategory === `tree` && (
+                    }
+
+                    {tplGroupId === TPL_TREE && (
                         <>
                             <Divider plain>其他信息</Divider>
 
@@ -784,7 +792,9 @@ const EditCode: React.FC<{
                                 </Col>
                             </Row>
                         </>
-                    )}
+                    )
+
+                    }
                 </>
             ),
         },

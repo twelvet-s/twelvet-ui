@@ -73,11 +73,11 @@ const Gen: React.FC = () => {
 
     /**
      *
-     * @param tableName 同步表结构域
+     * @param tableId 同步表结构域
      */
-    const refSynchDb = async (tableName: string) => {
+    const refSynchDb = async (tableId: number) => {
         try {
-            const { code, msg } = await synchDb(tableName);
+            const { code, msg } = await synchDb(tableId);
             if (code !== 200) {
                 return message.error(msg);
             }
@@ -170,7 +170,7 @@ const Gen: React.FC = () => {
                             </a>
                         </Popconfirm>
                         <Divider type="vertical" />
-                        <Popconfirm onConfirm={() => refSynchDb(record.tableName)} title="确定强制同步结构吗">
+                        <Popconfirm onConfirm={() => refSynchDb(record.tableId)} title="确定强制同步结构吗">
                             <a href="#">
                                 <Space>
                                     <SyncOutlined spin />
@@ -179,7 +179,7 @@ const Gen: React.FC = () => {
                             </a>
                         </Popconfirm>
                         <Divider type="vertical" />
-                        <Popconfirm onConfirm={() => batchGenCode([record.tableName])} title="确定生成吗">
+                        <Popconfirm onConfirm={() => batchGenCode([record.tableId])} title="确定生成吗">
                             <a href="#">
                                 <Space>
                                     <FileZipOutlined />
@@ -232,11 +232,11 @@ const Gen: React.FC = () => {
                         key={'generateTool'}
                         disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
                         onConfirm={() => {
-                            const tableNames = selectedRows?.map((item) => {
-                                return item.tableName;
+                            const tableids = selectedRows?.map((item) => {
+                                return item.tableId;
                             });
-                            if (tableNames) {
-                                batchGenCode(tableNames);
+                            if (tableids) {
+                                batchGenCode(tableids);
                             }
                         }}
                         title="是否批量生成"

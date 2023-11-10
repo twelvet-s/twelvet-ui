@@ -1,6 +1,6 @@
-import React, {useState, useRef} from 'react'
-import {PageContainer, ProTable} from '@ant-design/pro-components'
-import type {ActionType, ProColumns} from '@ant-design/pro-components'
+import React, { useState, useRef } from 'react'
+import { PageContainer, ProTable } from '@ant-design/pro-components'
+import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import {
     DeleteOutlined,
     FundProjectionScreenOutlined,
@@ -8,25 +8,28 @@ import {
     EditOutlined,
     CloseOutlined
 } from '@ant-design/icons'
-import {Popconfirm, Button, message, Modal, Form, Input, Space, Divider} from 'antd'
-import {FormInstance} from 'antd/lib/form'
+import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider } from 'antd'
+import { FormInstance } from 'antd/lib/form'
 import {
-    pageQueryTemplate_group,
-    getTemplate_group,
-    delTemplate_group,
-    addTemplate_group,
-    updateTemplate_group,
-    exportTemplate_group
+    pageQueryGroup,
+    getGroup,
+    delGroup,
+    addGroup,
+    updateGroup,
+    exportGroup
 } from './service'
-import {system} from '@/utils/twelvet'
-import {isArray} from 'lodash'
-import {proTableConfigs} from '@/setting'
+import { system } from '@/utils/twelvet'
+import { isArray } from 'lodash'
+import { proTableConfigs } from '@/setting'
 
+import DatePickerTWT from '@/components/TwelveT/DatePicker/Index'
+import moment from 'moment'
+import TemplateSearch from './TemplateSearch/Index'
 
 /**
- * 模板分组关联模块
+ * 模板分组模块
  */
-const Template_group: React.FC = () => {
+const Group: React.FC = () => {
 
     const [state] = useState<{
         pageSize: number
@@ -35,7 +38,7 @@ const Template_group: React.FC = () => {
     });
 
     // 显示Modal
-    const [modal, setModal] = useState<{ title: string, visible: boolean }>({title: ``, visible: false})
+    const [modal, setModal] = useState<{ title: string, visible: boolean }>({ title: ``, visible: false })
 
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false)
@@ -48,31 +51,31 @@ const Template_group: React.FC = () => {
 
     const formItemLayout = {
         labelCol: {
-            xs: {span: 4},
-            sm: {span: 4},
+            xs: { span: 4 },
+            sm: { span: 4 },
         },
         wrapperCol: {
-            xs: {span: 18},
-            sm: {span: 18},
+            xs: { span: 18 },
+            sm: { span: 18 },
         },
     }
 
 
     /**
-     * 新增模板分组关联数据
+     * 新增模板分组数据
      * @param row row
      */
     const refPost = async () => {
-        setModal({title: "新增", visible: true})
+        setModal({ title: "新增", visible: true })
     }
 
     /**
-     * 获取修改模板分组关联信息
+     * 获取修改模板分组信息
      * @param row row
      */
     const refPut = async (row: { [key: string]: any }) => {
         try {
-            const {code, msg, data} = await getTemplate_group(row.groupId)
+            const { code, msg, data } = await getGroup(row.id)
             if (code !== 200) {
                 return message.error(msg)
             }
@@ -82,7 +85,7 @@ const Template_group: React.FC = () => {
             form.setFieldsValue(data)
 
             // 设置Modal状态
-            setModal({title: "修改", visible: true})
+            setModal({ title: "修改", visible: true })
 
         } catch (e) {
             system.error(e)
@@ -90,23 +93,23 @@ const Template_group: React.FC = () => {
     }
 
     /**
-     * 移除模板分组关联数据
-     * @param row groupId
+     * 移除模板分组数据
+     * @param row id
      */
-    const refRemove = async (groupId: (string | number)[] | string | undefined) => {
+    const refRemove = async (id: (string | number)[] | string | undefined) => {
         try {
-            if (!groupId) {
+            if (!id) {
                 return true
             }
 
             let params
-            if (isArray(groupId)) {
-                params = groupId.join(",")
+            if (isArray(id)) {
+                params = id.join(",")
             } else {
-                params = groupId
+                params = id
             }
 
-            const {code, msg} = await delTemplate_group(params)
+            const { code, msg } = await delGroup(params)
 
             if (code !== 200) {
                 return message.error(msg)
@@ -126,14 +129,14 @@ const Template_group: React.FC = () => {
      * 取消Modal的显示
      */
     const handleCancel = () => {
-        setModal({title: "", visible: false})
+        setModal({ title: "", visible: false })
 
         form.resetFields()
 
     }
 
     /**
-     * 保存模板分组关联数据
+     * 保存模板分组数据
      */
     const onSave = () => {
         form
@@ -149,7 +152,7 @@ const Template_group: React.FC = () => {
                         const {
                             code,
                             msg
-                        } = fields.groupId === 0 ? await addTemplate_group(fields) : await updateTemplate_group(fields)
+                        } = fields.id === 0 ? await addGroup(fields) : await updateGroup(fields)
                         if (code !== 200) {
                             return message.error(msg)
                         }
@@ -168,12 +171,18 @@ const Template_group: React.FC = () => {
                         setLoadingModal(false)
                     }
                 }).catch(e => {
-            system.error(e)
-        })
+                    system.error(e)
+                })
     }
 
     // Form参数
     const columns: ProColumns<any>[] = [
+        {
+            title: '分组名称', ellipsis: true, width: 200, valueType: "text", dataIndex: 'groupName',
+        },
+        {
+            title: '分组描述', search: false, ellipsis: true, width: 200, valueType: "text", dataIndex: 'groupDesc',
+        },
         {
             title: '操作',
             fixed: 'right',
@@ -185,20 +194,20 @@ const Template_group: React.FC = () => {
                     <>
                         <a onClick={() => refPut(row)}>
                             <Space>
-                                <EditOutlined/>
+                                <EditOutlined />
                                 修改
                             </Space>
                         </a>
 
-                        <Divider type="vertical"/>
+                        <Divider type="vertical" />
 
                         <Popconfirm
-                            onConfirm={() => refRemove(row.groupId)}
+                            onConfirm={() => refRemove(row.id)}
                             title="确定删除吗"
                         >
                             <a href='#'>
                                 <Space>
-                                    <CloseOutlined/>
+                                    <CloseOutlined />
                                     删除
                                 </Space>
                             </a>
@@ -221,11 +230,11 @@ const Template_group: React.FC = () => {
                 }}
                 actionRef={acForm}
                 formRef={formRef}
-                rowKey="groupId"
+                rowKey="id"
                 columns={columns}
                 request={async (params) => {
-                    const {data} = await pageQueryTemplate_group(params);
-                    const {records, total} = data;
+                    const { data } = await pageQueryGroup(params);
+                    const { records, total } = data;
                     return Promise.resolve({
                         data: records,
                         success: true,
@@ -236,7 +245,7 @@ const Template_group: React.FC = () => {
                 beforeSearchSubmit={(params) => {
                     // 分隔搜索参数
                     if (params.between) {
-                        const {between} = params
+                        const { between } = params
                         // 移除参数
                         delete params.between
 
@@ -246,9 +255,9 @@ const Template_group: React.FC = () => {
                     }
                     return params
                 }}
-                toolBarRender={(action, {selectedRowKeys}) => [
+                toolBarRender={(action, { selectedRowKeys }) => [
                     <Button key='add' type="default" onClick={refPost}>
-                        <PlusOutlined/>
+                        <PlusOutlined />
                         新增
                     </Button>,
                     <Popconfirm
@@ -261,7 +270,7 @@ const Template_group: React.FC = () => {
                             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
                             type="primary" danger
                         >
-                            <DeleteOutlined/>
+                            <DeleteOutlined />
                             批量删除
                         </Button>
                     </Popconfirm>
@@ -270,7 +279,7 @@ const Template_group: React.FC = () => {
             />
 
             <Modal
-                title={`${modal.title}模板分组关联`}
+                title={`${modal.title}模板分组`}
                 open={modal.visible}
                 okText={`${modal.title}`}
                 confirmLoading={loadingModal}
@@ -287,10 +296,37 @@ const Template_group: React.FC = () => {
                         hidden
                         {...formItemLayout}
                         label="主键"
-                        name="groupId"
+                        name="id"
                         initialValue={0}
                     >
-                        <Input/>
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
+                        label="分组名称"
+                        rules={[{ required: true, message: '分组名称不能为空' }]}
+                        name="groupName"
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
+                        label="模板类型"
+                        rules={[{ required: true, message: '模板类型不能为空' }]}
+                        name="templateIdList"
+                    >
+                        <TemplateSearch />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
+                        label="分组描述"
+                        rules={[{ required: false, message: '分组描述不能为空' }]}
+                        name="groupDesc"
+                    >
+                        <Input />
                     </Form.Item>
 
                 </Form>
@@ -302,4 +338,4 @@ const Template_group: React.FC = () => {
 
 }
 
-export default Template_group
+export default Group

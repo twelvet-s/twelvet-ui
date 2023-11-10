@@ -34,6 +34,16 @@ export async function getOptionSelect() {
 }
 
 /**
+ * 获取字典数据
+ * @returns
+ */
+export async function selectGenGroupAll() {
+    return request(`${controller}/selectGenGroupAll`, {
+        method: 'GET',
+    });
+}
+
+/**
  * 保存数据
  * @returns
  */

@@ -1,32 +1,34 @@
-import React, {useState, useRef} from 'react'
-import {PageContainer, ProTable} from '@ant-design/pro-components'
-import type {ActionType, ProColumns} from '@ant-design/pro-components'
+import React, { useState, useRef } from 'react'
+import { PageContainer, ProTable } from '@ant-design/pro-components'
+import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import {
     DeleteOutlined,
-    FundProjectionScreenOutlined,
     PlusOutlined,
     EditOutlined,
     CloseOutlined
 } from '@ant-design/icons'
-import {Popconfirm, Button, message, Modal, Form, Input, Space, Divider} from 'antd'
-import {FormInstance} from 'antd/lib/form'
+import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider, Row, Col } from 'antd'
+import { FormInstance } from 'antd/lib/form'
+import AceEditor from "react-ace"
+import "ace-builds/src-noconflict/mode-java"
+import "ace-builds/src-noconflict/theme-monokai"
+import "ace-builds/src-noconflict/ext-language_tools"
 import {
-    pageQueryGroup,
-    getGroup,
-    delGroup,
-    addGroup,
-    updateGroup,
-    exportGroup
+    pageQueryTemplate,
+    getTemplate,
+    delTemplate,
+    addTemplate,
+    updateTemplate
 } from './service'
-import {system} from '@/utils/twelvet'
-import {isArray} from 'lodash'
-import {proTableConfigs} from '@/setting'
+import { system } from '@/utils/twelvet'
+import { isArray } from 'lodash'
+import { proTableConfigs } from '@/setting'
 
 
 /**
- * 模板分组模块
+ * 代码生成业务模板模块
  */
-const Group: React.FC = () => {
+const Template: React.FC = () => {
 
     const [state] = useState<{
         pageSize: number
@@ -35,7 +37,7 @@ const Group: React.FC = () => {
     });
 
     // 显示Modal
-    const [modal, setModal] = useState<{ title: string, visible: boolean }>({title: ``, visible: false})
+    const [modal, setModal] = useState<{ title: string, visible: boolean }>({ title: ``, visible: false })
 
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false)
@@ -48,41 +50,40 @@ const Group: React.FC = () => {
 
     const formItemLayout = {
         labelCol: {
-            xs: {span: 4},
-            sm: {span: 4},
+            xs: { span: 6 },
+            sm: { span: 6 },
         },
         wrapperCol: {
-            xs: {span: 18},
-            sm: {span: 18},
+            xs: { span: 16 },
+            sm: { span: 16 },
         },
     }
 
 
     /**
-     * 新增模板分组数据
+     * 新增代码生成业务模板数据
      * @param row row
      */
     const refPost = async () => {
-        setModal({title: "新增", visible: true})
+        setModal({ title: "新增", visible: true })
     }
 
     /**
-     * 获取修改模板分组信息
+     * 获取修改代码生成业务模板信息
      * @param row row
      */
     const refPut = async (row: { [key: string]: any }) => {
         try {
-            const {code, msg, data} = await getGroup(row.id)
+            const { code, msg, data } = await getTemplate(row.id)
             if (code !== 200) {
                 return message.error(msg)
             }
-
 
             // 赋值表单数据
             form.setFieldsValue(data)
 
             // 设置Modal状态
-            setModal({title: "修改", visible: true})
+            setModal({ title: "修改", visible: true })
 
         } catch (e) {
             system.error(e)
@@ -90,7 +91,7 @@ const Group: React.FC = () => {
     }
 
     /**
-     * 移除模板分组数据
+     * 移除代码生成业务模板数据
      * @param row id
      */
     const refRemove = async (id: (string | number)[] | string | undefined) => {
@@ -106,7 +107,7 @@ const Group: React.FC = () => {
                 params = id
             }
 
-            const {code, msg} = await delGroup(params)
+            const { code, msg } = await delTemplate(params)
 
             if (code !== 200) {
                 return message.error(msg)
@@ -126,14 +127,14 @@ const Group: React.FC = () => {
      * 取消Modal的显示
      */
     const handleCancel = () => {
-        setModal({title: "", visible: false})
+        setModal({ title: "", visible: false })
 
         form.resetFields()
 
     }
 
     /**
-     * 保存模板分组数据
+     * 保存代码生成业务模板数据
      */
     const onSave = () => {
         form
@@ -149,7 +150,7 @@ const Group: React.FC = () => {
                         const {
                             code,
                             msg
-                        } = fields.id === 0 ? await addGroup(fields) : await updateGroup(fields)
+                        } = fields.id === 0 ? await addTemplate(fields) : await updateTemplate(fields)
                         if (code !== 200) {
                             return message.error(msg)
                         }
@@ -168,18 +169,21 @@ const Group: React.FC = () => {
                         setLoadingModal(false)
                     }
                 }).catch(e => {
-            system.error(e)
-        })
+                    system.error(e)
+                })
     }
 
     // Form参数
     const columns: ProColumns<any>[] = [
-                {
-                    title: '分组名称', ellipsis: true, width: 200, valueType: "text", dataIndex: 'groupName',
-                },
-                {
-                    title: '分组描述', ellipsis: true, width: 200, valueType: "text", dataIndex: 'groupDesc',
-                },
+        {
+            title: '模板名称', ellipsis: true, width: 200, valueType: "text", dataIndex: 'templateName',
+        },
+        {
+            title: '模板路径', search: false, ellipsis: true, width: 200, valueType: "text", dataIndex: 'generatorPath',
+        },
+        {
+            title: '模板描述', search: false, ellipsis: true, width: 200, valueType: "text", dataIndex: 'templateDesc',
+        },
         {
             title: '操作',
             fixed: 'right',
@@ -191,12 +195,12 @@ const Group: React.FC = () => {
                     <>
                         <a onClick={() => refPut(row)}>
                             <Space>
-                                <EditOutlined/>
+                                <EditOutlined />
                                 修改
                             </Space>
                         </a>
 
-                        <Divider type="vertical"/>
+                        <Divider type="vertical" />
 
                         <Popconfirm
                             onConfirm={() => refRemove(row.id)}
@@ -204,7 +208,7 @@ const Group: React.FC = () => {
                         >
                             <a href='#'>
                                 <Space>
-                                    <CloseOutlined/>
+                                    <CloseOutlined />
                                     删除
                                 </Space>
                             </a>
@@ -230,8 +234,8 @@ const Group: React.FC = () => {
                 rowKey="id"
                 columns={columns}
                 request={async (params) => {
-                    const {data} = await pageQueryGroup(params);
-                    const {records, total} = data;
+                    const { data } = await pageQueryTemplate(params);
+                    const { records, total } = data;
                     return Promise.resolve({
                         data: records,
                         success: true,
@@ -242,7 +246,7 @@ const Group: React.FC = () => {
                 beforeSearchSubmit={(params) => {
                     // 分隔搜索参数
                     if (params.between) {
-                        const {between} = params
+                        const { between } = params
                         // 移除参数
                         delete params.between
 
@@ -252,9 +256,9 @@ const Group: React.FC = () => {
                     }
                     return params
                 }}
-                toolBarRender={(action, {selectedRowKeys}) => [
+                toolBarRender={(action, { selectedRowKeys }) => [
                     <Button key='add' type="default" onClick={refPost}>
-                        <PlusOutlined/>
+                        <PlusOutlined />
                         新增
                     </Button>,
                     <Popconfirm
@@ -267,7 +271,7 @@ const Group: React.FC = () => {
                             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
                             type="primary" danger
                         >
-                            <DeleteOutlined/>
+                            <DeleteOutlined />
                             批量删除
                         </Button>
                     </Popconfirm>
@@ -276,7 +280,8 @@ const Group: React.FC = () => {
             />
 
             <Modal
-                title={`${modal.title}模板分组`}
+                width={'90%'}
+                title={`${modal.title}模板`}
                 open={modal.visible}
                 okText={`${modal.title}`}
                 confirmLoading={loadingModal}
@@ -289,41 +294,95 @@ const Group: React.FC = () => {
                 <Form
                     form={form}
                 >
-                    <Form.Item
-                        hidden
-                        {...formItemLayout}
-                        label="主键"
-                        name="id"
-                        initialValue={0}
-                    >
-                        <Input/>
-                    </Form.Item>
 
-                                    <Form.Item
-                                        {...formItemLayout}
-                                        label="分组名称"
-                                        rules={[{required: false, message: '分组名称不能为空'}]}
-                                        name="groupName"
-                                    >
-                                        <Input/>
-                                    </Form.Item>
+                    <Row>
+                        <Col sm={18} xs={24}>
+                            <Form.Item
+                                labelCol={
+                                    {
+                                        xs: { span: 1 },
+                                        sm: { span: 1 },
+                                    }
+                                }
+                                wrapperCol={
+                                    {
+                                        xs: { span: 23 },
+                                        sm: { span: 23 },
+                                    }
+                                }
+                                rules={[{ required: true, message: '模板代码不能为空' }]}
+                                name="templateCode"
+                            >
+                                <AceEditor
+                                    placeholder={'输入模板代码'}
+                                    mode={'java'}
+                                    theme={'monokai'}
+                                    name="templateEditor"
+                                    width={'100%'}
+                                    height={'600px'}
+                                    fontSize={16}
+                                    showPrintMargin={true}
+                                    showGutter={true}
+                                    highlightActiveLine={true}
+                                    setOptions={{
+                                        enableBasicAutocompletion: true,
+                                        enableLiveAutocompletion: true,
+                                        enableSnippets: true,
+                                        showLineNumbers: true,
+                                        tabSize: 2,
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
 
-                                    <Form.Item
-                                        {...formItemLayout}
-                                        label="分组描述"
-                                        rules={[{required: false, message: '分组描述不能为空'}]}
-                                        name="groupDesc"
-                                    >
-                                        <Input/>
-                                    </Form.Item>
+                        <Col sm={6} xs={24}>
+                            <Form.Item
+                                hidden
+                                {...formItemLayout}
+                                label="主键"
+                                name="id"
+                                initialValue={0}
+                            >
+                                <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                                {...formItemLayout}
+                                label="模板名称"
+                                rules={[{ required: true, message: '模板名称不能为空' }]}
+                                name="templateName"
+                            >
+                                <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                                {...formItemLayout}
+                                label="模板路径"
+                                rules={[{ required: true, message: '模板路径不能为空' }]}
+                                name="generatorPath"
+                            >
+                                <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                                {...formItemLayout}
+                                label="模板描述"
+                                rules={[{ required: true, message: '模板描述不能为空' }]}
+                                name="templateDesc"
+                            >
+                                <Input.TextArea />
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
                 </Form>
 
 
             </Modal>
+
         </PageContainer>
     )
 
 }
 
-export default Group
+export default Template

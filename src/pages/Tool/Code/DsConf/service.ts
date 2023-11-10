@@ -2,7 +2,7 @@ import { request } from '@umijs/max';
 import { download } from '@/utils/twelvet';
 
 // 请求的控制器名称
-const controller = '/gen/ds_conf';
+const controller = '/gen/dsConf';
 
 /**
  * 查询数据源列表

@@ -1,8 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Tabs, Skeleton } from 'antd';
-import { getInfo } from './service';
-import { system } from '@/utils/twelvet';
-import styles from './styles.less';
+import React, { useState, useEffect, ReactElement, useRef } from 'react'
+import { Button, Col, Modal, Row, Tree, message } from 'antd'
+import AceEditor from "react-ace"
+import "ace-builds/src-noconflict/mode-java"
+import "ace-builds/src-noconflict/theme-monokai"
+import "ace-builds/src-noconflict/ext-language_tools"
+import { getInfo } from './service'
+import { system } from '@/utils/twelvet'
+import { CopyOutlined, DownOutlined, FileTextOutlined } from '@ant-design/icons'
+
+type treeType = {
+    title: string
+    code?: string
+    key: string
+    codePath?: string
+    fileName?: string
+    children: treeType[]
+    icon?: ReactElement
+};
 
 /**
  * 字典模块数据管理
@@ -16,31 +30,22 @@ const PreviewCode: React.FC<{
 }> = (props) => {
     const { info, onClose } = props;
 
-    const [codeData, setCodeData] = useState<{
-        'vm/java/controller.java.vm': string;
-        'vm/java/service.java.vm': string;
-        'vm/java/serviceImpl.java.vm': string;
-        'vm/java/mapper.java.vm': string;
-        'vm/xml/mapper.xml.vm': string;
-        'vm/java/domain.java.vm': string;
-        'vm/react/index.tsx.vm': string;
-        'vm/react/index-tree.tsx.vm': string;
-        'vm/react/service.ts.vm': string;
-        'vm/sql/sql.vm': string;
-    }>({
-        'vm/java/controller.java.vm': '',
-        'vm/java/service.java.vm': '',
-        'vm/java/serviceImpl.java.vm': '',
-        'vm/java/mapper.java.vm': '',
-        'vm/xml/mapper.xml.vm': '',
-        'vm/java/domain.java.vm': '',
-        'vm/react/index.tsx.vm': '',
-        'vm/react/index-tree.tsx.vm': '',
-        'vm/react/service.ts.vm': '',
-        'vm/sql/sql.vm': '',
-    });
+    const [codeData, setCodeData] = useState<treeType[]>([])
 
-    const [loading, setLoading] = useState<boolean>(false);
+    const [aceValue, setAceValue] = useState<string>('')
+
+    const editorRef = useRef();
+
+    const handleCopyClick = () => {
+        // 获取编辑器的内容
+        const content = editorRef.current?.editor.getValue();
+        // 将内容复制到剪切板
+        navigator.clipboard.writeText(content).then(() => {
+            message.success('Success to Copy')
+        }, (err) => {
+            message.error(`Failed to Copy：${err}`)
+        });
+    };
 
     /**
      * 获取信息
@@ -48,122 +53,46 @@ const PreviewCode: React.FC<{
      */
     const refGetInfo = async (tableId: number) => {
         try {
-            setLoading(true);
-            const { data } = await getInfo(tableId);
+            const { data } = await getInfo(tableId)
 
-            setCodeData(data);
+
+            const result: treeType[] = []
+
+            data.forEach((item: {
+                code: string
+                codePath: string
+            }) => {
+                const pathParts = item.codePath.replace(/\\/g, '/').replace(/\/+/g, '/').split('/');
+                let currentLevel = result;
+                for (let i = 0; i < pathParts.length - 1; i++) {
+                    if (!currentLevel.some(child => child.title === pathParts[i])) {
+                        currentLevel.push({
+                            title: pathParts[i],
+                            key: `${i}-${Math.random().toString(36).substring(2, 8)}`,
+                            children: []
+                        });
+                    }
+
+                    currentLevel = currentLevel.find(child => child.title === pathParts[i])!.children
+
+                }
+                if (!aceValue) {
+                    setAceValue(item.code)
+                }
+                currentLevel.push({
+                    title: pathParts[pathParts.length - 1],
+                    key: `${pathParts.length - 1}-${Math.random().toString(36).substring(2, 8)}`,
+                    icon: <FileTextOutlined />,
+                    children: [],
+                    code: item.code,
+                });
+            });
+
+            setCodeData(result)
         } catch (e) {
-            system.error(e);
-        } finally {
-            setLoading(false);
+            system.error(e)
         }
     };
-
-    const tabsiItems: TabsProps['items'] = [
-        {
-            key: '1',
-            label: `Controller.java`,
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>{codeData['vm/java/controller.java.vm']}</code>
-                    </pre>
-                </>
-            ),
-        },
-        {
-            key: '2',
-            label: `Service.java`,
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>{codeData['vm/java/service.java.vm']}</code>
-                    </pre>
-                </>
-            ),
-        },
-        {
-            key: '3',
-            label: `ServiceImpl.java`,
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>{codeData['vm/java/serviceImpl.java.vm']}</code>
-                    </pre>
-                </>
-            ),
-        },
-        {
-            key: '4',
-            label: `Mapper.java`,
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>{codeData['vm/java/mapper.java.vm']}</code>
-                    </pre>
-                </>
-            ),
-        },
-        {
-            key: '5',
-            label: `Mapper.xml`,
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>{codeData['vm/xml/mapper.xml.vm']}</code>
-                    </pre>
-                </>
-            ),
-        },
-        {
-            key: '6',
-            label: `Domain.java`,
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>{codeData['vm/java/domain.java.vm']}</code>
-                    </pre>
-                </>
-            ),
-        },
-        {
-            key: '7',
-            label: codeData['vm/react/index.tsx.vm'] ? 'index.tsx' : 'index-tree.tsx',
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>
-                            {codeData['vm/react/index.tsx.vm']
-                                ? codeData['vm/react/index.tsx.vm']
-                                : codeData['vm/react/index-tree.tsx.vm']}
-                        </code>
-                    </pre>
-                </>
-            ),
-        },
-        {
-            key: '8',
-            label: 'service.ts',
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>{codeData['vm/react/service.ts.vm']}</code>
-                    </pre>
-                </>
-            ),
-        },
-        {
-            key: '9',
-            label: 'SQL',
-            children: (
-                <>
-                    <pre className={styles.preCode}>
-                        <code>{codeData['vm/sql/sql.vm']}</code>
-                    </pre>
-                </>
-            ),
-        },
-    ];
 
     /**
      * 初始化数据信息
@@ -177,16 +106,69 @@ const PreviewCode: React.FC<{
     return (
         <Modal
             title={`代码预览`}
-            width={'80%'}
+            width={'90%'}
             open={info.visible}
             onCancel={() => {
+                setAceValue('')
                 onClose();
             }}
             footer={null}
         >
-            <Skeleton active loading={loading}>
-                <Tabs defaultActiveKey="1" tabPosition="top" items={tabsiItems} />
-            </Skeleton>
+            <Row>
+                <Col sm={8} xs={24}>
+                    <Tree
+                        showIcon
+                        defaultSelectedKeys={['0-0-0']}
+                        switcherIcon={<DownOutlined />}
+                        treeData={codeData}
+                        defaultExpandAll={true}
+                        onSelect={(_, e) => {
+                            if (e.node.code) {
+                                setAceValue(e.node.code)
+                            }
+
+                        }}
+                    />
+                </Col>
+
+                <Col sm={16} xs={24}>
+                    <div style={{
+                        position: 'relative'
+                    }}>
+                        <AceEditor
+                            ref={editorRef}
+                            mode={'java'}
+                            theme={'monokai'}
+                            name="templateEditor"
+                            width={'100%'}
+                            height={'600px'}
+                            fontSize={16}
+                            showPrintMargin={true}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            value={aceValue}
+                            readOnly={true}
+                            setOptions={{
+                                enableBasicAutocompletion: true,
+                                enableLiveAutocompletion: true,
+                                enableSnippets: true,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                            }}
+                        />
+                        <Button
+                            style={{
+                                position: 'absolute',
+                                top: 10,
+                                right: 35
+                            }}
+                            onClick={handleCopyClick}
+                        >
+                            <CopyOutlined />
+                        </Button>
+                    </div>
+                </Col>
+            </Row>
         </Modal>
     );
 };

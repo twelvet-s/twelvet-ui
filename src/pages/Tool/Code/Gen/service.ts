@@ -29,11 +29,11 @@ export async function remove(tableIds: (string | number)[]) {
 
 /**
  * 同步表结构
- * @param tableName 表ID
+ * @param tableId 表ID
  */
-export async function synchDb(tableName: string) {
-    return request(`${controller}/synchDb/${tableName}`, {
-        method: 'GET',
+export async function synchDb(tableId: number) {
+    return request(`${controller}/synchDb/${tableId}`, {
+        method: 'POST',
     });
 }
 
@@ -41,8 +41,8 @@ export async function synchDb(tableName: string) {
  * 生成代码
  * @param tableNames 表名称
  */
-export async function batchGenCode(tableNames: string[]) {
-    return download(`${controller}/batchGenCode?tables=${tableNames}`);
+export async function batchGenCode(tableids: number[]) {
+    return download(`${controller}/batchGenCode?tableIds=${tableids}`);
 }
 
 /**
@@ -50,7 +50,7 @@ export async function batchGenCode(tableNames: string[]) {
  * @param query 查询参数
  */
 export function listConf(query: { [key: string]: any }) {
-    return request(`/gen/ds_conf/list`, {
+    return request(`/gen/dsConf/listQuery`, {
         method: `get`,
         params: query,
     });
