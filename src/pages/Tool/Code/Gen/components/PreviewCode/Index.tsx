@@ -34,7 +34,7 @@ const PreviewCode: React.FC<{
 
     const [aceValue, setAceValue] = useState<string>('')
 
-    const editorRef = useRef();
+    const editorRef = useRef<any>();
 
     const handleCopyClick = () => {
         // 获取编辑器的内容
