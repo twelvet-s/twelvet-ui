@@ -70,9 +70,8 @@ export async function exportGroup(params?: { [key: string]: any }) {
  * 查询模板列表
  * @param query 查询参数
  */
-export function listQueryTemplate(query: { [key: string]: any }) {
+export function listQueryTemplate() {
     return request(`${controller}/queryTemplateList`, {
-        method: `get`,
-        params: query
+        method: `get`
     })
 }

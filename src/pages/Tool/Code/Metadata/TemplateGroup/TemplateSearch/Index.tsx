@@ -13,7 +13,7 @@ const TemplateSearch: React.FC<{
 
     const makeDsConf = async () => {
         try {
-            const { data } = await listQueryTemplate({})
+            const { data } = await listQueryTemplate()
 
             // 制作数据
             const tree: any = []

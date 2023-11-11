@@ -285,7 +285,7 @@ export const auth = (authStr: string) => {
         return true
     }
     const authArr = JSON.parse(auths);
-    if (authArr.includes('*:*:*')) {
+    if (authArr.includes('*:*:*') || authArr.includes('*')) {
         return false
     }
 
