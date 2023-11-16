@@ -1,5 +1,4 @@
 import TWT from '@/setting';
-import { isArray } from 'lodash';
 import { request, history } from '@umijs/max';
 
 /**
@@ -86,7 +85,7 @@ export const makeTree = (params: {
     const treeData = cloneData.filter((father: { [key: string]: any; children: any }) => {
         // 增强参数
         for (const key in enhance) {
-            father[key] = father[enhance[key]];
+            father[key] = father[enhance[key]]
         }
 
         // 循环找出每个父目录的子目录
@@ -181,6 +180,7 @@ export const reductionMenuList = (
             const reductionMenus = reductionMenuList(item.routes);
             res.push(...reductionMenus);
         }
+        return false
     });
 
     return res;
@@ -194,7 +194,7 @@ export const reductionMenuList = (
 const getFileNameFromContentDisposition = (contentDisposition: string) => {
     const regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
     const matches = regex.exec(contentDisposition);
-    if (matches != null && matches[1]) {
+    if (matches !== null && matches[1]) {
         let fileName = matches[1].replace(/['"]/g, '');
         // 解码文件名，如果有需要的话
         fileName = decodeURIComponent(fileName);
@@ -229,6 +229,7 @@ export const download = (url: string, params?: Record<string, any>, filename?: s
             if (!currentFileName) {
                 const contentDisposition = response.headers['content-disposition'];
                 if (!contentDisposition) {
+                    system.error('获取文件名称失败');
                     return response.data;
                 }
                 const name = getFileNameFromContentDisposition(contentDisposition)
