@@ -3,7 +3,6 @@ import { PageContainer, ProTable } from '@ant-design/pro-components'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import {
     DeleteOutlined,
-    FundProjectionScreenOutlined,
     PlusOutlined,
     EditOutlined,
     CloseOutlined
@@ -15,15 +14,11 @@ import {
     getGroup,
     delGroup,
     addGroup,
-    updateGroup,
-    exportGroup
-} from './service'
+    updateGroup} from './service'
 import { system } from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import { proTableConfigs } from '@/setting'
 
-import DatePickerTWT from '@/components/TwelveT/DatePicker/Index'
-import moment from 'moment'
 import TemplateSearch from './TemplateSearch/Index'
 
 /**
