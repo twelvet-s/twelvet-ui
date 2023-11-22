@@ -9,6 +9,19 @@ const History = () => {
     const items: CollapseProps['items'] = [
         {
             key: 11,
+            label: 'v3.2.0 - 2023-11-23',
+            children: (
+                <ol>
+                    <li>进入JDK 17 历程，兼容JDK 21</li>
+                    <li>支持多元化数据库兼容</li>
+                    <li>代码生成器动态化</li>
+                    <li>加入动态切换数据源</li>
+                    <li>优化Redis监控</li>
+                </ol>
+            ),
+        },
+        {
+            key: 11,
             label: 'v3.0.5 - 2023-7-31',
             children: (
                 <ol>
