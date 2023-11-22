@@ -8,7 +8,7 @@ const History = () => {
 
     const items: CollapseProps['items'] = [
         {
-            key: 11,
+            key: 12,
             label: 'v3.2.0 - 2023-11-23',
             children: (
                 <ol>
@@ -192,7 +192,7 @@ const History = () => {
     ];
 
     return (
-        <Collapse items={items} defaultActiveKey={[11]} className={styles.historyOl} />
+        <Collapse items={items} defaultActiveKey={[12]} className={styles.historyOl} />
     );
 };
 
