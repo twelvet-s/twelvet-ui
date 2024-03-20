@@ -1,5 +1,6 @@
 import TWT from '@/setting';
 import {request} from '@umijs/max'
+import qs from 'qs';
 
 // 请求的控制器名称
 const controller = "/auth";
@@ -58,9 +59,9 @@ export async function refreshToken() {
         headers: {
             Authorization: auth
         },
-        params: {
+        data: qs.stringify({
             refresh_token: localStorage.getItem(TWT.refreshToken),
             grant_type: 'refresh_token'
-        }
+        })
     })
 }

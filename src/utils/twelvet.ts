@@ -1,5 +1,7 @@
+import { refreshToken } from '@/pages/Login/service';
 import TWT from '@/setting';
 import { request, history } from '@umijs/max';
+import { notification } from 'antd';
 
 /**
  * 系统日志输出
@@ -29,20 +31,56 @@ export const system = {
 };
 
 /**
+ * 定时刷新Token
+ * @param expires 过期时间
+ */
+let tokenTimed: NodeJS.Timeout;
+export function timedRefreshToken() {
+    // 取消定时任务
+    clearTimeout(tokenTimed)
+
+    // 定时刷新token避免过期
+    const local = localStorage.getItem(TWT.accessToken);
+    const { expires_in } = local ? JSON.parse(local) : { expires_in: 0 }
+
+    tokenTimed = setTimeout(() => {
+        // 续签失败将要求重新登录
+        refreshToken().then(res => {
+
+            if (res.code === 400) {
+                notification.error({
+                    message: `Token已失效`,
+                    description: `续签失败,请重新登录`,
+                    duration: 0,
+                });
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                setAuthority(res);
+            }
+        });
+        // 提前5分钟刷新
+    }, expires_in);
+
+}
+
+/**
  * 设置授权令牌
  * @param authority
  */
 export function setAuthority(authority: Record<string, any>): void {
     const date = new Date();
-
+    const expires = date.getTime() + (authority.expires_in * 1000)
     // 设置access_token
     localStorage.setItem(
         TWT.accessToken,
         JSON.stringify({
             access_token: authority.access_token,
-            expires_in: date.getTime() + authority.expires_in,
+            expires_in: expires,
         }),
     );
+
+    timedRefreshToken();
+
     // 设置refresh_token
     localStorage.setItem(TWT.refreshToken, authority.refresh_token);
 }
