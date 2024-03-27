@@ -1,14 +1,8 @@
-import {GithubOutlined} from '@ant-design/icons';
-import {DefaultFooter} from '@ant-design/pro-components';
-import {useIntl} from '@umijs/max';
+import { GithubOutlined } from '@ant-design/icons';
+import { DefaultFooter } from '@ant-design/pro-components';
 import React from 'react';
 
 const Footer: React.FC = () => {
-    const intl = useIntl();
-    const defaultMessage = intl.formatMessage({
-        id: 'app.copyright.produced',
-        defaultMessage: 'TwelveT',
-    });
 
     const currentYear = new Date().getFullYear();
 
@@ -17,7 +11,7 @@ const Footer: React.FC = () => {
             style={{
                 background: 'none',
             }}
-            copyright={`${currentYear} ${defaultMessage}`}
+            copyright={`${currentYear} TwelveT`}
             links={[
                 {
                     key: 'TwelveT',
@@ -27,7 +21,7 @@ const Footer: React.FC = () => {
                 },
                 {
                     key: 'Github',
-                    title: <GithubOutlined/>,
+                    title: <GithubOutlined />,
                     href: 'https://github.com/twelvet-projects/twelvet',
                     blankTarget: true,
                 },

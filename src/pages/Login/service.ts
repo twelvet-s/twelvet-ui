@@ -1,11 +1,10 @@
 import TWT from '@/setting';
-import {request} from '@umijs/max'
-import qs from 'qs';
+import { request } from '@umijs/max';
 
 // 请求的控制器名称
-const controller = "/auth";
+const controller = '/auth';
 
-const auth = 'Basic ' + window.btoa("twelvet:123456")
+const auth = 'Basic ' + window.btoa('twelvet:123456');
 
 /**
  * 登录
@@ -16,16 +15,16 @@ export async function login(params: Record<string, any>) {
     return request(`${controller}/oauth2/token`, {
         method: 'POST',
         headers: {
-            Authorization: auth
+            Authorization: auth,
         },
         data: {
-            ...params
+            ...params,
         },
         params: {
             ...params,
             grant_type: 'password',
-            scope: 'server'
-        }
+            scope: 'server',
+        },
     });
 }
 
@@ -35,8 +34,8 @@ export async function login(params: Record<string, any>) {
  */
 export async function getCurrentUser(): Promise<any> {
     return request(`system/user/getInfo`, {
-        method: 'GET'
-    })
+        method: 'GET',
+    });
 }
 
 /**
@@ -45,23 +44,26 @@ export async function getCurrentUser(): Promise<any> {
  */
 export async function getRouters(): Promise<any> {
     return request(`system/menu/getRouters`, {
-        method: 'GET'
-    })
+        method: 'GET',
+    });
 }
 
 /**
  * 刷新令牌
  */
 export async function refreshToken() {
-
+    const formData: any = {
+        refresh_token: localStorage.getItem(TWT.refreshToken),
+        grant_type: 'refresh_token',
+    };
     return request(`${controller}/oauth2/token`, {
         method: 'POST',
         headers: {
-            Authorization: auth
+            Authorization: auth,
         },
-        data: qs.stringify({
-            refresh_token: localStorage.getItem(TWT.refreshToken),
-            grant_type: 'refresh_token'
-        })
-    })
+        // 将对象转换为查询字符串，表单请求
+        data: Object.keys(formData)
+            .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(formData[k])}`)
+            .join('&'),
+    });
 }

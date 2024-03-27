@@ -37,30 +37,31 @@ export const system = {
 let tokenTimed: NodeJS.Timeout;
 export function timedRefreshToken() {
     // 取消定时任务
-    clearTimeout(tokenTimed)
+    clearTimeout(tokenTimed);
 
     // 定时刷新token避免过期
     const local = localStorage.getItem(TWT.accessToken);
-    const { expires_in } = local ? JSON.parse(local) : { expires_in: 0 }
-
-    tokenTimed = setTimeout(() => {
-        // 续签失败将要求重新登录
-        refreshToken().then(res => {
-
-            if (res.code === 400) {
-                notification.error({
-                    message: `Token已失效`,
-                    description: `续签失败,请重新登录`,
-                    duration: 0,
-                });
-            } else {
-                // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                setAuthority(res);
-            }
-        });
-        // 提前5分钟刷新
-    }, expires_in);
-
+    const { expires_in } = local ? JSON.parse(local) : { expires_in: 0 };
+    const expires = expires_in - (new Date().getTime() + 60 * 5 * 1000);
+    tokenTimed = setTimeout(
+        () => {
+            // 续签失败将要求重新登录
+            refreshToken().then((res) => {
+                if (res.code === 400) {
+                    notification.error({
+                        message: `Token已失效`,
+                        description: `续签失败,请重新登录`,
+                        duration: 0,
+                    });
+                } else {
+                    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                    setAuthority(res);
+                }
+            });
+            // 提前5分钟刷新
+        },
+        expires > 1000 ? expires : 0,
+    );
 }
 
 /**
@@ -69,7 +70,7 @@ export function timedRefreshToken() {
  */
 export function setAuthority(authority: Record<string, any>): void {
     const date = new Date();
-    const expires = date.getTime() + (authority.expires_in * 1000)
+    const expires = date.getTime() + authority.expires_in * 1000;
     // 设置access_token
     localStorage.setItem(
         TWT.accessToken,
@@ -123,7 +124,7 @@ export const makeTree = (params: {
     const treeData = cloneData.filter((father: { [key: string]: any; children: any }) => {
         // 增强参数
         for (const key in enhance) {
-            father[key] = father[enhance[key]]
+            father[key] = father[enhance[key]];
         }
 
         // 循环找出每个父目录的子目录
@@ -218,7 +219,7 @@ export const reductionMenuList = (
             const reductionMenus = reductionMenuList(item.routes);
             res.push(...reductionMenus);
         }
-        return false
+        return false;
     });
 
     return res;
@@ -236,11 +237,11 @@ const getFileNameFromContentDisposition = (contentDisposition: string) => {
         let fileName = matches[1].replace(/['"]/g, '');
         // 解码文件名，如果有需要的话
         fileName = decodeURIComponent(fileName);
-        fileName = fileName.replace('utf-8', '')
+        fileName = fileName.replace('utf-8', '');
         return fileName;
     }
     return null;
-}
+};
 
 /**
  * 通用下载方法
@@ -270,7 +271,7 @@ export const download = (url: string, params?: Record<string, any>, filename?: s
                     system.error('获取文件名称失败');
                     return response.data;
                 }
-                const name = getFileNameFromContentDisposition(contentDisposition)
+                const name = getFileNameFromContentDisposition(contentDisposition);
                 if (name) {
                     // 获取并还原编码
                     currentFileName = name;
@@ -319,14 +320,14 @@ export const upload = (url: string, formData: FormData) => {
  * @returns 具备：false，不具备：true
  */
 export const auth = (authStr: string) => {
-    const auths = localStorage.getItem(TWT.preAuthorize)
+    const auths = localStorage.getItem(TWT.preAuthorize);
     if (!auths) {
-        return true
+        return true;
     }
     const authArr = JSON.parse(auths);
     if (authArr.includes('*:*:*') || authArr.includes('*')) {
-        return false
+        return false;
     }
 
-    return !authArr.includes(authStr)
-}
+    return !authArr.includes(authStr);
+};
