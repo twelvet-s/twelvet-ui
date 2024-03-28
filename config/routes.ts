@@ -84,6 +84,13 @@ export default [
                 path: '/system/token',
                 component: './System/Token',
             },
+            {
+                title: '国际化',
+                icon: 'icon-I18n',
+                name: 'I18n',
+                path: '/system/I18n',
+                component: './System/I18n',
+            },
         ],
     },
     // 跳转
@@ -268,7 +275,7 @@ export default [
                                 path: '/tool/code/metadata/template_group',
                                 component: './Tool/Code/Metadata/TemplateGroup',
                             },
-                        ]
+                        ],
                     },
                 ],
             },
