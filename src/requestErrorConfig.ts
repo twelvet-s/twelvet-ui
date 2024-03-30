@@ -1,6 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
-import { request } from '@umijs/max';
+import { request, getLocale } from '@umijs/max';
 import { message, notification } from 'antd';
 import { refreshToken as refreshTokenService } from './pages/Login/service';
 import TWT from './setting';
@@ -147,13 +147,17 @@ export const errorConfig: RequestConfig = {
 
             let authHeader;
             if (!config.headers?.Authorization) {
-                authHeader = { ...config.headers, Authorization: `Bearer ${access_token}` };
+                authHeader = {
+                    ...config.headers,
+                    "Authorization": `Bearer ${access_token}`,
+                    // 国际化
+                    "Accept-Language": getLocale()
+                };
             } else {
                 authHeader = {
                     ...config.headers,
                 };
             }
-
             // 拦截请求配置，进行个性化处理。
             const url = config?.url;
             const requestUri = TWT.requestUri.endsWith('/')
