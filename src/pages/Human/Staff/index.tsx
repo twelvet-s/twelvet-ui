@@ -8,6 +8,7 @@ import {
     EditOutlined,
     CloseOutlined,
 } from '@ant-design/icons';
+import { useIntl } from '@umijs/max';
 import {
     Popconfirm,
     Button,
@@ -400,15 +401,15 @@ const Staff: React.FC = () => {
                         <a onClick={() => refPut(row)} hidden={auth('system:user:update')}>
                             <Space>
                                 <EditOutlined/>
-                                修改
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
                         <Popconfirm onConfirm={() => refRemove([row.userId])} title="确定删除吗">
                             <a href="#" hidden={auth('system:user:remove')}>
                                 <Space>
-                                    <CloseOutlined/>
-                                    删除
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -416,7 +417,7 @@ const Staff: React.FC = () => {
                         <a onClick={() => changPassword(row.userId)}>
                             <Space>
                                 <EditOutlined/>
-                                重置密码
+                                {useIntl().formatMessage({id: 'system.rest.password'})}
                             </Space>
                         </a>
                     </>
@@ -450,8 +451,8 @@ const Staff: React.FC = () => {
                         type="default"
                         onClick={refPost}
                     >
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -465,7 +466,7 @@ const Staff: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -479,7 +480,7 @@ const Staff: React.FC = () => {
                     >
                         <Button type="default" hidden={auth('system:user:export')}>
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                     <Button
@@ -491,7 +492,7 @@ const Staff: React.FC = () => {
                         }}
                     >
                         <PlusOutlined/>
-                        导入数据
+                        {useIntl().formatMessage({id: 'system.import'})}
                     </Button>,
                 ]}
             />

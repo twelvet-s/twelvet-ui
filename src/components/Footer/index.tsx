@@ -1,6 +1,7 @@
-import { GithubOutlined } from '@ant-design/icons';
-import { DefaultFooter } from '@ant-design/pro-components';
+import {GithubOutlined} from '@ant-design/icons';
+import {DefaultFooter} from '@ant-design/pro-components';
 import React from 'react';
+import {useIntl} from '@umijs/max';
 
 const Footer: React.FC = () => {
 
@@ -21,13 +22,13 @@ const Footer: React.FC = () => {
                 },
                 {
                     key: 'Github',
-                    title: <GithubOutlined />,
+                    title: <GithubOutlined/>,
                     href: 'https://github.com/twelvet-projects/twelvet',
                     blankTarget: true,
                 },
                 {
-                    key: '开发文档',
-                    title: '开发文档',
+                    key: useIntl().formatMessage({id: 'app.development.documentation'}),
+                    title: useIntl().formatMessage({id: 'app.development.documentation'}),
                     href: 'https://twelvet.cn/docs',
                     blankTarget: true,
                 },

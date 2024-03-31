@@ -7,6 +7,7 @@ import {Popconfirm, Button, message} from 'antd';
 import {proTableConfigs} from '@/setting';
 import {exportExcel, pageQuery, remove} from './service';
 import {system} from '@/utils/twelvet';
+import { useIntl } from '@umijs/max';
 
 /**
  * 登录日志
@@ -143,7 +144,7 @@ const LogLogin: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -175,7 +176,7 @@ const LogLogin: React.FC = () => {
                             disabled={state.exportExcelLoading}
                         >
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

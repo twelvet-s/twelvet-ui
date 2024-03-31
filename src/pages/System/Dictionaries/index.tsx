@@ -17,6 +17,7 @@ import {pageQuery, remove, exportExcel, getBydictId, insert, update, clearCache}
 import {system, auth} from '@/utils/twelvet';
 import {isArray} from 'lodash';
 import DrawerInfo from './components/drawerInfo/Index';
+import { useIntl } from '@umijs/max';
 
 /**
  * 字典模块类型管理
@@ -231,7 +232,7 @@ const Dictionaries: React.FC = () => {
                         <a onClick={() => refPut(row)} hidden={auth('system:dict:update')}>
                             <Space>
                                 <EditOutlined/>
-                                修改
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
 
@@ -247,7 +248,7 @@ const Dictionaries: React.FC = () => {
                         >
                             <Space>
                                 <SettingOutlined/>
-                                数据管理
+                                {useIntl().formatMessage({id: 'system.data.management'})}
                             </Space>
                         </a>
 
@@ -256,8 +257,8 @@ const Dictionaries: React.FC = () => {
                         <Popconfirm onConfirm={() => refRemove([row.dictId])} title="确定删除吗">
                             <a href="#" hidden={auth('system:dict:remove')}>
                                 <Space>
-                                    <CloseOutlined/>
-                                    删除
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -293,8 +294,8 @@ const Dictionaries: React.FC = () => {
                 rowSelection={{}}
                 toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key={'addTool'} hidden={auth('system:dict:insert')} type="default" onClick={refPost}>
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -308,7 +309,7 @@ const Dictionaries: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -322,7 +323,7 @@ const Dictionaries: React.FC = () => {
                     >
                         <Button type="default" hidden={auth('system:dict:export')}>
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm key={'cleanTool'} title="是否清空缓存" onConfirm={() => clear()}>

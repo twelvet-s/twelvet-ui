@@ -10,6 +10,7 @@ import {
     CloseOutlined,
     QuestionCircleOutlined,
 } from '@ant-design/icons';
+import { useIntl } from '@umijs/max';
 import {
     Popconfirm,
     Button,
@@ -206,15 +207,15 @@ const Post: React.FC = () => {
                         <a onClick={() => refPut(row.clientId)} hidden={auth('system:client:update')}>
                             <Space>
                                 <EditOutlined/>
-                                修改
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
                         <Popconfirm onConfirm={() => refRemove([row.clientId])} title="确定删除吗">
                             <a href="#" hidden={auth('system:client:remove')}>
                                 <Space>
-                                    <CloseOutlined/>
-                                    删除
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -249,8 +250,8 @@ const Post: React.FC = () => {
                 rowSelection={{}}
                 toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key={'addTool'} hidden={auth('system:client:insert')} type="default" onClick={refPost}>
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -264,7 +265,7 @@ const Post: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                 ]}

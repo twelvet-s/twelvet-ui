@@ -9,6 +9,7 @@ import {pageQuery, remove} from './service';
 import type {FormInstance} from 'antd/lib/form';
 import {isArray} from 'lodash';
 import {system, auth} from '@/utils/twelvet';
+import { useIntl } from '@umijs/max';
 
 /**
  * Token令牌管理
@@ -101,7 +102,7 @@ const Token: React.FC = () => {
                             <a href="#" hidden={auth('system:token:remove')}>
                                 <Space>
                                     <CloseOutlined/>
-                                    强退
+                                    {useIntl().formatMessage({id: 'system.forceful.retreat'})}
                                 </Space>
                             </a>
                         </Popconfirm>

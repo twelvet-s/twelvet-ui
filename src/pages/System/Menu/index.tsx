@@ -21,11 +21,15 @@ import {getInfo, insert, list, remove, update} from './service';
 import {auth, makeTree, system} from '@/utils/twelvet';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
+
 
 /**
  * 菜单模块
  */
 const Menu: React.FC = () => {
+    const {formatMessage} = useIntl()
+
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
@@ -88,6 +92,7 @@ const Menu: React.FC = () => {
         }
     };
 
+
     /**
      * 获取新增菜单信息
      * @param row row
@@ -99,8 +104,7 @@ const Menu: React.FC = () => {
         const field: Record<string, any> = {parentId: row.menuId};
         // 设置表单数据
         form.setFieldsValue(field);
-
-        setModal({title: '新增', visible: true});
+        setModal({title: formatMessage({id: 'system.add'}), visible: true});
     };
 
     /**
@@ -122,7 +126,7 @@ const Menu: React.FC = () => {
             setMenuType(data.menuType);
 
             // 设置Modal状态
-            setModal({title: '修改', visible: true});
+            setModal({title: formatMessage({id: 'system.update'}), visible: true});
         } catch (e) {
             system.error(e);
         }
@@ -263,7 +267,7 @@ const Menu: React.FC = () => {
                                 <a onClick={() => refPost(row)} hidden={auth('system:menu:insert')}>
                                     <Space>
                                         <PlusOutlined/>
-                                        新增
+                                        {useIntl().formatMessage({id: 'system.add'})}
                                     </Space>
                                 </a>
                                 <Divider type="vertical"/>
@@ -273,15 +277,15 @@ const Menu: React.FC = () => {
                         <a onClick={() => refPut(row)} hidden={auth('system:menu:update')}>
                             <Space>
                                 <EditOutlined/>
-                                修改
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
                         <Popconfirm onConfirm={() => refRemove(row)} title="确定删除吗">
                             <a href="#" hidden={auth('system:menu:remove')}>
                                 <Space>
-                                    <CloseOutlined/>
-                                    删除
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -313,8 +317,8 @@ const Menu: React.FC = () => {
                         type="default"
                         onClick={() => refPost({menuId: 0})}
                     >
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                 ]}
                 pagination={false}

@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 
 import {proTableConfigs} from '@/setting';
 import {CloseOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
+import { useIntl } from '@umijs/max';
 import {
     Button,
     Col,
@@ -224,7 +225,7 @@ const Dept: React.FC = () => {
                         <a onClick={() => refPost(row.deptId)} hidden={auth('system:dept:insert')}>
                             <Space>
                                 <PlusOutlined/>
-                                新增
+                                {useIntl().formatMessage({id: 'system.add'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -232,7 +233,7 @@ const Dept: React.FC = () => {
                         <a onClick={() => refPut(row.deptId)} hidden={auth('system:dept:update')}>
                             <Space>
                                 <EditOutlined/>
-                                修改
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -240,8 +241,8 @@ const Dept: React.FC = () => {
                         <Popconfirm onConfirm={() => refRemove(row)} title="确定删除吗">
                             <a href="#" hidden={auth('system:dept:remove')}>
                                 <Space>
-                                    <CloseOutlined/>
-                                    删除
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -269,8 +270,8 @@ const Dept: React.FC = () => {
                 request={list}
                 toolBarRender={() => [
                     <Button key={'addTool'} type="default" onClick={() => refPost(0)}>
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                 ]}
                 pagination={false}

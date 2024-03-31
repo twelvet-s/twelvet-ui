@@ -32,6 +32,7 @@ import {PageContainer, ProTable} from '@ant-design/pro-components';
 import Details from './components/details/Index';
 import type {FormInstance} from 'antd/lib/form';
 import {isArray} from 'lodash';
+import { useIntl } from '@umijs/max'
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
 
 /**
@@ -251,7 +252,7 @@ const Job: React.FC = () => {
                         <a onClick={() => refPut(row.jobId)} hidden={auth('monitor:job:update')}>
                             <Space>
                                 <EditOutlined/>
-                                修改
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -259,7 +260,7 @@ const Job: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CaretRightOutlined/>
-                                    执行
+                                    {useIntl().formatMessage({id: 'system.execute'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -275,7 +276,7 @@ const Job: React.FC = () => {
                         >
                             <Space>
                                 <EyeOutlined/>
-                                详情
+                                {useIntl().formatMessage({id: 'system.details'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -283,7 +284,7 @@ const Job: React.FC = () => {
                             <a href="#" hidden={auth('monitor:job:remove')}>
                                 <Space>
                                     <DeleteOutlined/>
-                                    删除
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -319,8 +320,8 @@ const Job: React.FC = () => {
                 rowSelection={{}}
                 toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key={'addTool'} hidden={auth('monitor:job:insert')} type="default" onClick={refPost}>
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -334,7 +335,7 @@ const Job: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -348,7 +349,7 @@ const Job: React.FC = () => {
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

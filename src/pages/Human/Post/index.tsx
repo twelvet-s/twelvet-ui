@@ -1,6 +1,7 @@
 import React, {useState, useRef} from 'react';
 
 import {proTableConfigs} from '@/setting';
+import { useIntl } from '@umijs/max';
 import {
     DeleteOutlined,
     FundProjectionScreenOutlined,
@@ -211,15 +212,15 @@ const Post: React.FC = () => {
                         <a onClick={() => refPut(row.postId)} hidden={auth('system:post:update')}>
                             <Space>
                                 <EditOutlined/>
-                                修改
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
                         <Popconfirm onConfirm={() => refRemove([row.postId])} title="确定删除吗">
                             <a href="#" hidden={auth('system:post:remove')}>
                                 <Space>
-                                    <CloseOutlined/>
-                                    删除
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -255,8 +256,8 @@ const Post: React.FC = () => {
                 rowSelection={{}}
                 toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key={'addTool'} type="default" onClick={refPost} hidden={auth('system:post:insert')}>
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -270,7 +271,7 @@ const Post: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -284,7 +285,7 @@ const Post: React.FC = () => {
                     >
                         <Button type="default" hidden={auth('system:post:export')}>
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

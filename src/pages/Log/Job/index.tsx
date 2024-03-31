@@ -8,6 +8,7 @@ import {pageQuery, remove, exportExcel} from './service';
 import {system, auth} from '@/utils/twelvet';
 import type {ProColumns, ActionType} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
 
 /**
  * 登录日志
@@ -147,7 +148,7 @@ const Login: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -161,7 +162,7 @@ const Login: React.FC = () => {
                     >
                         <Button type="default" hidden={auth('system:operlog:export')}>
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm key={'cleanTool'} onConfirm={() => refRemove(selectedRowKeys, action)} title="是否清空">

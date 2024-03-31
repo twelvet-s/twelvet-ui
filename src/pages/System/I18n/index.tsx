@@ -15,6 +15,7 @@ import { pageQueryI18n, getI18n, delI18n, addI18n, updateI18n, exportI18n } from
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
+import { useIntl } from '@umijs/max';
 
 import DatePickerTWT from '@/components/TwelveT/DatePicker/Index';
 import moment from 'moment';
@@ -214,7 +215,7 @@ const I18n: React.FC = () => {
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined />
-                                修改
+                                {useIntl().formatMessage({id: 'system.add'})}
                             </Space>
                         </a>
 
@@ -224,7 +225,7 @@ const I18n: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CloseOutlined />
-                                    删除
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -261,7 +262,7 @@ const I18n: React.FC = () => {
                 toolBarRender={(action, { selectedRowKeys }) => [
                     <Button key="add" type="default" onClick={refPost}>
                         <PlusOutlined />
-                        新增
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key="batchDelete"
@@ -274,8 +275,8 @@ const I18n: React.FC = () => {
                             type="primary"
                             danger
                         >
-                            <DeleteOutlined />
-                            批量删除
+                            <DeleteOutlined/>
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                 ]}

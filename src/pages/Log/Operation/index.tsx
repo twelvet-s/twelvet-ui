@@ -8,6 +8,7 @@ import type {FormInstance} from 'antd';
 import {Popconfirm, Button, message, Modal, Space} from 'antd';
 import {pageQuery, remove, exportExcel, getDictionariesType} from './service';
 import {system, auth} from '@/utils/twelvet';
+import { useIntl } from '@umijs/max';
 
 /**
  * 操作日志
@@ -172,7 +173,7 @@ const Operation: React.FC = () => {
                     <a onClick={() => handleView(row)}>
                         <Space>
                             <EyeOutlined/>
-                            详情
+                            {useIntl().formatMessage({id: 'system.details'})}
                         </Space>
                     </a>
                 );
@@ -212,7 +213,7 @@ const Operation: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -226,7 +227,7 @@ const Operation: React.FC = () => {
                     >
                         <Button type="default" hidden={auth('system:operlog:export')}>
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

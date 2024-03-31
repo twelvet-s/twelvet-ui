@@ -14,6 +14,7 @@ export default {
   'app.preview.down.block': 'このページをローカルプロジェクトにダウンロードしてください',
   'app.welcome.link.fetch-blocks': '',
   'app.welcome.link.block-list': '',
+    'app.development.documentation': '開発ドキュメント',
   ...globalHeader,
   ...menu,
   ...settingDrawer,

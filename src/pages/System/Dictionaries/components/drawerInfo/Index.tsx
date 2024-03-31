@@ -28,6 +28,7 @@ import {system} from '@/utils/twelvet';
 import {isArray} from 'lodash';
 import type {ProColumns, ActionType} from '@ant-design/pro-components';
 import {ProTable} from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
 
 /**
  * 字典模块数据管理
@@ -243,15 +244,15 @@ const DrawerInfo: React.FC<{
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined/>
-                                修改
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
                         <Popconfirm onConfirm={() => refRemove([row.dictCode])} title="确定删除吗">
                             <a href="#">
                                 <Space>
-                                    <CloseOutlined/>
-                                    删除
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -302,8 +303,8 @@ const DrawerInfo: React.FC<{
                 // }}
                 toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key={'addTool'} type="default" onClick={refPost}>
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -317,7 +318,7 @@ const DrawerInfo: React.FC<{
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -331,7 +332,7 @@ const DrawerInfo: React.FC<{
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

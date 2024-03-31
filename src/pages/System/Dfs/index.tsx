@@ -11,6 +11,7 @@ import type {FormInstance} from 'antd/lib/form';
 import {isArray} from 'lodash';
 import {system, auth} from '@/utils/twelvet';
 import TWT from '@/setting';
+import { useIntl } from '@umijs/max';
 
 /**
  * 分布式文件系统
@@ -110,15 +111,15 @@ const DFS: React.FC = () => {
                         <a href={`${TWT.static}${row.path}`} target={'_blank'} rel="noreferrer">
                             <Space>
                                 <DownloadOutlined/>
-                                查看
+                                {useIntl().formatMessage({id: 'system.check'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
                         <Popconfirm onConfirm={() => refRemove([row.fileId])} title="确定删除吗">
                             <a href="#" hidden={auth('system:dfs:remove')}>
                                 <Space>
-                                    <CloseOutlined/>
-                                    删除
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -165,7 +166,7 @@ const DFS: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Button
@@ -176,7 +177,7 @@ const DFS: React.FC = () => {
                         }}
                     >
                         <PlusOutlined/>
-                        上传文件
+                        {useIntl().formatMessage({id: 'system.upload'})}
                     </Button>,
                 ]}
             />

@@ -13,6 +13,8 @@ import TWT from './setting';
 import { getCurrentUser, getRouters } from './pages/Login/service';
 import { system, timedRefreshToken } from "@/utils/twelvet";
 import { Question } from './components/RightContent';
+import {useIntl} from "@@/exports";
+import {useIntl as i18n} from '@umijs/max';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
@@ -111,7 +113,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             ? [
                 <a key='docs' href="https://twelvet.cn/docs/" target="_blank" rel="noreferrer">
                     <QuestionCircleOutlined />
-                    <span>官方文档</span>
+                    <span>{i18n().formatMessage({id: 'app.development.documentation'})}</span>
                 </a>,
                 <a key='openapi' href="http://127.0.0.1:8080/doc.html" target="_blank" rel="noreferrer">
                     <QuestionCircleOutlined />

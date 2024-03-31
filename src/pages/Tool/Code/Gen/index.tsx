@@ -18,6 +18,7 @@ import { system } from '@/utils/twelvet'
 import DrawerInfo from './components/DrawerInfo/Index'
 import PreviewCode from './components/PreviewCode/Index'
 import EditCode from './components/EditCode/Index'
+import { useIntl } from '@umijs/max'
 
 /**
  * 代码生成器
@@ -142,7 +143,7 @@ const Gen: React.FC = () => {
                         >
                             <Space>
                                 <EyeOutlined />
-                                预览
+                                {useIntl().formatMessage({id: 'system.preview'})}
                             </Space>
                         </a>
                         <Divider type="vertical" />
@@ -157,7 +158,7 @@ const Gen: React.FC = () => {
                         >
                             <Space>
                                 <EditOutlined />
-                                编辑
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical" />
@@ -165,7 +166,7 @@ const Gen: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CloseOutlined />
-                                    删除
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -174,7 +175,7 @@ const Gen: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <SyncOutlined spin />
-                                    同步
+                                    {useIntl().formatMessage({id: 'system.sync'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -183,7 +184,7 @@ const Gen: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <FileZipOutlined />
-                                    生成代码
+                                    {useIntl().formatMessage({id: 'system.gen.code'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -257,8 +258,8 @@ const Gen: React.FC = () => {
                             type="primary"
                             danger
                         >
-                            <DeleteOutlined />
-                            批量删除
+                            <DeleteOutlined/>
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                 ]}

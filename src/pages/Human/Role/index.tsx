@@ -9,6 +9,7 @@ import {
     EditOutlined,
     CloseOutlined,
 } from '@ant-design/icons';
+import { useIntl } from '@umijs/max';
 import {
     Popconfirm,
     Button,
@@ -384,7 +385,7 @@ const Role: React.FC = () => {
                             <a onClick={() => refPut(row.roleId)} hidden={auth('system:role:update')}>
                                 <Space>
                                     <EditOutlined/>
-                                    修改
+                                    {useIntl().formatMessage({id: 'system.update'})}
                                 </Space>
                             </a>
                             <Divider type="vertical"/>
@@ -392,7 +393,7 @@ const Role: React.FC = () => {
                                 <a href="#" hidden={auth('system:role:remove')}>
                                     <Space>
                                         <CloseOutlined/>
-                                        删除
+                                        {useIntl().formatMessage({id: 'system.delete'})}
                                     </Space>
                                 </a>
                             </Popconfirm>
@@ -434,8 +435,8 @@ const Role: React.FC = () => {
                         hidden={auth('system:role:insert')}
                         onClick={refPost}
                     >
-                        <PlusOutlined/>
-                        新增
+                        <PlusOutlined />
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -449,7 +450,7 @@ const Role: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            批量删除
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -463,7 +464,7 @@ const Role: React.FC = () => {
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined/>
-                            导出数据
+                            {useIntl().formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

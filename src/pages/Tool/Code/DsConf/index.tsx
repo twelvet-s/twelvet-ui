@@ -21,6 +21,7 @@ import { isArray } from 'lodash'
 import { proTableConfigs } from '@/setting'
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index'
 import DictionariesRadio from '@/components/TwelveT/Dictionaries/DictionariesRadio/Index'
+import { useIntl } from '@umijs/max'
 
 
 /**
@@ -210,8 +211,8 @@ const Conf: React.FC = () => {
                     <>
                         <a onClick={() => refPut(row)}>
                             <Space>
-                                <EditOutlined />
-                                修改
+                                <EditOutlined/>
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
 
@@ -224,7 +225,7 @@ const Conf: React.FC = () => {
                             <a href='#'>
                                 <Space>
                                     <CloseOutlined />
-                                    删除
+                                    {useIntl().formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -261,7 +262,7 @@ const Conf: React.FC = () => {
                 toolBarRender={(action, { selectedRowKeys }) => [
                     <Button key='add' type="default" onClick={refPost}>
                         <PlusOutlined />
-                        新增
+                        {useIntl().formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key='batchDelete'
@@ -273,8 +274,8 @@ const Conf: React.FC = () => {
                             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
                             type="primary" danger
                         >
-                            <DeleteOutlined />
-                            批量删除
+                            <DeleteOutlined/>
+                            {useIntl().formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                 ]}
