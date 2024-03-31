@@ -242,7 +242,7 @@ const I18n: React.FC = () => {
                     // 是否允许每页大小更改
                     showSizeChanger: true,
                     // 每页显示条数
-                    pageSize: state.pageSize,
+                    defaultPageSize: state.pageSize,
                 }}
                 actionRef={acForm}
                 formRef={formRef}
