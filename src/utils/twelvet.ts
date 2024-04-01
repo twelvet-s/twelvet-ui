@@ -42,26 +42,28 @@ export function timedRefreshToken() {
     // 定时刷新token避免过期
     const local = localStorage.getItem(TWT.accessToken);
     const { expires_in } = local ? JSON.parse(local) : { expires_in: 0 };
-    const expires = expires_in - (new Date().getTime() + 60 * 5 * 1000);
-    tokenTimed = setTimeout(
-        () => {
-            // 续签失败将要求重新登录
-            refreshToken().then((res) => {
-                if (res.code === 400) {
-                    notification.error({
-                        message: `Token已失效`,
-                        description: `续签失败,请重新登录`,
-                        duration: 0,
-                    });
-                } else {
-                    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                    setAuthority(res);
-                }
-            });
-            // 提前5分钟刷新
-        },
-        expires > 1000 ? expires : 0,
-    );
+    if(expires_in) {
+        const expires = expires_in - (new Date().getTime() + 60 * 5 * 1000);
+        tokenTimed = setTimeout(
+            () => {
+                // 续签失败将要求重新登录
+                refreshToken().then((res) => {
+                    if (res.code === 400) {
+                        notification.error({
+                            message: `Token已失效`,
+                            description: `续签失败,请重新登录`,
+                            duration: 0,
+                        });
+                    } else {
+                        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                        setAuthority(res);
+                    }
+                });
+                // 提前5分钟刷新
+            },
+            expires > 1000 ? expires : 0,
+        );
+    }
 }
 
 /**
