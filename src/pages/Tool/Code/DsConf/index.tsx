@@ -29,6 +29,8 @@ import { useIntl } from '@umijs/max'
  */
 const Conf: React.FC = () => {
 
+    const {formatMessage} = useIntl()
+
     const [state] = useState<{
         pageSize: number
     }>({
@@ -69,7 +71,7 @@ const Conf: React.FC = () => {
      */
     const refPost = async () => {
         setSubmitPassword(1)
-        setModal({ title: "新增", visible: true })
+        setModal({title: formatMessage({id: 'system.add'}), visible: true});
     }
 
     /**
@@ -89,7 +91,7 @@ const Conf: React.FC = () => {
 
             // 设置Modal状态
             setSubmitPassword(1)
-            setModal({ title: "修改", visible: true })
+            setModal({title: formatMessage({id: 'system.update'}), visible: true});
 
         } catch (e) {
             system.error(e)

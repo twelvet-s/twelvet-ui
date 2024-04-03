@@ -48,6 +48,9 @@ import {PageContainer, ProTable} from '@ant-design/pro-components';
  * 职员模块
  */
 const Staff: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     // 显示Modal
     const [modal, setModal] = useState<{ title: string; visible: boolean; modelType: string }>({
         title: ``,
@@ -113,7 +116,7 @@ const Staff: React.FC = () => {
      * 新增职员
      */
     const refPost = async () => {
-        setModal({title: '新增', visible: true, modelType: 'POST'});
+        setModal({title: formatMessage({id: 'system.add'}), visible: true, modelType: 'POST'});
         // 获取新增用户所属数据
         const {data} = await getByStaff();
 
@@ -150,7 +153,7 @@ const Staff: React.FC = () => {
     const changPassword = async (userId: number) => {
         prform.setFieldsValue({userId: userId});
         // 设置Modal状态
-        setResetPassword({title: '重置密码', visible: true, modelType: 'PUT'});
+        setResetPassword({title: formatMessage({id: 'system.rest.password'}), visible: true, modelType: 'PUT'});
     };
 
     /**
@@ -200,7 +203,7 @@ const Staff: React.FC = () => {
             makeDept();
 
             // 设置Modal状态
-            setModal({title: '修改', visible: true, modelType: 'PUT'});
+            setModal({title: formatMessage({id: 'system.update'}), visible: true, modelType: 'PUT'});
         } catch (e) {
             system.error(e);
         }

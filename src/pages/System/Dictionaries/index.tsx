@@ -23,6 +23,9 @@ import { useIntl } from '@umijs/max';
  * 字典模块类型管理
  */
 const Dictionaries: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     // 显示Modal
     const [modal, setModal] = useState<{ title: string; visible: boolean }>({
         title: ``,
@@ -67,7 +70,7 @@ const Dictionaries: React.FC = () => {
      * 新增字典
      */
     const refPost = async () => {
-        setModal({title: '新增', visible: true});
+        setModal({title: formatMessage({id: 'system.add'}), visible: true});
     };
 
     /**
@@ -84,7 +87,7 @@ const Dictionaries: React.FC = () => {
             form.setFieldsValue(data);
 
             // 设置Modal状态
-            setModal({title: '修改', visible: true});
+            setModal({title: formatMessage({id: 'system.update'}), visible: true});
         } catch (e) {
             system.error(e);
         }

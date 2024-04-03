@@ -50,6 +50,9 @@ import {PageContainer, ProTable} from '@ant-design/pro-components';
  * 角色模块
  */
 const Role: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     // 显示Modal
     const [modal, setModal] = useState<{ title: string; visible: boolean }>({
         title: ``,
@@ -175,7 +178,7 @@ const Role: React.FC = () => {
         getDeptData();
         // 设置数据权限范围
         setDataScope('1');
-        setModal({title: '新增', visible: true});
+        setModal({title: formatMessage({id: 'system.add'}), visible: true});
     };
 
     /**
@@ -198,7 +201,7 @@ const Role: React.FC = () => {
             setDataScope(data.dataScope);
 
             // 设置Modal状态
-            setModal({title: '修改', visible: true});
+            setModal({title: formatMessage({id: 'system.update'}), visible: true});
         } catch (e) {
             system.error(e);
         }

@@ -14,6 +14,9 @@ import { useIntl } from '@umijs/max';
  * 操作日志
  */
 const Operation: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     const [descriptions, setDescriptions] = useState<Record<string, string | number>>();
 
     // 显示Modal
@@ -56,7 +59,7 @@ const Operation: React.FC = () => {
         // 设置描述数据
         setDescriptions(row);
 
-        setModal({title: '新增', visible: true});
+        setModal({title: formatMessage({id: 'system.add'}), visible: true});
     };
 
     /**

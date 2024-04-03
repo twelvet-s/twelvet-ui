@@ -27,6 +27,8 @@ import { useIntl } from '@umijs/max'
  */
 const Group: React.FC = () => {
 
+    const {formatMessage} = useIntl()
+
     const [state] = useState<{
         pageSize: number
     }>({
@@ -62,7 +64,7 @@ const Group: React.FC = () => {
      * @param row row
      */
     const refPost = async () => {
-        setModal({ title: "新增", visible: true })
+        setModal({title: formatMessage({id: 'system.add'}), visible: true})
     }
 
     /**
@@ -81,7 +83,7 @@ const Group: React.FC = () => {
             form.setFieldsValue(data)
 
             // 设置Modal状态
-            setModal({ title: "修改", visible: true })
+            setModal({title: formatMessage({id: 'system.update'}), visible: true})
 
         } catch (e) {
             system.error(e)

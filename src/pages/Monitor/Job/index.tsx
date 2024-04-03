@@ -39,6 +39,9 @@ import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSe
  * 定时任务
  */
 const Job: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     const formItemLayout = {
         labelCol: {
             sm: {span: 6},
@@ -92,7 +95,7 @@ const Job: React.FC = () => {
             form.setFieldsValue(data);
 
             // 设置Modal状态
-            setModal({title: '修改', visible: true});
+            setModal({title: formatMessage({id: 'system.update'}), visible: true});
         } catch (e) {
             system.error(e);
         }
@@ -154,7 +157,7 @@ const Job: React.FC = () => {
      * 新增任务
      */
     const refPost = async () => {
-        setModal({title: '新增', visible: true});
+        setModal({title: formatMessage({id: 'system.add'}), visible: true});
     };
 
     /**

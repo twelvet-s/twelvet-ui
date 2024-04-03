@@ -24,6 +24,9 @@ import moment from 'moment';
  * 国际化模块
  */
 const I18n: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     const [state] = useState<{
         pageSize: number;
     }>({
@@ -63,7 +66,7 @@ const I18n: React.FC = () => {
      * 新增国际化数据
      */
     const refPost = async () => {
-        setModal({ title: '新增', visible: true });
+        setModal({title: formatMessage({id: 'system.add'}), visible: true});
     };
 
     /**
@@ -81,7 +84,7 @@ const I18n: React.FC = () => {
             form.setFieldsValue(data);
 
             // 设置Modal状态
-            setModal({ title: '修改', visible: true });
+            setModal({title: formatMessage({id: 'system.update'}), visible: true});
         } catch (e) {
             system.error(e);
         }
@@ -215,7 +218,7 @@ const I18n: React.FC = () => {
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined />
-                                {useIntl().formatMessage({id: 'system.add'})}
+                                {useIntl().formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
 

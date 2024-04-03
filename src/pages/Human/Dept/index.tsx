@@ -27,6 +27,9 @@ import {PageContainer, ProTable} from '@ant-design/pro-components';
  * 部门模块
  */
 const Dept: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
@@ -98,7 +101,7 @@ const Dept: React.FC = () => {
             form.setFieldsValue(field);
         }
 
-        setModal({title: '新增', visible: true});
+        setModal({title: formatMessage({id: 'system.add'}), visible: true});
     };
 
     /**
@@ -115,7 +118,7 @@ const Dept: React.FC = () => {
             form.setFieldsValue(data);
 
             // 设置Modal状态
-            setModal({title: '修改', visible: true});
+            setModal({title: formatMessage({id: 'system.update'}), visible: true});
         } catch (e) {
             system.error(e);
         }
