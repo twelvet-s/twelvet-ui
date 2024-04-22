@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 
 import {proTableConfigs} from '@/setting';
 import {
+    AreaChartOutlined,
     CaretRightOutlined,
     DeleteOutlined,
     EditOutlined,
@@ -32,7 +33,7 @@ import {PageContainer, ProTable} from '@ant-design/pro-components';
 import Details from './components/details/Index';
 import type {FormInstance} from 'antd/lib/form';
 import {isArray} from 'lodash';
-import { useIntl } from '@umijs/max'
+import { useIntl, history } from '@umijs/max'
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
 
 /**
@@ -321,6 +322,12 @@ const Job: React.FC = () => {
                     <Button key={'addTool'} hidden={auth('monitor:job:insert')} type="default" onClick={refPost}>
                         <PlusOutlined />
                         {formatMessage({id: 'system.add'})}
+                    </Button>,
+                    <Button key={'log'} hidden={auth('system:operlog')} type="default" onClick={() => {
+                        history.push('/log/job')
+                    }}>
+                        <AreaChartOutlined />
+                        {formatMessage({id: 'system.log'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}

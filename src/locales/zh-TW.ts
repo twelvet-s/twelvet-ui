@@ -29,6 +29,7 @@ export default {
     'system.upload': '上傳文件',
     'system.forceful.retreat': '強退',
     'system.execute': '執行',
+    'system.log': '日誌',
 
     'system.gen.code': '生成代碼',
     ...pages,

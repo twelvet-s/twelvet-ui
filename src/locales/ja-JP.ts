@@ -31,6 +31,7 @@ export default {
     'system.upload': 'ファイルのアップロード',
     'system.forceful.retreat': '強制退去',
     'system.execute': '実行',
+    'system.log': 'ログ＃ログ＃',
 
     'system.gen.code': 'コード生成',
     ...globalHeader,

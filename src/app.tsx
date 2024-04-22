@@ -13,7 +13,6 @@ import TWT from './setting';
 import { getCurrentUser, getRouters } from './pages/Login/service';
 import { system, timedRefreshToken } from "@/utils/twelvet";
 import { Question } from './components/RightContent';
-import {useIntl} from "@@/exports";
 import {useIntl as i18n} from '@umijs/max';
 
 const isDev = process.env.NODE_ENV === 'development';

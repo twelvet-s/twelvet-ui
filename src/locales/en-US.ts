@@ -32,6 +32,7 @@ export default {
     'system.upload': 'Upload File',
     'system.forceful.retreat': 'Forceful Retreat',
     'system.execute': 'Execute',
+    'system.log': 'Log',
 
     'system.gen.code': 'Generate Code',
     ...globalHeader,
