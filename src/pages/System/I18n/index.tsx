@@ -3,7 +3,6 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import {
     DeleteOutlined,
-    FundProjectionScreenOutlined,
     PlusOutlined,
     EditOutlined,
     CloseOutlined,
@@ -11,14 +10,12 @@ import {
 import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
-import { pageQueryI18n, getI18n, delI18n, addI18n, updateI18n, exportI18n } from './service';
+import { pageQueryI18n, getI18n, delI18n, addI18n, updateI18n } from './service';
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
 import { useIntl } from '@umijs/max';
 
-import DatePickerTWT from '@/components/TwelveT/DatePicker/Index';
-import moment from 'moment';
 
 /**
  * 国际化模块
@@ -218,7 +215,7 @@ const I18n: React.FC = () => {
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined />
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
 
@@ -228,7 +225,7 @@ const I18n: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -265,7 +262,7 @@ const I18n: React.FC = () => {
                 toolBarRender={(action, { selectedRowKeys }) => [
                     <Button key="add" type="default" onClick={refPost}>
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key="batchDelete"
@@ -279,7 +276,7 @@ const I18n: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                 ]}
@@ -322,12 +319,7 @@ const I18n: React.FC = () => {
                         name="type"
                         initialValue={defaultLanguage}
                     >
-                        <DictionariesSelect
-
-                            onChange={(v: any) => {
-
-                            }}
-                            type='i18n' />
+                        <DictionariesSelect type='i18n' />
                     </Form.Item>
 
                     <Form.Item

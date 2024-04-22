@@ -388,7 +388,7 @@ const Role: React.FC = () => {
                             <a onClick={() => refPut(row.roleId)} hidden={auth('system:role:update')}>
                                 <Space>
                                     <EditOutlined/>
-                                    {useIntl().formatMessage({id: 'system.update'})}
+                                    {formatMessage({id: 'system.update'})}
                                 </Space>
                             </a>
                             <Divider type="vertical"/>
@@ -396,7 +396,7 @@ const Role: React.FC = () => {
                                 <a href="#" hidden={auth('system:role:remove')}>
                                     <Space>
                                         <CloseOutlined/>
-                                        {useIntl().formatMessage({id: 'system.delete'})}
+                                        {formatMessage({id: 'system.delete'})}
                                     </Space>
                                 </a>
                             </Popconfirm>
@@ -439,7 +439,7 @@ const Role: React.FC = () => {
                         onClick={refPost}
                     >
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -453,7 +453,7 @@ const Role: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -467,7 +467,7 @@ const Role: React.FC = () => {
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined/>
-                            {useIntl().formatMessage({id: 'system.export'})}
+                            {formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

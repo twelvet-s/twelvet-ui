@@ -197,7 +197,7 @@ const Template: React.FC = () => {
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
 
@@ -210,7 +210,7 @@ const Template: React.FC = () => {
                             <a href='#'>
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -247,7 +247,7 @@ const Template: React.FC = () => {
                 toolBarRender={(action, { selectedRowKeys }) => [
                     <Button key='add' type="default" onClick={refPost}>
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key='batchDelete'
@@ -260,7 +260,7 @@ const Template: React.FC = () => {
                             type="primary" danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>
                 ]}

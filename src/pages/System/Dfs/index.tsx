@@ -17,6 +17,9 @@ import { useIntl } from '@umijs/max';
  * 分布式文件系统
  */
 const DFS: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     const acForm = useRef<ActionType>();
 
     const formRef = useRef<FormInstance>();
@@ -111,7 +114,7 @@ const DFS: React.FC = () => {
                         <a href={`${TWT.static}${row.path}`} target={'_blank'} rel="noreferrer">
                             <Space>
                                 <DownloadOutlined/>
-                                {useIntl().formatMessage({id: 'system.check'})}
+                                {formatMessage({id: 'system.check'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -119,7 +122,7 @@ const DFS: React.FC = () => {
                             <a href="#" hidden={auth('system:dfs:remove')}>
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -166,7 +169,7 @@ const DFS: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Button
@@ -177,7 +180,7 @@ const DFS: React.FC = () => {
                         }}
                     >
                         <PlusOutlined/>
-                        {useIntl().formatMessage({id: 'system.upload'})}
+                        {formatMessage({id: 'system.upload'})}
                     </Button>,
                 ]}
             />

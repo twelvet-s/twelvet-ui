@@ -14,6 +14,8 @@ import { useIntl } from '@umijs/max';
  * @returns
  */
 const LogLogin: React.FC = () => {
+    const {formatMessage} = useIntl()
+
     const actionRef = useRef<ActionType>();
 
     const formRef = useRef<FormInstance>();
@@ -144,7 +146,7 @@ const LogLogin: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -176,7 +178,7 @@ const LogLogin: React.FC = () => {
                             disabled={state.exportExcelLoading}
                         >
                             <FundProjectionScreenOutlined/>
-                            {useIntl().formatMessage({id: 'system.export'})}
+                            {formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

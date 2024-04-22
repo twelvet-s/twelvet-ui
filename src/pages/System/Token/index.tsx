@@ -15,6 +15,9 @@ import { useIntl } from '@umijs/max';
  * Token令牌管理
  */
 const Token: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     const acForm = useRef<ActionType>();
 
     const formRef = useRef<FormInstance>();
@@ -102,7 +105,7 @@ const Token: React.FC = () => {
                             <a href="#" hidden={auth('system:token:remove')}>
                                 <Space>
                                     <CloseOutlined/>
-                                    {useIntl().formatMessage({id: 'system.forceful.retreat'})}
+                                    {formatMessage({id: 'system.forceful.retreat'})}
                                 </Space>
                             </a>
                         </Popconfirm>

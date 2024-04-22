@@ -210,7 +210,7 @@ const Post: React.FC = () => {
                         <a onClick={() => refPut(row.clientId)} hidden={auth('system:client:update')}>
                             <Space>
                                 <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -218,7 +218,7 @@ const Post: React.FC = () => {
                             <a href="#" hidden={auth('system:client:remove')}>
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -254,7 +254,7 @@ const Post: React.FC = () => {
                 toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key={'addTool'} hidden={auth('system:client:insert')} type="default" onClick={refPost}>
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -268,7 +268,7 @@ const Post: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                 ]}

@@ -176,7 +176,7 @@ const Operation: React.FC = () => {
                     <a onClick={() => handleView(row)}>
                         <Space>
                             <EyeOutlined/>
-                            {useIntl().formatMessage({id: 'system.details'})}
+                            {formatMessage({id: 'system.details'})}
                         </Space>
                     </a>
                 );
@@ -216,7 +216,7 @@ const Operation: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -230,7 +230,7 @@ const Operation: React.FC = () => {
                     >
                         <Button type="default" hidden={auth('system:operlog:export')}>
                             <FundProjectionScreenOutlined/>
-                            {useIntl().formatMessage({id: 'system.export'})}
+                            {formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}

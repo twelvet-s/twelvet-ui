@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {message, Switch} from 'antd'
 import {system} from '@/utils/twelvet'
 import {changeStatus} from './../../service'
@@ -13,6 +13,10 @@ const StaffStatusSwitch: React.FC<{
 
     const [loading, setLoading] = useState<boolean>(false)
     const [checked, setChecked] = useState<string>(props.row.status)
+
+    useEffect(() => {
+        setChecked(props.row.status)
+    }, [props.row.status])
 
     const toggle = async () => {
         try {

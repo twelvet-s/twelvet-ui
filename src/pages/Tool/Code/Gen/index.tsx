@@ -24,6 +24,9 @@ import { useIntl } from '@umijs/max'
  * 代码生成器
  */
 const Gen: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     const acForm = useRef<ActionType>()
 
     const formRef = useRef<FormInstance>()
@@ -143,7 +146,7 @@ const Gen: React.FC = () => {
                         >
                             <Space>
                                 <EyeOutlined />
-                                {useIntl().formatMessage({id: 'system.preview'})}
+                                {formatMessage({id: 'system.preview'})}
                             </Space>
                         </a>
                         <Divider type="vertical" />
@@ -158,7 +161,7 @@ const Gen: React.FC = () => {
                         >
                             <Space>
                                 <EditOutlined />
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical" />
@@ -166,7 +169,7 @@ const Gen: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -175,7 +178,7 @@ const Gen: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <SyncOutlined spin />
-                                    {useIntl().formatMessage({id: 'system.sync'})}
+                                    {formatMessage({id: 'system.sync'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -184,7 +187,7 @@ const Gen: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <FileZipOutlined />
-                                    {useIntl().formatMessage({id: 'system.gen.code'})}
+                                    {formatMessage({id: 'system.gen.code'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -259,7 +262,7 @@ const Gen: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                 ]}

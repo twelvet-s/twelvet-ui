@@ -267,7 +267,7 @@ const Menu: React.FC = () => {
                                 <a onClick={() => refPost(row)} hidden={auth('system:menu:insert')}>
                                     <Space>
                                         <PlusOutlined/>
-                                        {useIntl().formatMessage({id: 'system.add'})}
+                                        {formatMessage({id: 'system.add'})}
                                     </Space>
                                 </a>
                                 <Divider type="vertical"/>
@@ -277,7 +277,7 @@ const Menu: React.FC = () => {
                         <a onClick={() => refPut(row)} hidden={auth('system:menu:update')}>
                             <Space>
                                 <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -285,7 +285,7 @@ const Menu: React.FC = () => {
                             <a href="#" hidden={auth('system:menu:remove')}>
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -318,7 +318,7 @@ const Menu: React.FC = () => {
                         onClick={() => refPost({menuId: 0})}
                     >
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                 ]}
                 pagination={false}

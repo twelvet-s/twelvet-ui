@@ -228,7 +228,7 @@ const Dept: React.FC = () => {
                         <a onClick={() => refPost(row.deptId)} hidden={auth('system:dept:insert')}>
                             <Space>
                                 <PlusOutlined/>
-                                {useIntl().formatMessage({id: 'system.add'})}
+                                {formatMessage({id: 'system.add'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -236,7 +236,7 @@ const Dept: React.FC = () => {
                         <a onClick={() => refPut(row.deptId)} hidden={auth('system:dept:update')}>
                             <Space>
                                 <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -245,7 +245,7 @@ const Dept: React.FC = () => {
                             <a href="#" hidden={auth('system:dept:remove')}>
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -274,7 +274,7 @@ const Dept: React.FC = () => {
                 toolBarRender={() => [
                     <Button key={'addTool'} type="default" onClick={() => refPost(0)}>
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                 ]}
                 pagination={false}

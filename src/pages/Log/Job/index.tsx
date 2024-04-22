@@ -14,6 +14,9 @@ import { useIntl } from '@umijs/max';
  * 登录日志
  */
 const Login: React.FC = () => {
+
+    const {formatMessage} = useIntl()
+
     const acForm = useRef<ActionType>();
 
     const formRef = useRef<FormInstance>();
@@ -148,7 +151,7 @@ const Login: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -162,7 +165,7 @@ const Login: React.FC = () => {
                     >
                         <Button type="default" hidden={auth('system:operlog:export')}>
                             <FundProjectionScreenOutlined/>
-                            {useIntl().formatMessage({id: 'system.export'})}
+                            {formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm key={'cleanTool'} onConfirm={() => refRemove(selectedRowKeys, action)} title="是否清空">

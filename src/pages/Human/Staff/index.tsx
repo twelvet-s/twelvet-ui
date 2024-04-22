@@ -404,7 +404,7 @@ const Staff: React.FC = () => {
                         <a onClick={() => refPut(row)} hidden={auth('system:user:update')}>
                             <Space>
                                 <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -412,7 +412,7 @@ const Staff: React.FC = () => {
                             <a href="#" hidden={auth('system:user:remove')}>
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -420,7 +420,7 @@ const Staff: React.FC = () => {
                         <a onClick={() => changPassword(row.userId)}>
                             <Space>
                                 <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.rest.password'})}
+                                {formatMessage({id: 'system.rest.password'})}
                             </Space>
                         </a>
                     </>
@@ -455,7 +455,7 @@ const Staff: React.FC = () => {
                         onClick={refPost}
                     >
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -469,7 +469,7 @@ const Staff: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -483,7 +483,7 @@ const Staff: React.FC = () => {
                     >
                         <Button type="default" hidden={auth('system:user:export')}>
                             <FundProjectionScreenOutlined/>
-                            {useIntl().formatMessage({id: 'system.export'})}
+                            {formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                     <Button
@@ -495,7 +495,7 @@ const Staff: React.FC = () => {
                         }}
                     >
                         <PlusOutlined/>
-                        {useIntl().formatMessage({id: 'system.import'})}
+                        {formatMessage({id: 'system.import'})}
                     </Button>,
                 ]}
             />

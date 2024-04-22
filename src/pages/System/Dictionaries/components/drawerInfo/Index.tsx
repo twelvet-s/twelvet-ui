@@ -247,7 +247,7 @@ const DrawerInfo: React.FC<{
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -255,7 +255,7 @@ const DrawerInfo: React.FC<{
                             <a href="#">
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -307,7 +307,7 @@ const DrawerInfo: React.FC<{
                 toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key={'addTool'} type="default" onClick={refPost}>
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -321,7 +321,7 @@ const DrawerInfo: React.FC<{
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -335,7 +335,7 @@ const DrawerInfo: React.FC<{
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined/>
-                            {useIntl().formatMessage({id: 'system.export'})}
+                            {formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}
