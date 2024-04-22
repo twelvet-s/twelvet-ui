@@ -7,7 +7,7 @@ import {changeStatus} from './../../service'
  * 状态组件操作
  * @param props row 参数
  */
-const RoleSwitch: React.FC<{
+const StaffStatusSwitch: React.FC<{
     row: Record<string, any>
 }> = (props) => {
 
@@ -49,4 +49,4 @@ const RoleSwitch: React.FC<{
     )
 }
 
-export default RoleSwitch
+export default StaffStatusSwitch

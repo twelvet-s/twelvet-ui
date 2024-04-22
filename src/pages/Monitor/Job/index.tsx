@@ -236,10 +236,6 @@ const Job: React.FC = () => {
             title: '状态',
             ellipsis: false,
             dataIndex: 'status',
-            valueEnum: {
-                '0': {text: '成功', status: 'success'},
-                '1': {text: '失败', status: 'error'},
-            },
             render: (_, row) => <JobStatus row={row}/>,
         },
         {
@@ -255,7 +251,7 @@ const Job: React.FC = () => {
                         <a onClick={() => refPut(row.jobId)} hidden={auth('monitor:job:update')}>
                             <Space>
                                 <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                {formatMessage({id: 'system.update'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -263,7 +259,7 @@ const Job: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CaretRightOutlined/>
-                                    {useIntl().formatMessage({id: 'system.execute'})}
+                                    {formatMessage({id: 'system.execute'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -279,7 +275,7 @@ const Job: React.FC = () => {
                         >
                             <Space>
                                 <EyeOutlined/>
-                                {useIntl().formatMessage({id: 'system.details'})}
+                                {formatMessage({id: 'system.details'})}
                             </Space>
                         </a>
                         <Divider type="vertical"/>
@@ -287,7 +283,7 @@ const Job: React.FC = () => {
                             <a href="#" hidden={auth('monitor:job:remove')}>
                                 <Space>
                                     <DeleteOutlined/>
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -324,7 +320,7 @@ const Job: React.FC = () => {
                 toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key={'addTool'} hidden={auth('monitor:job:insert')} type="default" onClick={refPost}>
                         <PlusOutlined />
-                        {useIntl().formatMessage({id: 'system.add'})}
+                        {formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
                         key={'deleteTool'}
@@ -338,7 +334,7 @@ const Job: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            {formatMessage({id: 'system.delete.batch'})}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -352,7 +348,7 @@ const Job: React.FC = () => {
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined/>
-                            {useIntl().formatMessage({id: 'system.export'})}
+                            {formatMessage({id: 'system.export'})}
                         </Button>
                     </Popconfirm>,
                 ]}
