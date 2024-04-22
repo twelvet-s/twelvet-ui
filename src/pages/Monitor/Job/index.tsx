@@ -456,7 +456,7 @@ const Job: React.FC = () => {
                                 sm: {span: 21},
                             },
                         }}
-                        label="错误策略"
+                        label="执行策略"
                         name="misfirePolicy"
                         initialValue={1}
                     >
