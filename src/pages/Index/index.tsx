@@ -80,10 +80,6 @@ const Index: React.FC = () => {
                             官网：<a href="https://twelvet.cn/" target='_blank'
                                     rel="copyright noreferrer">https://twelvet.cn</a>
                         </p>
-                        <p>
-                            交流群：<a href="https://jq.qq.com/?_wv=1027&k=cznM6Q00" target='_blank'
-                                      rel='noreferrer'>985830229</a>
-                        </p>
 
                     </Card>
                 </Col>
