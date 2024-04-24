@@ -1,5 +1,5 @@
-import {QuestionCircleOutlined} from '@ant-design/icons';
-import {SelectLang as UmiSelectLang} from '@umijs/max';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { SelectLang as UmiSelectLang } from '@umijs/max';
 import React from 'react';
 
 export type SiderTheme = 'light' | 'dark';
@@ -22,10 +22,10 @@ export const Question = () => {
                 height: 26,
             }}
             onClick={() => {
-                window.open('https://api.twelvet.cn/doc.html');
+                window.open('https://github.com/twelvet-projects/twelvet/issues');
             }}
         >
-            <QuestionCircleOutlined/>
+            <QuestionCircleOutlined />
         </div>
     );
 };
