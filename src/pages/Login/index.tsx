@@ -1,14 +1,15 @@
 import Footer from '@/components/Footer';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
-    AlipayCircleOutlined,
+    GithubOutlined,
     LockOutlined,
     MobileOutlined,
-    TaobaoCircleOutlined,
     UserOutlined,
-    WeiboCircleOutlined,
+    VerifiedOutlined,
+    WechatOutlined,
 } from '@ant-design/icons';
 import {
+    CaptFieldRef,
     LoginForm,
     ProFormCaptcha,
     ProFormCheckbox,
@@ -17,7 +18,7 @@ import {
 import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import Settings from '../../../config/defaultSettings';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import { setAuthority } from '@/utils/twelvet';
@@ -65,9 +66,8 @@ const ActionIcons = () => {
 
     return (
         <>
-            <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action} />
-            <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action} />
-            <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action} />
+            <GithubOutlined key="GithubOutlined" className={styles.action} />
+            <WechatOutlined key="WechatOutlined" className={styles.action} />
         </>
     );
 };
@@ -103,6 +103,8 @@ const Login: React.FC = () => {
     const { initialState, setInitialState } = useModel('@@initialState');
     const { styles } = useStyles();
     const intl = useIntl();
+    const captchaRef = useRef<CaptFieldRef | null | undefined>();
+    const [captchPhone, setCaptchPhone] = useState<string>('')
 
     const fetchUserInfo = async () => {
         const userInfo = await initialState?.fetchUserInfo?.();
@@ -124,6 +126,11 @@ const Login: React.FC = () => {
 
     const handleSubmit = async (values: API.LoginParams) => {
         try {
+            if (type === 'account') {
+                values.grantType = 'password'
+            } else {
+                values.grantType = 'sms'
+            }
             // 登录
             const data = await login({ ...values, type });
             if (data.code === 200) {
@@ -293,10 +300,13 @@ const Login: React.FC = () => {
                                     prefix: <MobileOutlined />,
                                 }}
                                 name="mobile"
-                                placeholder={intl.formatMessage({
+                                placeholder={`${intl.formatMessage({
                                     id: 'pages.login.phoneNumber.placeholder',
                                     defaultMessage: '手机号',
-                                })}
+                                })}(Test：15788888888)`}
+                                onChange={(v: any) => {
+                                    setCaptchPhone(v.target.value)
+                                }}
                                 rules={[
                                     {
                                         required: true,
@@ -308,7 +318,7 @@ const Login: React.FC = () => {
                                         ),
                                     },
                                     {
-                                        pattern: /^1\d{10}$/,
+                                        pattern: /^1[3-9]\d{9}$/,
                                         message: (
                                             <FormattedMessage
                                                 id="pages.login.phoneNumber.invalid"
@@ -319,9 +329,10 @@ const Login: React.FC = () => {
                                 ]}
                             />
                             <ProFormCaptcha
+                                fieldRef={captchaRef}
                                 fieldProps={{
                                     size: 'large',
-                                    prefix: <LockOutlined />,
+                                    prefix: <VerifiedOutlined />,
                                 }}
                                 captchaProps={{
                                     size: 'large',
@@ -342,7 +353,8 @@ const Login: React.FC = () => {
                                         defaultMessage: '获取验证码',
                                     });
                                 }}
-                                name="captcha"
+                                phoneName="phone"
+                                name="code"
                                 rules={[
                                     {
                                         required: true,
@@ -353,15 +365,31 @@ const Login: React.FC = () => {
                                             />
                                         ),
                                     },
+                                    {
+                                        pattern: /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{5})$/,
+                                        message: (
+                                            <FormattedMessage
+                                                id="pages.login.phoneLogin.errorMessage"
+                                                defaultMessage="验证码不正确"
+                                            />
+                                        ),
+                                    },
                                 ]}
                                 onGetCaptcha={async (phone) => {
-                                    const result = await getFakeCaptcha({
-                                        phone,
-                                    });
-                                    if (!result) {
-                                        return;
+                                    const regex = /^1[3-9]\d{9}$/
+                                    if(!regex.test(captchPhone)) {
+                                        return new Promise((resolve, reject) => {
+                                            reject();
+                                        })
                                     }
-                                    message.success('获取验证码成功！验证码为：1234');
+                                    console.log(`手机号码${captchPhone}`)
+                                    // const result = await getFakeCaptcha({
+                                    //     phone: captchPhone,
+                                    // })
+                                    // if (!result) {
+                                    //     return;
+                                    // }
+                                    message.success('获取验证码成功！验证码为：1234')
                                 }}
                             />
                         </>

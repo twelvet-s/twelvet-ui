@@ -105,6 +105,7 @@ declare namespace API {
         password?: string;
         autoLogin?: boolean;
         type?: string;
+        grantType: 'password' | 'sms';
     };
 
     type ErrorResponse = {

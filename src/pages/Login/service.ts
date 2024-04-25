@@ -22,7 +22,7 @@ export async function login(params: Record<string, any>) {
         },
         params: {
             ...params,
-            grant_type: 'password',
+            grant_type: params.grantType,
             scope: 'server',
         },
     });
