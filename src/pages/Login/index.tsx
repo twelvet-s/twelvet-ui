@@ -14,15 +14,15 @@ import {
     ProFormCheckbox,
     ProFormText,
 } from '@ant-design/pro-components';
-import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
-import { Alert, message, Tabs } from 'antd';
-import Settings from '../../../config/defaultSettings';
+import { FormattedMessage, Helmet, SelectLang, history, useIntl, useModel } from '@umijs/max';
+import { Alert, Tabs, message } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
+import Settings from '../../../config/defaultSettings';
 
 import { setAuthority } from '@/utils/twelvet';
-import { login } from './service';
 import { createStyles } from 'antd-style';
+import { login } from './service';
 
 const useStyles = createStyles(({ token }) => {
     return {
@@ -115,10 +115,10 @@ const Login: React.FC = () => {
                         user: userInfo.user,
                         menus: userInfo.menus,
                         permissions: userInfo.permissions,
-                        roles: userInfo.roles
-                    }
+                        roles: userInfo.roles,
+                    },
                 }));
-            })
+            });
         }
     };
 
@@ -127,14 +127,12 @@ const Login: React.FC = () => {
             // 登录
             const data = await login({ ...values, type });
             if (data.code === 200) {
-
                 setAuthority(data);
 
                 const defaultloginSuccessMessage = intl.formatMessage({
                     id: 'pages.login.success',
                     defaultMessage: '登录成功！',
                 });
-
 
                 message.success(defaultloginSuccessMessage);
 
@@ -191,7 +189,7 @@ const Login: React.FC = () => {
                         autoLogin: true,
                         // 默认账号密码
                         username: 'admin',
-                        password: '123456'
+                        password: '123456',
                     }}
                     actions={[
                         <FormattedMessage
@@ -284,7 +282,9 @@ const Login: React.FC = () => {
                         </>
                     )}
 
-                    {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
+                    {status === 'error' && loginType === 'mobile' && (
+                        <LoginMessage content="验证码错误" />
+                    )}
                     {type === 'mobile' && (
                         <>
                             <ProFormText
@@ -343,6 +343,7 @@ const Login: React.FC = () => {
                                     });
                                 }}
                                 name="captcha"
+                                phoneName="mobile"
                                 rules={[
                                     {
                                         required: true,
@@ -372,14 +373,20 @@ const Login: React.FC = () => {
                         }}
                     >
                         <ProFormCheckbox noStyle name="autoLogin">
-                            <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
+                            <FormattedMessage
+                                id="pages.login.rememberMe"
+                                defaultMessage="自动登录"
+                            />
                         </ProFormCheckbox>
                         <a
                             style={{
                                 float: 'right',
                             }}
                         >
-                            <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+                            <FormattedMessage
+                                id="pages.login.forgotPassword"
+                                defaultMessage="忘记密码"
+                            />
                         </a>
                     </div>
                 </LoginForm>
