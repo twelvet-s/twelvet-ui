@@ -1,5 +1,4 @@
 import Footer from '@/components/Footer';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
     GithubOutlined,
     LockOutlined,
@@ -389,7 +388,7 @@ const Login: React.FC = () => {
                                     // if (!result) {
                                     //     return;
                                     // }
-                                    message.success('获取验证码成功！验证码为：1234')
+                                    message.success('获取验证码成功！验证码为：a1234')
                                 }}
                             />
                         </>
