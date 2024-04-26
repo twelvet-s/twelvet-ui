@@ -365,7 +365,7 @@ const Login: React.FC = () => {
                                         ),
                                     },
                                     {
-                                        pattern: /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{5})$/,
+                                        pattern: /^\d{4}$/,
                                         message: (
                                             <FormattedMessage
                                                 id="pages.login.phoneLogin.errorMessage"
@@ -388,7 +388,7 @@ const Login: React.FC = () => {
                                     // if (!result) {
                                     //     return;
                                     // }
-                                    message.success('获取验证码成功！验证码为：a1234')
+                                    message.success('获取验证码成功！验证码为：1234')
                                 }}
                             />
                         </>
