@@ -26,7 +26,7 @@ import {
 import {pageQuery, remove, getByClientId, insert, update} from './service';
 import {system, auth} from '@/utils/twelvet';
 import {isArray} from 'lodash';
-import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
+import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
 
 /**
  * 终端模块

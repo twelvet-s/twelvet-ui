@@ -8,7 +8,7 @@ import type { FormInstance } from 'antd/lib/form';
 import { pageQuery, importTable } from './service';
 import { system } from '@/utils/twelvet';
 import type { Key } from 'antd/lib/table/interface';
-import DsConfSearch from './DsConfSearch/Index';
+import DsConfSearch from './DsConfSearch';
 
 /**
  * 数据导入

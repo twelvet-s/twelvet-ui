@@ -15,9 +15,9 @@ import type { FormInstance } from 'antd'
 import { Button, Divider, message, Popconfirm, Space } from 'antd'
 import { batchGenCode, pageQuery, remove, synchDb } from './service'
 import { system } from '@/utils/twelvet'
-import DrawerInfo from './components/DrawerInfo/Index'
-import PreviewCode from './components/PreviewCode/Index'
-import EditCode from './components/EditCode/Index'
+import DrawerInfo from './components/DrawerInfo'
+import PreviewCode from './components/PreviewCode'
+import EditCode from './components/EditCode'
 import { useIntl } from '@umijs/max'
 
 /**

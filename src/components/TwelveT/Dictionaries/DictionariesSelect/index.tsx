@@ -9,7 +9,7 @@ import { system } from '@/utils/twelvet'
 const DictionariesSelect: React.FC<{
     type: string
     mode?: 'multiple' | 'tags' | undefined
-    onChange?: (value: ValueType, option: OptionType | OptionType[]) => void;
+    onChange?: () => void;
 }> = (props) => {
 
     const { Option } = Select

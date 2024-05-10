@@ -22,7 +22,7 @@ import Form from 'antd/lib/form';
 import { getInfo, getMenus, getOptionSelect, putGen } from './service';
 import { makeTree, system } from '@/utils/twelvet';
 import TagList from './TagList';
-import TemplateGroupSearch from './TemplateGroupSearch/Index';
+import TemplateGroupSearch from './TemplateGroupSearch';
 
 /**
  * 生成代码编辑

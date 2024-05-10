@@ -19,8 +19,8 @@ import {
 import { system } from '@/utils/twelvet'
 import { isArray } from 'lodash'
 import { proTableConfigs } from '@/setting'
-import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index'
-import DictionariesRadio from '@/components/TwelveT/Dictionaries/DictionariesRadio/Index'
+import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect'
+import DictionariesRadio from '@/components/TwelveT/Dictionaries/DictionariesRadio'
 import { useIntl } from '@umijs/max'
 
 

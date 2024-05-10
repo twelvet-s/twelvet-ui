@@ -1,26 +1,16 @@
-import React, { useState, useRef } from 'react'
-import { PageContainer, ProTable } from '@ant-design/pro-components'
-import type { ActionType, ProColumns } from '@ant-design/pro-components'
-import {
-    DeleteOutlined,
-    PlusOutlined,
-    EditOutlined,
-    CloseOutlined
-} from '@ant-design/icons'
-import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider } from 'antd'
-import { FormInstance } from 'antd/lib/form'
-import {
-    pageQueryGroup,
-    getGroup,
-    delGroup,
-    addGroup,
-    updateGroup} from './service'
-import { system } from '@/utils/twelvet'
-import { isArray } from 'lodash'
-import { proTableConfigs } from '@/setting'
+import React, {useRef, useState} from 'react'
+import type {ActionType, ProColumns} from '@ant-design/pro-components'
+import {PageContainer, ProTable} from '@ant-design/pro-components'
+import {CloseOutlined, DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons'
+import {Button, Divider, Form, Input, message, Modal, Popconfirm, Space} from 'antd'
+import {FormInstance} from 'antd/lib/form'
+import {addGroup, delGroup, getGroup, pageQueryGroup, updateGroup} from './service'
+import {system} from '@/utils/twelvet'
+import {isArray} from 'lodash'
+import {proTableConfigs} from '@/setting'
 
-import TemplateSearch from './TemplateSearch/Index'
-import { useIntl } from '@umijs/max'
+import TemplateSearch from './TemplateSearch'
+import {useIntl} from '@umijs/max'
 
 /**
  * 模板分组模块
@@ -36,7 +26,7 @@ const Group: React.FC = () => {
     });
 
     // 显示Modal
-    const [modal, setModal] = useState<{ title: string, visible: boolean }>({ title: ``, visible: false })
+    const [modal, setModal] = useState<{ title: string, visible: boolean }>({title: ``, visible: false})
 
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false)
@@ -49,12 +39,12 @@ const Group: React.FC = () => {
 
     const formItemLayout = {
         labelCol: {
-            xs: { span: 4 },
-            sm: { span: 4 },
+            xs: {span: 4},
+            sm: {span: 4},
         },
         wrapperCol: {
-            xs: { span: 18 },
-            sm: { span: 18 },
+            xs: {span: 18},
+            sm: {span: 18},
         },
     }
 
@@ -73,7 +63,7 @@ const Group: React.FC = () => {
      */
     const refPut = async (row: { [key: string]: any }) => {
         try {
-            const { code, msg, data } = await getGroup(row.id)
+            const {code, msg, data} = await getGroup(row.id)
             if (code !== 200) {
                 return message.error(msg)
             }
@@ -107,7 +97,7 @@ const Group: React.FC = () => {
                 params = id
             }
 
-            const { code, msg } = await delGroup(params)
+            const {code, msg} = await delGroup(params)
 
             if (code !== 200) {
                 return message.error(msg)
@@ -127,7 +117,7 @@ const Group: React.FC = () => {
      * 取消Modal的显示
      */
     const handleCancel = () => {
-        setModal({ title: "", visible: false })
+        setModal({title: "", visible: false})
 
         form.resetFields()
 
@@ -169,8 +159,8 @@ const Group: React.FC = () => {
                         setLoadingModal(false)
                     }
                 }).catch(e => {
-                    system.error(e)
-                })
+            system.error(e)
+        })
     }
 
     // Form参数
@@ -197,7 +187,7 @@ const Group: React.FC = () => {
                             </Space>
                         </a>
 
-                        <Divider type="vertical" />
+                        <Divider type="vertical"/>
 
                         <Popconfirm
                             onConfirm={() => refRemove(row.id)}
@@ -205,7 +195,7 @@ const Group: React.FC = () => {
                         >
                             <a href='#'>
                                 <Space>
-                                    <CloseOutlined />
+                                    <CloseOutlined/>
                                     {formatMessage({id: 'system.delete'})}
                                 </Space>
                             </a>
@@ -231,8 +221,8 @@ const Group: React.FC = () => {
                 rowKey="id"
                 columns={columns}
                 request={async (params) => {
-                    const { data } = await pageQueryGroup(params);
-                    const { records, total } = data;
+                    const {data} = await pageQueryGroup(params);
+                    const {records, total} = data;
                     return Promise.resolve({
                         data: records,
                         success: true,
@@ -240,9 +230,9 @@ const Group: React.FC = () => {
                     });
                 }}
                 rowSelection={{}}
-                toolBarRender={(action, { selectedRowKeys }) => [
+                toolBarRender={(action, {selectedRowKeys}) => [
                     <Button key='add' type="default" onClick={refPost}>
-                        <PlusOutlined />
+                        <PlusOutlined/>
                         {formatMessage({id: 'system.add'})}
                     </Button>,
                     <Popconfirm
@@ -284,34 +274,34 @@ const Group: React.FC = () => {
                         name="id"
                         initialValue={0}
                     >
-                        <Input />
+                        <Input/>
                     </Form.Item>
 
                     <Form.Item
                         {...formItemLayout}
                         label="分组名称"
-                        rules={[{ required: true, message: '分组名称不能为空' }]}
+                        rules={[{required: true, message: '分组名称不能为空'}]}
                         name="groupName"
                     >
-                        <Input />
+                        <Input/>
                     </Form.Item>
 
                     <Form.Item
                         {...formItemLayout}
                         label="模板类型"
-                        rules={[{ required: true, message: '模板类型不能为空' }]}
+                        rules={[{required: true, message: '模板类型不能为空'}]}
                         name="templateIdList"
                     >
-                        <TemplateSearch />
+                        <TemplateSearch/>
                     </Form.Item>
 
                     <Form.Item
                         {...formItemLayout}
                         label="分组描述"
-                        rules={[{ required: false, message: '分组描述不能为空' }]}
+                        rules={[{required: false, message: '分组描述不能为空'}]}
                         name="groupDesc"
                     >
-                        <Input />
+                        <Input/>
                     </Form.Item>
 
                 </Form>

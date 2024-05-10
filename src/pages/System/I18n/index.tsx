@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
+import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
 import { pageQueryI18n, getI18n, delI18n, addI18n, updateI18n } from './service';
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';

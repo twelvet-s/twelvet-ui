@@ -26,15 +26,15 @@ import {
 } from 'antd';
 import {pageQuery, remove, exportExcel, run, insert, update, getByJobId} from './service';
 import {system, auth} from '@/utils/twelvet';
-import JobStatus from './components/jobStatusSwitch/Index';
+import JobStatus from './components/jobStatusSwitch';
 import type {ProColumns} from '@ant-design/pro-components';
 import type {ActionType} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
-import Details from './components/details/Index';
+import Details from './components/details';
 import type {FormInstance} from 'antd/lib/form';
 import {isArray} from 'lodash';
 import { useIntl, history } from '@umijs/max'
-import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
+import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
 
 /**
  * 定时任务
