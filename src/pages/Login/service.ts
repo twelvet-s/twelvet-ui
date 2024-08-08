@@ -4,7 +4,8 @@ import { request } from '@umijs/max';
 // 请求的控制器名称
 const controller = '/auth';
 
-const auth = 'Basic ' + window.btoa('twelvet:123456');
+// window.btoa('twelvet:123456') 提前加密，不要暴露
+const auth = 'Basic ' + 'dHdlbHZldDoxMjM0NTY=';
 
 /**
  * 登录
