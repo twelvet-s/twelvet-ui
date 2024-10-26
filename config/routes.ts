@@ -183,6 +183,21 @@ export default [
             }
         ]
     },*/
+    {
+        title: 'AI知识库',
+        name: 'ai',
+        icon: 'icon-ai',
+        path: '/ai',
+        routes: [
+            {
+                title: 'AI助手',
+                name: 'aiChat',
+                icon: 'icon-ai-chat',
+                path: '/ai/chat',
+                component: './AI/Chat',
+            },
+        ],
+    },
     // 跳转
     {
         path: '/log',
