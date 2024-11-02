@@ -2,6 +2,7 @@ import { refreshToken } from '@/pages/Login/service';
 import TWT from '@/setting';
 import { request, history } from '@umijs/max';
 import { notification } from 'antd';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 
 /**
  * 系统日志输出
@@ -31,6 +32,17 @@ export const system = {
 };
 
 /**
+ * 获取用户token
+ * @returns 返回token
+ */
+export function getToken() {
+    const local = localStorage.getItem(TWT.accessToken)
+
+    const { access_token } = local ? JSON.parse(local) : { access_token: '' }
+    return access_token
+}
+
+/**
  * 定时刷新Token
  * @param expires 过期时间
  */
@@ -42,7 +54,7 @@ export function timedRefreshToken() {
     // 定时刷新token避免过期
     const local = localStorage.getItem(TWT.accessToken);
     const { expires_in } = local ? JSON.parse(local) : { expires_in: 0 };
-    if(expires_in) {
+    if (expires_in) {
         const expires = expires_in - (new Date().getTime() + 60 * 5 * 1000);
         tokenTimed = setTimeout(
             () => {
@@ -332,4 +344,45 @@ export const auth = (authStr: string) => {
     }
 
     return !authArr.includes(authStr);
+};
+
+
+/**
+ * 处理流请求
+ * @param eventSourceUrl 请求地址
+ * @param message
+ * @param handleMessage
+ * @param handleDone
+ */
+export const eventSource = async (
+    eventSourceUrl: string,
+    message: any,
+    handleMessage: (data: any) => void,
+    handleDone: () => void,
+): Promise<void> => {
+
+    const requestUri = TWT.requestUri.endsWith('/')
+        ? TWT.requestUri.slice(0, -1)
+        : TWT.requestUri;
+
+    const controller = new AbortController();
+
+    fetchEventSource(eventSourceUrl?.charAt(0) === '/' ? `${requestUri}${eventSourceUrl}` : `${requestUri}/${eventSourceUrl}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify(message),
+        signal: controller.signal,
+        openWhenHidden: true,
+        onmessage: (event) => {
+            // 处理收到的消息
+            handleMessage(JSON.parse(event.data));
+        },
+        onerror: (err) => {
+            console.error('EventSource error:', err);
+            controller.abort(); // 处理错误时中止连接
+        },
+    });
 };
