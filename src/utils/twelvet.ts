@@ -383,6 +383,8 @@ export const eventSource = async (
         onerror: (err) => {
             console.error('EventSource error:', err);
             controller.abort(); // 处理错误时中止连接
+            // 抛出错误，否则会自动重试
+            throw err
         },
     });
 };
