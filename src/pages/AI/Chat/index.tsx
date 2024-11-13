@@ -44,7 +44,7 @@ const AIChat: React.FC = () => {
                 content: content,
             },
             (value) => {
-                setSSEData((prevData) => prevData + value.result.output.content); // 更新状态
+                setSSEData((prevData) => prevData + value.content); // 更新状态
             },
             () => {
                 console.log('结束对话');
