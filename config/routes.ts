@@ -190,6 +190,27 @@ export default [
         path: '/ai',
         routes: [
             {
+                title: '知识库管理',
+                name: 'aiModel',
+                icon: 'icon-ai-model',
+                path: '/ai/model',
+                component: './AI/Model',
+            },
+            {
+                title: '文档管理',
+                name: 'aiDoc',
+                icon: 'icon-ai-doc',
+                path: '/ai/doc',
+                component: './AI/Doc',
+            },
+            {
+                title: '切片管理',
+                name: 'aiSlice',
+                icon: 'icon-ai-slice',
+                path: '/ai/slice',
+                component: './AI/Slice',
+            },
+            {
                 title: 'AI助手',
                 name: 'aiChat',
                 icon: 'icon-ai-chat',
