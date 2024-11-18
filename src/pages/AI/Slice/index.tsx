@@ -9,7 +9,7 @@ import {
     EditOutlined,
     CloseOutlined
 } from '@ant-design/icons'
-import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider, Upload } from 'antd'
+import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import {
     pageQuerySlice,
@@ -78,7 +78,7 @@ const Slice: React.FC = () => {
     /**
      * 获取知识库列表
      */
-    const selectModelDat = async () => {
+    const selectModelData = async () => {
         try {
             const { code, msg, data } = await listModelQueryDoc({})
             if (code !== 200) {
@@ -102,7 +102,7 @@ const Slice: React.FC = () => {
     /**
      * 获取知识库文档列表
      */
-    const selectDocDat = async () => {
+    const selectDocData = async () => {
         try {
             const { code, msg, data } = await listDocQueryDoc({})
             if (code !== 200) {

@@ -6,10 +6,9 @@ import {
     DeleteOutlined,
     FundProjectionScreenOutlined,
     PlusOutlined,
-    EditOutlined,
     CloseOutlined
 } from '@ant-design/icons'
-import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider, Select } from 'antd'
+import { Popconfirm, Button, message, Modal, Form, Input, Space, Select } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import {
     pageQueryDoc,
@@ -71,7 +70,7 @@ const Doc: React.FC = () => {
     /**
      * 获取知识库列表
      */
-    const selectModelDat = async () => {
+    const selectModelData = async () => {
         try {
             const { code, msg, data } = await listModelQueryDoc({})
             if (code !== 200) {
@@ -98,7 +97,7 @@ const Doc: React.FC = () => {
      * @param row row
      */
     const refPost = async () => {
-        selectModelDat()
+        selectModelData()
         setModal({ title: formatMessage({ id: 'system.add' }), visible: true })
     }
 
@@ -108,7 +107,7 @@ const Doc: React.FC = () => {
      */
     const refPut = async (row: { [key: string]: any }) => {
         try {
-            selectModelDat()
+            selectModelData()
 
             const { code, msg, data } = await getDoc(row.docId)
             if (code !== 200) {
