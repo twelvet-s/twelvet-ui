@@ -11,30 +11,10 @@ const AIChat: React.FC = () => {
     const [content, setContent] = useState<string>();
     const [sseData, setSSEData] = useState<string>();
 
-    const sse = () => {
-        // const eventSource = new EventSource('http://localhost:8080/ai/chat?q=你好');
-
-        // eventSource.onmessage = (event) => {
-        //     // 处理接收到的数据
-        //     const json = JSON.parse(event.data)
-        //     setSSEData((prevData) => [...prevData, json]); // 更新状态
-        //     console.log(`==${new Date()}==`, sseData)
-        // };
-
-        // eventSource.onerror = (event) => {
-        //     console.error("EventSource failed:", event);
-        //     eventSource.close();
-        // };
-
-        // const text = `data:{"results":[{"output":{"messageType":"ASSISTANT","metadata":{"finishReason":"","role":"ASSISTANT","id":"20241102182559c1bc73e5277045e0","messageType":"ASSISTANT"},"toolCalls":[],"content":"端"},"metadata":{"finishReason":"","contentFilterMetadata":null}}],"result":{"output":{"messageType":"ASSISTANT","metadata":{"finishReason":"","role":"ASSISTANT","id":"20241102182559c1bc73e5277045e0","messageType":"ASSISTANT"},"toolCalls":[],"content":"端"},"metadata":{"finishReason":"","contentFilterMetadata":null}},"metadata":{"id":"20241102182559c1bc73e5277045e0","model":"glm-4-0520","rateLimit":{"requestsReset":0.0,"tokensLimit":0,"requestsLimit":0,"tokensReset":0.0,"tokensRemaining":0,"requestsRemaining":0},"usage":{"promptTokens":0,"generationTokens":0,"totalTokens":0},"promptMetadata":[],"empty":false}}`
-        // if (text.startsWith('data:')) {
-        //     const jsonText = text.slice(5).trim();
-        //     console.log(jsonText);
-        //     if (jsonText) {
-        //         const json = JSON.parse(jsonText)
-        //         console.log('====json=====', json)
-        //     }
-        // }
+    /**
+     * 发起SSE请求
+     */
+    const doSse = () => {
 
         // 清空上一次回答
         setSSEData('');
@@ -50,16 +30,19 @@ const AIChat: React.FC = () => {
                 console.log('结束对话');
             },
         );
+        // 清空输入
+        setContent('')
     };
 
     return (
         <PageContainer>
             <Space.Compact style={{ width: '100%' }}>
                 <Input
+                    value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="输入提问内容"
                 ></Input>
-                <Button type='primary' onClick={sse}>Send</Button>
+                <Button type='primary' onClick={doSse}>Send</Button>
             </Space.Compact>
 
             <Divider />
