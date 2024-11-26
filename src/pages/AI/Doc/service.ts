@@ -8,7 +8,7 @@ const controller = "/ai/doc";
  * 查询AI知识库文档列表
  * @param query 查询参数
  */
-export function pageQueryDoc(query: { [key: string]: any }) {
+export async function pageQueryDoc(query: { [key: string]: any }) {
     return request(`${controller}/pageQuery`, {
         method: `get`,
         params: query
@@ -19,7 +19,7 @@ export function pageQueryDoc(query: { [key: string]: any }) {
  * 查询AI知识库文档详细
  * @param 主键
  */
-export function getDoc(docId: string | number) {
+export async function getDoc(docId: string | number) {
     return request(`${controller}/${docId}`, {
         method: `get`
     })
@@ -29,7 +29,7 @@ export function getDoc(docId: string | number) {
  * 新增AI知识库文档
  * @param data 数据参数
  */
-export function addDoc(data: { [key: string]: any }) {
+export async function addDoc(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `post`,
         data: data
@@ -40,7 +40,7 @@ export function addDoc(data: { [key: string]: any }) {
  * 修改AI知识库文档
  * @param data 数据参数
  */
-export function updateDoc(data: { [key: string]: any }) {
+export async function updateDoc(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `put`,
         data: data
@@ -51,7 +51,7 @@ export function updateDoc(data: { [key: string]: any }) {
  * 删除AI知识库文档
  * @param 主键
  */
-export function delDoc(docId: string | number) {
+export async function delDoc(docId: string | number) {
     return request(`${controller}/${docId}`, {
         method: `delete`
     })
@@ -69,7 +69,7 @@ export async function exportDoc(params?: { [key: string]: any }) {
  * 查询AI知识库列表
  * @param query 查询参数
  */
-export function listModelQueryDoc(query: { [key: string]: any }) {
+export async function listModelQueryDoc(query: { [key: string]: any }) {
     return request(`/ai/model/list`, {
         method: `get`,
         params: query

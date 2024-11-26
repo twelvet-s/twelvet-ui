@@ -8,7 +8,7 @@ const controller = "/ai/model";
  * 查询AI知识库列表
  * @param query 查询参数
  */
-export function pageQueryModel(query: { [key: string]: any }) {
+export async function pageQueryModel(query: { [key: string]: any }) {
     return request(`${controller}/pageQuery`, {
         method: `get`,
         params: query
@@ -19,7 +19,7 @@ export function pageQueryModel(query: { [key: string]: any }) {
  * 查询AI知识库详细
  * @param 主键
  */
-export function getModel(modelId: string | number) {
+export async function getModel(modelId: string | number) {
     return request(`${controller}/${modelId}`, {
         method: `get`
     })
@@ -29,7 +29,7 @@ export function getModel(modelId: string | number) {
  * 新增AI知识库
  * @param data 数据参数
  */
-export function addModel(data: { [key: string]: any }) {
+export async function addModel(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `post`,
         data: data
@@ -40,7 +40,7 @@ export function addModel(data: { [key: string]: any }) {
  * 修改AI知识库
  * @param data 数据参数
  */
-export function updateModel(data: { [key: string]: any }) {
+export async function updateModel(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `put`,
         data: data
@@ -51,7 +51,7 @@ export function updateModel(data: { [key: string]: any }) {
  * 删除AI知识库
  * @param 主键
  */
-export function delModel(modelId: string | number) {
+export async function delModel(modelId: string | number) {
     return request(`${controller}/${modelId}`, {
         method: `delete`
     })
