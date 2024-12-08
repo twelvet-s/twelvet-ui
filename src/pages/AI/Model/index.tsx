@@ -51,12 +51,12 @@ const Model: React.FC = () => {
 
     const formItemLayout = {
         labelCol: {
-            xs: { span: 4 },
-            sm: { span: 4 },
+            xs: { span: 5 },
+            sm: { span: 5 },
         },
         wrapperCol: {
-            xs: { span: 18 },
-            sm: { span: 18 },
+            xs: { span: 20 },
+            sm: { span: 20 },
         },
     }
 
@@ -306,7 +306,7 @@ const Model: React.FC = () => {
                     <Form.Item
                         {...formItemLayout}
                         label="知识库名称"
-                        rules={[{ required: false, message: '知识库名称不能为空' }]}
+                        rules={[{ required: true, message: '知识库名称不能为空' }]}
                         name="modelName"
                     >
                         <Input />
