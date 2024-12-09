@@ -10,7 +10,7 @@ import Markdown from 'react-markdown';
 const AIChat: React.FC = () => {
     // 是否处于处理数据中
     const [processingData, setProcessingData] = useState<boolean | undefined>(false)
-    const [content, setContent] = useState<string>()
+    const [content, setContent] = useState<string>('')
     const [sseData, setSSEData] = useState<string>()
 
     /**
@@ -31,6 +31,7 @@ const AIChat: React.FC = () => {
 
             sendMessage(
                 {
+                    modelId: 1,
                     content: content,
                 },
                 (value) => {

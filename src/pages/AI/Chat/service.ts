@@ -19,11 +19,14 @@ export interface Message {
 }
 
 export const sendMessage = async (
-    message: any,
+    data: {
+        modelId: number,
+        content: string
+    },
     handleMessage: (data: any) => void,
     handleDone: () => void,
 ): Promise<void> => {
-    eventSource('/ai/chat', message, handleMessage, handleDone);
+    eventSource('/ai/chat', data, handleMessage, handleDone);
 };
 
 // export const sendMessage = async (

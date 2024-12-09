@@ -356,7 +356,7 @@ export const auth = (authStr: string) => {
  */
 export const eventSource = async (
     eventSourceUrl: string,
-    message: any,
+    data: any,
     handleMessage: (data: any) => void,
     handleDone: () => void,
 ): Promise<void> => {
@@ -373,7 +373,7 @@ export const eventSource = async (
             'Content-Type': 'application/json',
             Authorization: `Bearer ${getToken()}`,
         },
-        body: JSON.stringify(message),
+        body: JSON.stringify(data),
         signal: controller.signal,
         openWhenHidden: true,
         onmessage: (event) => {
