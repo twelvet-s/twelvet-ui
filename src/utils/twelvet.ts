@@ -386,5 +386,8 @@ export const eventSource = async (
             // 抛出错误，否则会自动重试
             throw err
         },
+        onclose: () => {
+            handleDone()
+        }
     });
 };
