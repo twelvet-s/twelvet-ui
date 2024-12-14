@@ -1,0 +1,22 @@
+.ctn {
+    width: 100%;
+    height: calc(100vh - 370px);
+}
+
+.autoHeight {
+    height: 100%;
+}
+
+.chatListCtn {
+    flex: 1;
+    overflow-y: auto;
+
+    /* Webkit 浏览器（Chrome, Safari）隐藏滚动条 */
+    &::-webkit-scrollbar {
+        display: none; // 隐藏滚动条
+    }
+}
+
+.chatCtn {
+    min-height: 32px;
+}
