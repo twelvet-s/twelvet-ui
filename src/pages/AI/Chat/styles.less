@@ -16,11 +16,14 @@
     width: 100%;
     height: auto;
     flex: 1;
-    overflow-y: auto;
+    overflow: auto;
+    scrollbar-width: none; // 火狐兼容隐藏滚动条
+    -ms-overflow-style: none; // 兼容其它浏览器隐藏滚动条
 
     /* Webkit 浏览器（Chrome, Safari）隐藏滚动条 */
 
     &::-webkit-scrollbar {
+
         display: none; // 隐藏滚动条
     }
 
@@ -113,9 +116,10 @@
     }
 
     // 工具（语音、复制等）
-    .chatInfoTool {
+    .chatInfoToolCtn {
+        margin-top: 5px;
 
-        .chatInfoToolCopy {
+        .chatInfoTool {
             padding: 5px;
             border-radius: 3px;
 
@@ -128,6 +132,28 @@
     }
 }
 
+// 全局工具框
+.chatToolCtn {
+    margin-left: 3px;
+
+    // 启用工具
+    .enableTool {
+        color: #4096ff;
+    }
+
+    // 工具默认通用
+    .chatTool {
+        padding: 5px;
+        border-radius: 3px;
+
+        &:hover {
+            cursor: pointer;
+            background: #f5f6f8;
+        }
+    }
+}
+
+// 聊天框
 .chatCtn {
     min-height: 32px;
     padding: 5px;

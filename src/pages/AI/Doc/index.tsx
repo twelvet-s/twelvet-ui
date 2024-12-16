@@ -79,7 +79,6 @@ const Doc: React.FC = () => {
 
             const selectData = []
             for (let model of data) {
-                console.log(model)
                 selectData.push({
                     label: model.modelName,
                     value: model.modelId

@@ -1,21 +1,29 @@
-import { eventSource, getToken } from '@/utils/twelvet';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { eventSource } from '@/utils/twelvet';
 import { request } from '@umijs/max';
 
 // 请求的控制器名称
 const controller = '/ai/chat';
 
-// 对话接口
-
-export interface MessageContent {
-    file?: string;
-    content: string;
-    type: string;
+/**
+ * 查询AI知识库列表
+ * @param query 查询参数
+ */
+export async function listModelQueryDoc(query: { [key: string]: any }) {
+    return request(`/ai/model/list`, {
+        method: `get`,
+        params: query
+    })
 }
 
-export interface Message {
-    role: string;
-    content: MessageContent;
+/**
+ * 查询对应的AI知识库聊天历史记录
+ * @param query 查询参数
+ */
+export async function pageQueryDoc(query: { [key: string]: any }) {
+    return request(`/ai/chat/history/page`, {
+        method: `get`,
+        params: query
+    })
 }
 
 export const sendMessage = async (
@@ -26,7 +34,7 @@ export const sendMessage = async (
     handleMessage: (data: any) => void,
     handleDone: () => void,
 ): Promise<void> => {
-    eventSource('/ai/chat', data, handleMessage, handleDone);
+    eventSource(`${controller}`, data, handleMessage, handleDone);
 };
 
 // export const sendMessage = async (
