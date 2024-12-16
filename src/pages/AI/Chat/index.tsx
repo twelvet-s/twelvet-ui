@@ -157,12 +157,12 @@ const AIChat: React.FC = () => {
 
         // 重新赋值数据
         setModelData((modelData) => {
-            const newData = modelData
-            const newChatDataList = newData[modelId].chatDataList
+            const newData = modelData;
+            const newChatDataList = newData[modelId].chatDataList;
 
-            newData[modelId].chatDataList =[...newChatDataList, userChat, aiChat]
-            return newData
-        })
+            newData[modelId].chatDataList = [...newChatDataList, userChat, aiChat];
+            return newData;
+        });
         // setChatDataList((chatDataList) => [...chatDataList, userChat, aiChat]);
 
         const sendData = {
@@ -177,9 +177,9 @@ const AIChat: React.FC = () => {
         await sendMessage(
             sendData,
             (value) => {
-                console.log("===处理哦==", value.content)
+                console.log('===处理哦==', value.content);
                 setModelData((prevData) => {
-                    const newData = {...prevData}
+                    const newData = { ...prevData };
                     const newChatDataList = [...newData[modelId].chatDataList];
 
                     const aiContent = newChatDataList[newChatDataList.length - 1];
@@ -192,8 +192,8 @@ const AIChat: React.FC = () => {
                         aiContent.content = value.content;
                     }
                     newChatDataList[newChatDataList.length - 1] = aiContent;
-                    return newData
-                })
+                    return newData;
+                });
 
                 // setChatDataList((prevData) => {
                 //     const newData = [...prevData];
@@ -218,15 +218,15 @@ const AIChat: React.FC = () => {
             () => {
                 // 完成输出显示工具
                 setModelData((prevData) => {
-                    const newData = {...prevData}
+                    const newData = { ...prevData };
                     const newChatDataList = [...newData[modelId].chatDataList];
 
                     const aiContent = newChatDataList[newChatDataList.length - 1];
                     aiContent.okFlag = true;
                     newChatDataList[newChatDataList.length - 1] = aiContent;
 
-                    return newData
-                })
+                    return newData;
+                });
                 // setChatDataList((prevData) => {
                 //     const newData = [...prevData];
                 //     const aiContent = newData[newData.length - 1];
@@ -264,30 +264,50 @@ const AIChat: React.FC = () => {
             });
     };
 
+    /**
+     * 切换知识库
+     * @param modelId 知识库ID
+     */
+    const changeModel = (modelId: number) => {
+        setModelId(modelId);
+    };
+
     return (
         <PageContainer>
             <Card>
                 <Row className={styles.ctn}>
                     <Col span={3} className={styles.autoHeight}>
-                        <List
-                            className={styles.model}
-                            itemLayout="horizontal"
-                            dataSource={modelList}
-                            renderItem={(model) => (
-                                <List.Item key={model.modelId}>{model.modelName}</List.Item>
-                            )}
-                        />
+                        <ul className={styles.modelCtn}>
+                            {modelList.map((modelItem, index) => (
+                                <li
+                                    onClick={() => changeModel(modelItem.modelId)}
+                                    className={`${styles.modelItem} ${
+                                        modelId === modelItem.modelId ? styles.modelItemActive : ''
+                                    }`}
+                                    key={index}
+                                >
+                                    <OpenAIOutlined className={styles.modelItemIcon} />
+                                    <div className={styles.modelItemInfo}>
+                                        <p className={styles.modelItemInfoTitle}>
+                                            {modelItem.modelName}
+                                        </p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
                     </Col>
                     <Col span={21} className={styles.autoHeight}>
                         <Flex gap={'small'} vertical={true} className={styles.autoHeight}>
                             <Flex vertical={true} className={styles.autoHeight}>
                                 <div ref={chatListCtnRef} className={styles.chatListCtn}>
-                                    <div className={styles.model}>
-                                        {modelId !== undefined && modelData[modelId].chatDataList.map((chatData, index) => (
-                                            <>
-                                                <div
-                                                    key={index}
-                                                    className={`
+                                    <div className={styles.maxCtn}>
+                                        {modelId !== undefined &&
+                                            modelData[modelId].chatDataList.map(
+                                                (chatData, index) => (
+                                                    <>
+                                                        <div
+                                                            key={index}
+                                                            className={`
                                                             ${styles.chatInfoCtn}
                                                             ${
                                                                 chatData.role === 'USER'
@@ -295,69 +315,79 @@ const AIChat: React.FC = () => {
                                                                     : styles.chatInfoCtnRight
                                                             }
                                                     `}
-                                                >
-                                                    {chatData.role === 'USER' ? (
-                                                        <UserOutlined className={styles.chatIcon} />
-                                                    ) : (
-                                                        <OpenAIOutlined
-                                                            className={styles.chatIcon}
-                                                        />
-                                                    )}
-                                                    <div className={styles.chatInfo}>
-                                                        <div className={styles.chatInfoTime}>
-                                                            {chatData.sendTime}
-                                                        </div>
-                                                        <div
-                                                            ref={(el) =>
-                                                                (chatDataRefs.current[index] = el)
-                                                            }
-                                                            className={styles.chatInfoDes}
                                                         >
-                                                            {chatData.content ? (
-                                                                <Markdown>
-                                                                    {chatData.content}
-                                                                </Markdown>
+                                                            {chatData.role === 'USER' ? (
+                                                                <UserOutlined
+                                                                    className={styles.chatIcon}
+                                                                />
                                                             ) : (
-                                                                <span
-                                                                    className={
-                                                                        styles.chatWaitCursor
-                                                                    }
+                                                                <OpenAIOutlined
+                                                                    className={styles.chatIcon}
                                                                 />
                                                             )}
-                                                        </div>
-                                                        {chatData.okFlag &&
-                                                            chatData.role === 'AI' && (
+                                                            <div className={styles.chatInfo}>
                                                                 <div
-                                                                    className={
-                                                                        styles.chatInfoToolCtn
-                                                                    }
+                                                                    className={styles.chatInfoTime}
                                                                 >
-                                                                    <CopyOutlined
-                                                                        onClick={() =>
-                                                                            copyContent(index)
-                                                                        }
-                                                                        className={
-                                                                            styles.chatInfoTool
-                                                                        }
-                                                                        title={'复制文本'}
-                                                                    />
-                                                                    <CodeOutlined
-                                                                        onClick={() =>
-                                                                            copyContent(
-                                                                                chatData!.content,
-                                                                            )
-                                                                        }
-                                                                        className={
-                                                                            styles.chatInfoTool
-                                                                        }
-                                                                        title={'复制md'}
-                                                                    />
+                                                                    {chatData.sendTime}
                                                                 </div>
-                                                            )}
-                                                    </div>
-                                                </div>
-                                            </>
-                                        ))}
+                                                                <div
+                                                                    ref={(el) =>
+                                                                        (chatDataRefs.current[
+                                                                            index
+                                                                        ] = el)
+                                                                    }
+                                                                    className={styles.chatInfoDes}
+                                                                >
+                                                                    {chatData.content ? (
+                                                                        <Markdown>
+                                                                            {chatData.content}
+                                                                        </Markdown>
+                                                                    ) : (
+                                                                        <span
+                                                                            className={
+                                                                                styles.chatWaitCursor
+                                                                            }
+                                                                        />
+                                                                    )}
+                                                                </div>
+                                                                {chatData.okFlag &&
+                                                                    chatData.role === 'AI' && (
+                                                                        <div
+                                                                            className={
+                                                                                styles.chatInfoToolCtn
+                                                                            }
+                                                                        >
+                                                                            <CopyOutlined
+                                                                                onClick={() =>
+                                                                                    copyContent(
+                                                                                        index,
+                                                                                    )
+                                                                                }
+                                                                                className={
+                                                                                    styles.chatInfoTool
+                                                                                }
+                                                                                title={'复制文本'}
+                                                                            />
+                                                                            <CodeOutlined
+                                                                                onClick={() =>
+                                                                                    copyContent(
+                                                                                        chatData!
+                                                                                            .content,
+                                                                                    )
+                                                                                }
+                                                                                className={
+                                                                                    styles.chatInfoTool
+                                                                                }
+                                                                                title={'复制md'}
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                ),
+                                            )}
                                     </div>
                                 </div>
 
