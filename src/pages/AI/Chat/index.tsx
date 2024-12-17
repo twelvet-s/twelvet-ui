@@ -49,22 +49,6 @@ const AIChat: React.FC = () => {
     };
     const [modelData, setModelData] = useState<modelDataType>({});
 
-    // 聊天列表数据
-    // const [chatDataList, setChatDataList] = useState<
-    //     {
-    //         // 消息唯一ID
-    //         msgId?: string;
-    //         // 消息归属
-    //         role: string;
-    //         // 消息内容
-    //         content?: string;
-    //         // 发送时间
-    //         sendTime?: string;
-    //         // 是否处理完成
-    //         okFlag: boolean;
-    //     }[]
-    // >([]);
-
     // 当前使用的知识库
     const [modelId, setModelId] = useState<number>();
 
@@ -163,7 +147,6 @@ const AIChat: React.FC = () => {
             newData[modelId].chatDataList = [...newChatDataList, userChat, aiChat];
             return newData;
         });
-        // setChatDataList((chatDataList) => [...chatDataList, userChat, aiChat]);
 
         const sendData = {
             modelId: modelId,
@@ -195,21 +178,6 @@ const AIChat: React.FC = () => {
                     return newData;
                 });
 
-                // setChatDataList((prevData) => {
-                //     const newData = [...prevData];
-                //     const aiContent = newData[newData.length - 1];
-                //     // 插入数据
-                //     if (aiContent.content !== undefined) {
-                //         aiContent.content += value.content;
-                //     } else {
-                //         aiContent.msgId = value.msgId;
-                //         aiContent.sendTime = moment().format('YYYY-MM-DD HH:mm:ss');
-                //         aiContent.content = value.content;
-                //     }
-                //     newData[newData.length - 1] = aiContent;
-                //     return newData;
-                // });
-
                 // 移动到底部
                 if (chatListCtnRef!.current!.scrollTop !== chatListCtnRef!.current!.scrollHeight) {
                     chatListCtnRef!.current!.scrollTop = chatListCtnRef!.current!.scrollHeight;
@@ -227,13 +195,6 @@ const AIChat: React.FC = () => {
 
                     return newData;
                 });
-                // setChatDataList((prevData) => {
-                //     const newData = [...prevData];
-                //     const aiContent = newData[newData.length - 1];
-                //     aiContent.okFlag = true;
-                //     newData[newData.length - 1] = aiContent;
-                //     return newData;
-                // });
                 // 关闭处理数据中
                 setProcessingDataFlag((prevData) => !prevData);
             },

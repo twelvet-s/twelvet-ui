@@ -1,4 +1,5 @@
 [中文](https://github.com/twelvet-projects/twelvet/blob/master/README_ZH.md) | [English](https://github.com/twelvet-projects/twelvet/blob/master/README.md)
+
 # 🚀twelvet
 
 # JDK >= 17
@@ -20,10 +21,6 @@
 
 系统初心是为了能够更快地完成业务的需求，带来更好的体验、更多的时间。它将会用于孵化一些实用的功能点。
 我们希望它们是轻量级，可移植性高的功能插件。
-
-同时，我们更希望广大开发者能在其中更快地获得更好的解决方案、尽量降低我们的学习成本。
-由此，我们应当把更多的时间投入到其它更有意义的事情当中，我们深知知识的重要性，但，并不希望仅拥有单一”知识“。
-去感受/关爱更多光彩，无论人、事、物，它们也将成为你最好的灵感。
 
 后端源码：https://github.com/twelvet-projects/twelvet
 
@@ -53,6 +50,7 @@ com.twelvet
 │       └── twelvet-api-system                             // 系统接口
 │       └── twelvet-api-dfs                                // DFS接口
 │       └── twelvet-api-job                                // 定时任务接口
+│       └── twelvet-api-ai                                  // AI接口
 ├── twelvet-framework       // 核心模块
 │       └── twelvet-framework-core                         // 核心模块
 │       └── twelvet-framework-log                          // 日志记录
@@ -67,6 +65,7 @@ com.twelvet
 │       └── twelvet-server-job                             // 定时任务 [8082]
 │       └── twelvet-server-dfs                             // DFS服务 [8083]
 │       └── twelvet-server-gen                             // 代码生成 [8084]
+│       └── twelvet-server-ai                               // AI模块 [8085]
 ├── twelvet-visual        // 图形化管理模块
 |       └── twelvet-visual-sentinel                        // sentinel [8101]
 │       └── twelvet-visual-monitor                         // 监控中心 [8102]
@@ -91,21 +90,26 @@ com.twelvet
 14. Swagger网关聚合文档。
 15. Sentinel限流中心。
 16. Nacos注册 + 配置中心。
+17. RAG 知识库
 
 ## 演示图
 
 <table>
     <tr>
-        <td><img src="https://twelvet.cn/assets/images/twelvet/1.png"/></td>
-        <td><img src="https://twelvet.cn/assets/images/twelvet/2.png"/></td>
+        <td><img src="https://static.twelvet.cn/twelvet/1.jpg"/></td>
+        <td><img src="https://static.twelvet.cn/twelvet/2.jpg"/></td>
     </tr>
     <tr>
-        <td><img src="https://twelvet.cn/assets/images/twelvet/3.png"/></td>
-        <td><img src="https://twelvet.cn/assets/images/twelvet/4.png"/></td>
+        <td><img src="https://static.twelvet.cn/twelvet/3.jpg"/></td>
+        <td><img src="https://static.twelvet.cn/twelvet/4.jpg"/></td>
     </tr>
     <tr>
-        <td><img src="https://twelvet.cn/assets/images/twelvet/5.png"/></td>
-        <td><img src="https://twelvet.cn/assets/images/twelvet/6.png"/></td>
+        <td><img src="https://static.twelvet.cn/twelvet/5.jpg"/></td>
+        <td><img src="https://static.twelvet.cn/twelvet/6.jpg"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://static.twelvet.cn/twelvet/7.jpg"/></td>
+        <td><img src="https://static.twelvet.cn/twelvet/8.jpg"/></td>
     </tr>
 </table>
 
@@ -117,7 +121,7 @@ com.twelvet
 
 ## 架构图
 
-<img src="https://twelvet.cn/assets/images/twelvet/map.png"/>
+<img src="https://static.twelvet.cn/twelvet/framework.png"/>
 
 ## ✈️✈️✈️快速启动微服务
 
@@ -125,10 +129,16 @@ com.twelvet
 需要自行安装maven、docker、docker-compose、node、yarn
 
 ```shell
-# mvn
-mvn clean && mvn install
+# mvn twelvet
+cd ./twelvet && mvn clean && mvn install
+# mvn twelvet-auth
+cd ../twelvet-auth && mvn clean && mvn install
+# mvn twelvet-gateway
+cd ../twelvet-gateway && mvn clean && mvn install
+# mvn twelvet-server-system
+cd ../twelvet-server/twelvet-server-system && mvn clean && mvn install
 # 进入脚本目录
-cd ./docker
+cd ../../docker
 # 可执行权限
 chmod 751 deploy.sh
 # 执行启动（按需执行参数，[init|port|base|server|stop|rm]）
