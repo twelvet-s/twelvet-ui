@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Col, Flex, Input, List, Row, message } from 'antd';
+import { Button, Card, Col, Flex, Input, Row, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { listModelQueryDoc, sendMessage } from './service';
 import Markdown from 'react-markdown';
@@ -30,24 +30,7 @@ const AIChat: React.FC = () => {
     // 输入内容，准备发送sse内容
     const [content, setContent] = useState<string>('');
 
-    // 知识库对应的渲染数据
-    type modelDataType = {
-        [key: number]: {
-            chatDataList: {
-                // 消息唯一ID
-                msgId?: string;
-                // 消息归属
-                role: string;
-                // 消息内容
-                content?: string;
-                // 发送时间
-                sendTime?: string;
-                // 是否处理完成
-                okFlag: boolean;
-            }[];
-        };
-    };
-    const [modelData, setModelData] = useState<modelDataType>({});
+    const [modelData, setModelData] = useState<AIChat.modelDataType>({});
 
     // 当前使用的知识库
     const [modelId, setModelId] = useState<number>();
@@ -76,7 +59,7 @@ const AIChat: React.FC = () => {
             return message.warning('知识库为空，请先进行创建再来对话吧~');
         }
         const modelDataList = [];
-        const chatDataListTemp: modelDataType = {};
+        const chatDataListTemp: AIChat.modelDataType = {};
         for (let model of data) {
             modelDataList.push({
                 modelId: model.modelId,
@@ -101,6 +84,16 @@ const AIChat: React.FC = () => {
     useEffect(() => {
         initData().then();
     }, []);
+
+    /**
+     * 需要时刻保持在底部
+     */
+    useEffect(() => {
+        // 移动到底部
+        if (chatListCtnRef!.current!.scrollTop !== chatListCtnRef!.current!.scrollHeight) {
+            chatListCtnRef!.current!.scrollTop = chatListCtnRef!.current!.scrollHeight;
+        }
+    }, [modelData]);
 
     /**
      * 发起SSE请求
@@ -140,8 +133,8 @@ const AIChat: React.FC = () => {
         };
 
         // 重新赋值数据
-        setModelData((modelData) => {
-            const newData = modelData;
+        setModelData((prevData) => {
+            const newData = { ...prevData };
             const newChatDataList = newData[modelId].chatDataList;
 
             newData[modelId].chatDataList = [...newChatDataList, userChat, aiChat];
@@ -177,11 +170,6 @@ const AIChat: React.FC = () => {
                     newChatDataList[newChatDataList.length - 1] = aiContent;
                     return newData;
                 });
-
-                // 移动到底部
-                if (chatListCtnRef!.current!.scrollTop !== chatListCtnRef!.current!.scrollHeight) {
-                    chatListCtnRef!.current!.scrollTop = chatListCtnRef!.current!.scrollHeight;
-                }
             },
             () => {
                 // 完成输出显示工具
@@ -195,6 +183,7 @@ const AIChat: React.FC = () => {
 
                     return newData;
                 });
+
                 // 关闭处理数据中
                 setProcessingDataFlag((prevData) => !prevData);
             },
@@ -237,7 +226,14 @@ const AIChat: React.FC = () => {
         <PageContainer>
             <Card>
                 <Row className={styles.ctn}>
-                    <Col span={3} className={styles.autoHeight}>
+                    <Col
+                        xs={{ span: 0 }}
+                        sm={{ span: 0 }}
+                        md={{ span: 0 }}
+                        lg={{ span: 0 }}
+                        xxl={{ span: 3 }}
+                        className={styles.autoHeight}
+                    >
                         <ul className={styles.modelCtn}>
                             {modelList.map((modelItem, index) => (
                                 <li
@@ -257,7 +253,14 @@ const AIChat: React.FC = () => {
                             ))}
                         </ul>
                     </Col>
-                    <Col span={21} className={styles.autoHeight}>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 24 }}
+                        lg={{ span: 24 }}
+                        xxl={{ span: 21 }}
+                        className={styles.autoHeight}
+                    >
                         <Flex gap={'small'} vertical={true} className={styles.autoHeight}>
                             <Flex vertical={true} className={styles.autoHeight}>
                                 <div ref={chatListCtnRef} className={styles.chatListCtn}>

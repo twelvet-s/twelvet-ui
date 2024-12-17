@@ -202,6 +202,15 @@ export default [
                 icon: 'icon-ai-doc',
                 path: '/ai/doc',
                 component: './AI/Doc',
+                routes: [
+                    {
+                        title: '文档切片管理',
+                        name: 'aiDocSlice',
+                        icon: 'icon-ai-doc-slice',
+                        path: '/ai/doc/slice',
+                        component: './AI/Doc/Slice',
+                    },
+                ],
             },
             {
                 title: '切片管理',
