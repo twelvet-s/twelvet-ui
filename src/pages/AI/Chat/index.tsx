@@ -360,13 +360,17 @@ const AIChat: React.FC = () => {
                                     <HistoryOutlined
                                         onClick={() => {
                                             if (!carryContextFlag) {
-                                                message.success(
-                                                    '当前模式下，发送消息会携带之前的聊天记录',
-                                                );
+                                                message
+                                                    .success(
+                                                        '当前模式下，发送消息会携带之前的聊天记录',
+                                                    )
+                                                    .then();
                                             } else {
-                                                message.success(
-                                                    '当前模式下，发送消息不会携带之前的聊天记录',
-                                                );
+                                                message
+                                                    .success(
+                                                        '当前模式下，发送消息不会携带之前的聊天记录',
+                                                    )
+                                                    .then();
                                             }
                                             setCarryContextFlag((prevData) => !prevData);
                                         }}

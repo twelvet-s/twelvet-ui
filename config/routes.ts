@@ -204,13 +204,6 @@ export default [
                 path: '/ai/doc',
                 component: './AI/Doc',
             },
-            {
-                title: '文档切片管理',
-                name: 'aiDocSlice',
-                icon: 'icon-ai-doc-slice',
-                path: '/ai/doc/slice',
-                component: './AI/Doc/Slice',
-            },
 
             {
                 title: 'AI助手',

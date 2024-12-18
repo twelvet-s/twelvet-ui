@@ -96,7 +96,6 @@ const Doc: React.FC = () => {
 
     /**
      * 新增AI知识库文档数据
-     * @param row row
      */
     const refPost = async () => {
         selectModelData();
