@@ -29,7 +29,7 @@ import { proTableConfigs } from '@/setting'
 /**
  * AI知识库文档分片模块
  */
-const Slice: React.FC = () => {
+const DocSlice: React.FC = () => {
 
     const { formatMessage } = useIntl()
 
@@ -409,4 +409,4 @@ const Slice: React.FC = () => {
 
 }
 
-export default Slice
+export default DocSlice

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useIntl } from '@umijs/max';
+import { useIntl, history } from '@umijs/max';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import {
@@ -232,7 +232,7 @@ const Doc: React.FC = () => {
                             </a>
                         </Popconfirm>
                         <Divider type="vertical" />
-                        <a href="#">
+                        <a href="#" onClick={() => history.push('/ai/doc/slice')}>
                             <Space>
                                 <CopyOutlined />
                                 切片
