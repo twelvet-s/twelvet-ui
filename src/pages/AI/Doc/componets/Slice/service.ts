@@ -69,8 +69,8 @@ export async function exportSlice(params?: { [key: string]: any }) {
  * 查询AI知识库列表
  * @param query 查询参数
  */
-export async function listModelQueryDoc(query: { [key: string]: any }) {
-    return request(`/ai/model/list`, {
+export async function listKnowledgeQueryDoc(query: { [key: string]: any }) {
+    return request(`/ai/knowledge/list`, {
         method: `get`,
         params: query
     })

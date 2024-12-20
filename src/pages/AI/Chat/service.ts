@@ -8,11 +8,11 @@ const controller = '/ai/chat';
  * 查询AI知识库列表
  * @param query 查询参数
  */
-export async function listModelQueryDoc(query: { [key: string]: any }) {
-    return request(`/ai/model/list`, {
+export async function listKnowledgeQueryDoc(query: { [key: string]: any }) {
+    return request(`/ai/knowledge/list`, {
         method: `get`,
-        params: query
-    })
+        params: query,
+    });
 }
 
 /**
@@ -22,14 +22,15 @@ export async function listModelQueryDoc(query: { [key: string]: any }) {
 export async function pageQueryDoc(query: { [key: string]: any }) {
     return request(`/ai/chat/history/page`, {
         method: `get`,
-        params: query
-    })
+        params: query,
+    });
 }
 
 export const sendMessage = async (
     data: {
-        modelId: number,
-        content: string
+        knowledgeId: number;
+        content: string;
+        carryContextFlag: boolean;
     },
     handleMessage: (data: any) => void,
     handleDone: () => void,

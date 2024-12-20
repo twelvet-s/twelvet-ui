@@ -19,7 +19,7 @@ import {
     addDoc,
     updateDoc,
     exportDoc,
-    listModelQueryDoc,
+    listKnowledgeQueryDoc,
 } from './service';
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
@@ -47,7 +47,7 @@ const Doc: React.FC = () => {
     const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
     // 知识库列表
-    const [modelData, setModelData] = useState<
+    const [knowledgeData, setKnowledgeData] = useState<
         Array<{
             label: string;
             value: number;
@@ -74,21 +74,21 @@ const Doc: React.FC = () => {
     /**
      * 获取知识库列表
      */
-    const selectModelData = async () => {
+    const selectKnowledgeData = async () => {
         try {
-            const { code, msg, data } = await listModelQueryDoc({});
+            const { code, msg, data } = await listKnowledgeQueryDoc({});
             if (code !== 200) {
                 return message.error(msg);
             }
 
             const selectData = [];
-            for (let model of data) {
+            for (let knowledge of data) {
                 selectData.push({
-                    label: model.modelName,
-                    value: model.modelId,
+                    label: knowledge.knowledgeName,
+                    value: knowledge.knowledgeId,
                 });
             }
-            setModelData(selectData);
+            setKnowledgeData(selectData);
         } catch (e) {
             system.error(e);
         }
@@ -98,7 +98,7 @@ const Doc: React.FC = () => {
      * 新增AI知识库文档数据
      */
     const refPost = async () => {
-        selectModelData();
+        selectKnowledgeData();
         setModal({ title: formatMessage({ id: 'system.add' }), visible: true });
     };
 
@@ -108,7 +108,7 @@ const Doc: React.FC = () => {
      */
     const refPut = async (row: { [key: string]: any }) => {
         try {
-            selectModelData();
+            selectKnowledgeData();
 
             const { code, msg, data } = await getDoc(row.docId);
             if (code !== 200) {
@@ -338,13 +338,13 @@ const Doc: React.FC = () => {
                         {...formItemLayout}
                         label="知识库"
                         rules={[{ required: true, message: '请选择知识库' }]}
-                        name="modelId"
+                        name="knowledgeId"
                     >
                         <Select
                             showSearch
                             placeholder="请选择知识库"
                             optionFilterProp="label"
-                            options={modelData}
+                            options={knowledgeData}
                         />
                     </Form.Item>
 

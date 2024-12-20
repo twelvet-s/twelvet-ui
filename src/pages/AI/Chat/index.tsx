@@ -1,7 +1,7 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Card, Col, Flex, Input, Row, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { listModelQueryDoc, sendMessage } from './service';
+import { listKnowledgeQueryDoc, sendMessage } from './service';
 import Markdown from 'react-markdown';
 import {
     CodeOutlined,
@@ -30,16 +30,16 @@ const AIChat: React.FC = () => {
     // 输入内容，准备发送sse内容
     const [content, setContent] = useState<string>('');
 
-    const [modelData, setModelData] = useState<AIChat.modelDataType>({});
+    const [knowledgeData, setKnowledgeData] = useState<AIChat.knowledgeDataType>({});
 
     // 当前使用的知识库
-    const [modelId, setModelId] = useState<number>();
+    const [knowledgeId, setKnowledgeId] = useState<number>();
 
     // 知识库列表
-    const [modelList, setModelList] = useState<
+    const [knowledgeList, setKnowledgeList] = useState<
         {
-            modelId: number;
-            modelName: string;
+            knowledgeId: number;
+            knowledgeName: string;
         }[]
     >([]);
 
@@ -51,31 +51,31 @@ const AIChat: React.FC = () => {
      */
     const initData = async () => {
         // 获取所有知识库
-        const { code, msg, data } = await listModelQueryDoc({});
+        const { code, msg, data } = await listKnowledgeQueryDoc({});
         if (code !== 200) {
             return message.error(msg);
         }
         if (data.length === 0) {
             return message.warning('知识库为空，请先进行创建再来对话吧~');
         }
-        const modelDataList = [];
-        const chatDataListTemp: AIChat.modelDataType = {};
-        for (let model of data) {
-            modelDataList.push({
-                modelId: model.modelId,
-                modelName: model.modelName,
+        const knowledgeDataList = [];
+        const chatDataListTemp: AIChat.knowledgeDataType = {};
+        for (let knowledge of data) {
+            knowledgeDataList.push({
+                knowledgeId: knowledge.knowledgeId,
+                knowledgeName: knowledge.knowledgeName,
             });
 
             // 初始化数据
-            chatDataListTemp[model.modelId] = {
+            chatDataListTemp[knowledge.knowledgeId] = {
                 chatDataList: [],
             };
         }
         // 默认使用第一个知识库
-        setModelId(modelDataList[0].modelId);
+        setKnowledgeId(knowledgeDataList[0].knowledgeId);
         // 设置初始化聊天信息
-        setModelData(chatDataListTemp);
-        setModelList(modelDataList);
+        setKnowledgeData(chatDataListTemp);
+        setKnowledgeList(knowledgeDataList);
     };
 
     /**
@@ -93,13 +93,13 @@ const AIChat: React.FC = () => {
         if (chatListCtnRef!.current!.scrollTop !== chatListCtnRef!.current!.scrollHeight) {
             chatListCtnRef!.current!.scrollTop = chatListCtnRef!.current!.scrollHeight;
         }
-    }, [modelData]);
+    }, [knowledgeData]);
 
     /**
      * 发起SSE请求
      */
     const doSse = async () => {
-        if (modelId === undefined) {
+        if (knowledgeId === undefined) {
             message.error('请选择一个知识库进行提问');
             return;
         }
@@ -133,16 +133,16 @@ const AIChat: React.FC = () => {
         };
 
         // 重新赋值数据
-        setModelData((prevData) => {
+        setKnowledgeData((prevData) => {
             const newData = { ...prevData };
-            const newChatDataList = newData[modelId].chatDataList;
+            const newChatDataList = newData[knowledgeId].chatDataList;
 
-            newData[modelId].chatDataList = [...newChatDataList, userChat, aiChat];
+            newData[knowledgeId].chatDataList = [...newChatDataList, userChat, aiChat];
             return newData;
         });
 
         const sendData = {
-            modelId: modelId,
+            knowledgeId: knowledgeId,
             content: content,
             // 是否携带上下文
             carryContextFlag,
@@ -153,10 +153,9 @@ const AIChat: React.FC = () => {
         await sendMessage(
             sendData,
             (value) => {
-                console.log('===处理哦==', value.content);
-                setModelData((prevData) => {
+                setKnowledgeData((prevData) => {
                     const newData = { ...prevData };
-                    const newChatDataList = [...newData[modelId].chatDataList];
+                    const newChatDataList = [...newData[knowledgeId].chatDataList];
 
                     const aiContent = newChatDataList[newChatDataList.length - 1];
                     // 插入数据
@@ -173,9 +172,9 @@ const AIChat: React.FC = () => {
             },
             () => {
                 // 完成输出显示工具
-                setModelData((prevData) => {
+                setKnowledgeData((prevData) => {
                     const newData = { ...prevData };
-                    const newChatDataList = [...newData[modelId].chatDataList];
+                    const newChatDataList = [...newData[knowledgeId].chatDataList];
 
                     const aiContent = newChatDataList[newChatDataList.length - 1];
                     aiContent.okFlag = true;
@@ -216,10 +215,10 @@ const AIChat: React.FC = () => {
 
     /**
      * 切换知识库
-     * @param modelId 知识库ID
+     * @param knowledgeId 知识库ID
      */
-    const changeModel = (modelId: number) => {
-        setModelId(modelId);
+    const changeknowledge = (knowledgeId: number) => {
+        setKnowledgeId(knowledgeId);
     };
 
     return (
@@ -234,19 +233,19 @@ const AIChat: React.FC = () => {
                         xxl={{ span: 3 }}
                         className={styles.autoHeight}
                     >
-                        <ul className={styles.modelCtn}>
-                            {modelList.map((modelItem, index) => (
+                        <ul className={styles.knowledgeCtn}>
+                            {knowledgeList.map((knowledgeItem, index) => (
                                 <li
-                                    onClick={() => changeModel(modelItem.modelId)}
-                                    className={`${styles.modelItem} ${
-                                        modelId === modelItem.modelId ? styles.modelItemActive : ''
+                                    onClick={() => changeknowledge(knowledgeItem.knowledgeId)}
+                                    className={`${styles.knowledgeItem} ${
+                                        knowledgeId === knowledgeItem.knowledgeId ? styles.knowledgeItemActive : ''
                                     }`}
                                     key={index}
                                 >
-                                    <OpenAIOutlined className={styles.modelItemIcon} />
-                                    <div className={styles.modelItemInfo}>
-                                        <p className={styles.modelItemInfoTitle}>
-                                            {modelItem.modelName}
+                                    <OpenAIOutlined className={styles.knowledgeItemIcon} />
+                                    <div className={styles.knowledgeItemInfo}>
+                                        <p>
+                                            {knowledgeItem.knowledgeName}
                                         </p>
                                     </div>
                                 </li>
@@ -265,8 +264,8 @@ const AIChat: React.FC = () => {
                             <Flex vertical={true} className={styles.autoHeight}>
                                 <div ref={chatListCtnRef} className={styles.chatListCtn}>
                                     <div className={styles.maxCtn}>
-                                        {modelId !== undefined &&
-                                            modelData[modelId].chatDataList.map(
+                                        {knowledgeId !== undefined &&
+                                            knowledgeData[knowledgeId].chatDataList.map(
                                                 (chatData, index) => (
                                                     <>
                                                         <div

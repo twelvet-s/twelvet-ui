@@ -1,9 +1,9 @@
 declare namespace AIChat {
 
     /**
-     *
+     * 知识库数据
      */
-    type modelDataType = {
+    type knowledgeDataType = {
         [key: number]: {
             chatDataList: {
                 // 消息唯一ID
