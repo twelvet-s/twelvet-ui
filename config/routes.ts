@@ -191,10 +191,10 @@ export default [
         routes: [
             {
                 title: '知识库管理',
-                name: 'aiModel',
-                icon: 'icon-ai-model',
-                path: '/ai/model',
-                component: './AI/Model',
+                name: 'aiKnowledge',
+                icon: 'icon-ai-knowledge',
+                path: '/ai/knowledge',
+                component: './AI/Knowledge',
             },
             // 文档管理
             {

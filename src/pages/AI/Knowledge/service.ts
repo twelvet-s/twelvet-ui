@@ -2,13 +2,13 @@ import {request} from '@umijs/max'
 import {download} from '@/utils/twelvet'
 
 // 请求的控制器名称
-const controller = "/ai/model";
+const controller = "/ai/knowledge";
 
 /**
  * 查询AI知识库列表
  * @param query 查询参数
  */
-export async function pageQueryModel(query: { [key: string]: any }) {
+export async function pageQueryKnowledge(query: { [key: string]: any }) {
     return request(`${controller}/pageQuery`, {
         method: `get`,
         params: query
@@ -19,8 +19,8 @@ export async function pageQueryModel(query: { [key: string]: any }) {
  * 查询AI知识库详细
  * @param 主键
  */
-export async function getModel(modelId: string | number) {
-    return request(`${controller}/${modelId}`, {
+export async function getKnowledge(knowledgeId: string | number) {
+    return request(`${controller}/${knowledgeId}`, {
         method: `get`
     })
 }
@@ -29,7 +29,7 @@ export async function getModel(modelId: string | number) {
  * 新增AI知识库
  * @param data 数据参数
  */
-export async function addModel(data: { [key: string]: any }) {
+export async function addKnowledge(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `post`,
         data: data
@@ -40,7 +40,7 @@ export async function addModel(data: { [key: string]: any }) {
  * 修改AI知识库
  * @param data 数据参数
  */
-export async function updateModel(data: { [key: string]: any }) {
+export async function updateKnowledge(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `put`,
         data: data
@@ -51,8 +51,8 @@ export async function updateModel(data: { [key: string]: any }) {
  * 删除AI知识库
  * @param 主键
  */
-export async function delModel(modelId: string | number) {
-    return request(`${controller}/${modelId}`, {
+export async function delKnowledge(knowledgeId: string | number) {
+    return request(`${controller}/${knowledgeId}`, {
         method: `delete`
     })
 }
@@ -61,6 +61,6 @@ export async function delModel(modelId: string | number) {
  * 导出数据
  * @param params
  */
-export async function exportModel(params?: { [key: string]: any }) {
+export async function exportKnowledge(params?: { [key: string]: any }) {
     return download(`${controller}/export`, params);
 }

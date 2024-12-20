@@ -12,12 +12,12 @@ import {
 import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider, InputNumber } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import {
-    pageQueryModel,
-    getModel,
-    delModel,
-    addModel,
-    updateModel,
-    exportModel
+    pageQueryKnowledge,
+    getKnowledge,
+    delKnowledge,
+    addKnowledge,
+    updateKnowledge,
+    exportKnowledge
 } from './service'
 import { system } from '@/utils/twelvet'
 import { isArray } from 'lodash'
@@ -27,7 +27,7 @@ import { proTableConfigs } from '@/setting'
 /**
  * AI知识库模块
  */
-const Model: React.FC = () => {
+const Knowledge: React.FC = () => {
 
     const { formatMessage } = useIntl()
 
@@ -75,7 +75,7 @@ const Model: React.FC = () => {
      */
     const refPut = async (row: { [key: string]: any }) => {
         try {
-            const { code, msg, data } = await getModel(row.modelId)
+            const { code, msg, data } = await getKnowledge(row.knowledgeId)
             if (code !== 200) {
                 return message.error(msg)
             }
@@ -94,22 +94,22 @@ const Model: React.FC = () => {
 
     /**
      * 移除AI知识库数据
-     * @param row modelId
+     * @param knowledgeId
      */
-    const refRemove = async (modelId: (string | number)[] | string | undefined) => {
+    const refRemove = async (knowledgeId: (string | number)[] | string | undefined) => {
         try {
-            if (!modelId) {
+            if (!knowledgeId) {
                 return true
             }
 
             let params
-            if (isArray(modelId)) {
-                params = modelId.join(",")
+            if (isArray(knowledgeId)) {
+                params = knowledgeId.join(",")
             } else {
-                params = modelId
+                params = knowledgeId
             }
 
-            const { code, msg } = await delModel(params)
+            const { code, msg } = await delKnowledge(params)
 
             if (code !== 200) {
                 return message.error(msg)
@@ -152,7 +152,7 @@ const Model: React.FC = () => {
                         const {
                             code,
                             msg
-                        } = fields.modelId === 0 ? await addModel(fields) : await updateModel(fields)
+                        } = fields.knowledgeId === 0 ? await addKnowledge(fields) : await updateKnowledge(fields)
                         if (code !== 200) {
                             return message.error(msg)
                         }
@@ -178,10 +178,10 @@ const Model: React.FC = () => {
     // Form参数
     const columns: ProColumns<any>[] = [
         {
-            title: '知识库名称', ellipsis: true, width: 200, valueType: "text", dataIndex: 'modelName',
+            title: '知识库名称', ellipsis: true, width: 200, valueType: "text", dataIndex: 'knowledgeName',
         },
         {
-            title: '知识库排序', search: false, ellipsis: true, width: 200, valueType: "text", dataIndex: 'modelSort',
+            title: '知识库排序', search: false, ellipsis: true, width: 200, valueType: "text", dataIndex: 'knowledgeSort',
         },
         {
             title: '操作',
@@ -202,7 +202,7 @@ const Model: React.FC = () => {
                         <Divider type="vertical" />
 
                         <Popconfirm
-                            onConfirm={() => refRemove(row.modelId)}
+                            onConfirm={() => refRemove(row.knowledgeId)}
                             title="确定删除吗"
                         >
                             <a href='#'>
@@ -230,10 +230,10 @@ const Model: React.FC = () => {
                 }}
                 actionRef={acForm}
                 formRef={formRef}
-                rowKey="modelId"
+                rowKey="knowledgeId"
                 columns={columns}
                 request={async (params) => {
-                    const { data } = await pageQueryModel(params);
+                    const { data } = await pageQueryKnowledge(params);
                     const { records, total } = data;
                     return Promise.resolve({
                         data: records,
@@ -265,7 +265,7 @@ const Model: React.FC = () => {
                         key='export'
                         title="是否导出数据"
                         onConfirm={() => {
-                            exportModel({
+                            exportKnowledge({
                                 ...formRef.current?.getFieldsValue()
                             })
                         }}
@@ -297,7 +297,7 @@ const Model: React.FC = () => {
                         hidden
                         {...formItemLayout}
                         label="主键"
-                        name="modelId"
+                        name="knowledgeId"
                         initialValue={0}
                     >
                         <Input />
@@ -307,7 +307,7 @@ const Model: React.FC = () => {
                         {...formItemLayout}
                         label="知识库名称"
                         rules={[{ required: true, message: '知识库名称不能为空' }]}
-                        name="modelName"
+                        name="knowledgeName"
                     >
                         <Input />
                     </Form.Item>
@@ -345,7 +345,7 @@ const Model: React.FC = () => {
                         {...formItemLayout}
                         label="排序"
                         rules={[{ required: false, message: '知识库排序不能为空' }]}
-                        name="modelSort"
+                        name="knowledgeSort"
                         initialValue={1}
                     >
                         <InputNumber />
@@ -360,4 +360,4 @@ const Model: React.FC = () => {
 
 }
 
-export default Model
+export default Knowledge
