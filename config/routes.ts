@@ -190,6 +190,13 @@ export default [
         path: '/ai',
         routes: [
             {
+                title: '模型管理',
+                name: 'aiModel',
+                icon: 'icon-ai-model',
+                path: '/ai/model',
+                component: './AI/Model',
+            },
+            {
                 title: '知识库管理',
                 name: 'aiKnowledge',
                 icon: 'icon-ai-knowledge',

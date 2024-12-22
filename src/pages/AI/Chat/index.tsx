@@ -1,18 +1,21 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Card, Col, Flex, Input, Row, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { listKnowledgeQueryDoc, sendMessage } from './service';
+import { listKnowledgeQueryDoc, sendMessage, tts } from './service';
 import Markdown from 'react-markdown';
 import {
     CodeOutlined,
-    CopyOutlined,
+    CopyOutlined, GlobalOutlined,
     HistoryOutlined,
+    MutedFilled,
+    MutedOutlined,
     OpenAIOutlined,
     SendOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import styles from './styles.less';
 import moment from 'moment';
+import { wait } from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 /**
  * AI助手模块
@@ -190,6 +193,74 @@ const AIChat: React.FC = () => {
     };
 
     /**
+     * TTS文字转语音播报
+     */
+    const tTSContent = async (index: number) => {
+        const content = chatDataRefs.current[index]!.innerText;
+
+        const { code, msg, data } = await tts({
+            content,
+        });
+
+        if (code !== 200) {
+            message.error(msg);
+            return;
+        }
+
+        // Base64字符串
+        const base64Data = data.audio;
+
+        // 解码Base64字符串为二进制数据
+        const binaryString = atob(base64Data); // atob() 用于解码Base64
+        const byteArray = new Uint8Array(binaryString.length);
+
+        // 将二进制字符串转换为字节数组
+        for (let i = 0; i < binaryString.length; i++) {
+            byteArray[i] = binaryString.charCodeAt(i);
+        }
+
+        // 将字节数组转换为ArrayBuffer
+        const arrayBuffer = byteArray.buffer;
+
+        // 如果是音频数据，可以通过AudioContext来播放
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // 解码音频数据并播放
+        audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+
+            // 开始播放音频
+            source.start(0);
+
+            //let currentIndex = 0;
+
+            // 定时检查音频播放的时间
+            const intervalId = setInterval(() => {
+                const currentTime = audioContext.currentTime;
+
+                console.log("播放时间戳：", currentTime)
+                // 检查当前时间是否跨越了下一个字/词的时间段
+                // if (currentIndex < content.length && (currentTime * 1000) >= textData[currentIndex].beginTime) {
+                //
+                //     // 显示当前字并添加高亮
+                //     const word = textData[currentIndex].text;
+                //     textDisplay.innerHTML += `<span class="highlight">${word}</span>`;
+                //     currentIndex++;
+                // }
+
+                // 如果音频播放完毕，清除定时器
+                if (currentTime >= audioBuffer.duration) {
+                    clearInterval(intervalId);
+                }
+            }, 100); // 每100毫秒检查一次
+        }, (error) => {
+            console.error("解码音频失败", error);
+        });
+    };
+
+    /**
      * 复制内容
      */
     const copyContent = (copyData: any) => {
@@ -238,15 +309,15 @@ const AIChat: React.FC = () => {
                                 <li
                                     onClick={() => changeknowledge(knowledgeItem.knowledgeId)}
                                     className={`${styles.knowledgeItem} ${
-                                        knowledgeId === knowledgeItem.knowledgeId ? styles.knowledgeItemActive : ''
+                                        knowledgeId === knowledgeItem.knowledgeId
+                                            ? styles.knowledgeItemActive
+                                            : ''
                                     }`}
                                     key={index}
                                 >
                                     <OpenAIOutlined className={styles.knowledgeItemIcon} />
                                     <div className={styles.knowledgeItemInfo}>
-                                        <p>
-                                            {knowledgeItem.knowledgeName}
-                                        </p>
+                                        <p>{knowledgeItem.knowledgeName}</p>
                                     </div>
                                 </li>
                             ))}
@@ -321,6 +392,18 @@ const AIChat: React.FC = () => {
                                                                                 styles.chatInfoToolCtn
                                                                             }
                                                                         >
+                                                                            <MutedFilled
+                                                                                onClick={() => {
+                                                                                    tTSContent(
+                                                                                        index,
+                                                                                    );
+                                                                                }}
+                                                                                className={
+                                                                                    styles.chatInfoTool
+                                                                                }
+                                                                                title={'语音播报'}
+                                                                            />
+
                                                                             <CopyOutlined
                                                                                 onClick={() =>
                                                                                     copyContent(
@@ -356,6 +439,11 @@ const AIChat: React.FC = () => {
 
                                 {/*全局工具框*/}
                                 <Flex gap="small" className={styles.chatToolCtn}>
+                                    <GlobalOutlined
+                                        className={`${styles.chatTool} ${
+                                            false ? styles.enableTool : ''
+                                        }`}
+                                        title={"开启联网"}/>
                                     <HistoryOutlined
                                         onClick={() => {
                                             if (!carryContextFlag) {

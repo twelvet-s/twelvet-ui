@@ -26,6 +26,17 @@ export async function pageQueryDoc(query: { [key: string]: any }) {
     });
 }
 
+/**
+ * TTS
+ * @param data 查询参数
+ */
+export async function tts(data: { [key: string]: any }) {
+    return request(`/ai/chat/tts`, {
+        method: `post`,
+        data: data,
+    });
+}
+
 export const sendMessage = async (
     data: {
         knowledgeId: number;
@@ -35,7 +46,7 @@ export const sendMessage = async (
     handleMessage: (data: any) => void,
     handleDone: () => void,
 ): Promise<void> => {
-    eventSource(`${controller}`, data, handleMessage, handleDone);
+    eventSource(`${controller}/multi`, data, handleMessage, handleDone);
 };
 
 // export const sendMessage = async (

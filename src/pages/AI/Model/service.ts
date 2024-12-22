@@ -2,7 +2,7 @@ import {request} from '@umijs/max'
 import {download} from '@/utils/twelvet'
 
 // 请求的控制器名称
-const controller = "/system/model";
+const controller = "/ai/model";
 
 /**
  * 查询AI大模型列表

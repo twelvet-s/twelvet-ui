@@ -1,76 +1,70 @@
-import React, {useState, useRef} from 'react'
-import { useIntl } from '@umijs/max'
-import {PageContainer, ProTable} from '@ant-design/pro-components'
-import type {ActionType, ProColumns} from '@ant-design/pro-components'
+import React, { useState, useRef } from 'react';
+import { useIntl } from '@umijs/max';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import {
     DeleteOutlined,
     FundProjectionScreenOutlined,
     PlusOutlined,
     EditOutlined,
-    CloseOutlined
-} from '@ant-design/icons'
-import {Popconfirm, Button, message, Modal, Form, Input, Space, Divider} from 'antd'
-import {FormInstance} from 'antd/lib/form'
-    import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index'
-import {
-    pageQueryModel,
-    getModel,
-    delModel,
-    addModel,
-    updateModel,
-    exportModel
-} from './service'
-import {system} from '@/utils/twelvet'
-import {isArray} from 'lodash'
-import {proTableConfigs} from '@/setting'
+    CloseOutlined,
+} from '@ant-design/icons';
+import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider } from 'antd';
+import { FormInstance } from 'antd/lib/form';
+import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
+import { pageQueryModel, getModel, delModel, addModel, updateModel, exportModel } from './service';
+import { system } from '@/utils/twelvet';
+import { isArray } from 'lodash';
+import { proTableConfigs } from '@/setting';
 
-    import DatePickerTWT from '@/components/TwelveT/DatePicker/Index'
-    import moment from 'moment'
+import DatePickerTWT from '@/components/TwelveT/DatePicker/Index';
+import moment from 'moment';
 
 /**
  * AI大模型模块
  */
 const Model: React.FC = () => {
-  
-    const {formatMessage} = useIntl()
+    const { formatMessage } = useIntl();
 
     const [state] = useState<{
-        pageSize: number
+        pageSize: number;
     }>({
         pageSize: 10,
     });
 
     // 显示Modal
-    const [modal, setModal] = useState<{ title: string, visible: boolean }>({title: ``, visible: false})
+    const [modal, setModal] = useState<{ title: string; visible: boolean }>({
+        title: ``,
+        visible: false,
+    });
 
     // 是否执行Modal数据操作中
-    const [loadingModal, setLoadingModal] = useState<boolean>(false)
+    const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
-    const acForm = useRef<ActionType>()
+    const acForm = useRef<ActionType>();
 
-    const formRef = useRef<FormInstance>()
+    const formRef = useRef<FormInstance>();
 
-    const [form] = Form.useForm()
+    const [form] = Form.useForm();
 
     const formItemLayout = {
         labelCol: {
-            xs: {span: 4},
-            sm: {span: 4},
+            xs: { span: 6 },
+            sm: { span: 6 },
         },
         wrapperCol: {
-            xs: {span: 18},
-            sm: {span: 18},
+            xs: { span: 14 },
+            sm: { span: 14 },
         },
-    }
-
+    };
 
     /**
      * 新增AI大模型数据
      * @param row row
      */
     const refPost = async () => {
-        setModal({title: formatMessage({id: 'system.add'}), visible: true})
-    }
+        setModal({ title: formatMessage({ id: 'system.add' }), visible: true });
+    };
 
     /**
      * 获取修改AI大模型信息
@@ -78,160 +72,158 @@ const Model: React.FC = () => {
      */
     const refPut = async (row: { [key: string]: any }) => {
         try {
-            const {code, msg, data} = await getModel(row.modelId)
+            const { code, msg, data } = await getModel(row.modelId);
             if (code !== 200) {
-                return message.error(msg)
+                return message.error(msg);
             }
 
-
             // 赋值表单数据
-            form.setFieldsValue(data)
+            form.setFieldsValue(data);
 
             // 设置Modal状态
-            setModal({title: formatMessage({id: 'system.update'}), visible: true})
-
+            setModal({ title: formatMessage({ id: 'system.update' }), visible: true });
         } catch (e) {
-            system.error(e)
+            system.error(e);
         }
-    }
+    };
 
     /**
      * 移除AI大模型数据
-     * @param row modelId
+     * @param modelId
      */
     const refRemove = async (modelId: (string | number)[] | string | undefined) => {
         try {
             if (!modelId) {
-                return true
+                return true;
             }
 
-            let params
+            let params;
             if (isArray(modelId)) {
-                params = modelId.join(",")
+                params = modelId.join(',');
             } else {
-                params = modelId
+                params = modelId;
             }
 
-            const {code, msg} = await delModel(params)
+            const { code, msg } = await delModel(params);
 
             if (code !== 200) {
-                return message.error(msg)
+                return message.error(msg);
             }
 
-            message.success(msg)
+            message.success(msg);
 
-            acForm?.current?.reload()
-
+            acForm?.current?.reload();
         } catch (e) {
-            system.error(e)
+            system.error(e);
         }
-
-    }
+    };
 
     /**
      * 取消Modal的显示
      */
     const handleCancel = () => {
-        setModal({title: "", visible: false})
+        setModal({ title: '', visible: false });
 
-        form.resetFields()
-
-    }
+        form.resetFields();
+    };
 
     /**
      * 保存AI大模型数据
      */
     const onSave = () => {
-        form
-            .validateFields()
-            .then(
-                async (fields) => {
-                    try {
-                        // 开启加载中
-                        setLoadingModal(true)
+        form.validateFields()
+            .then(async (fields) => {
+                try {
+                    // 开启加载中
+                    setLoadingModal(true);
 
-
-                        // ID为0则insert，否则将update
-                        const {
-                            code,
-                            msg
-                        } = fields.modelId === 0 ? await addModel(fields) : await updateModel(fields)
-                        if (code !== 200) {
-                            return message.error(msg)
-                        }
-
-                        message.success(msg)
-
-                        if (acForm.current) {
-                            acForm.current.reload()
-                        }
-
-                        // 关闭模态框
-                        handleCancel()
-                    } catch (e) {
-                        system.error(e)
-                    } finally {
-                        setLoadingModal(false)
+                    // ID为0则insert，否则将update
+                    const { code, msg } =
+                        fields.modelId === 0 ? await addModel(fields) : await updateModel(fields);
+                    if (code !== 200) {
+                        return message.error(msg);
                     }
-                }).catch(e => {
-            system.error(e)
-        })
-    }
+
+                    message.success(msg);
+
+                    if (acForm.current) {
+                        acForm.current.reload();
+                    }
+
+                    // 关闭模态框
+                    handleCancel();
+                } catch (e) {
+                    system.error(e);
+                } finally {
+                    setLoadingModal(false);
+                }
+            })
+            .catch((e) => {
+                system.error(e);
+            });
+    };
 
     // Form参数
     const columns: ProColumns<any>[] = [
-                {
-                    title: '供应商，枚举：ModelEnums.ModelSupplierEnums', ellipsis: true, width: 200, valueType: "text", dataIndex: 'modelSupplier',
-                },
-                {
-                    title: '模型', ellipsis: true, width: 200, valueType: "text", dataIndex: 'model',
-                },
-                {
-                    title: '模型类型，枚举：ModelEnums.ModelTypeEnums', ellipsis: true, width: 200, valueType: "text", dataIndex: 'modelType',
-                },
-                {
-                    title: '别名', ellipsis: true, width: 200, valueType: "text", dataIndex: 'alias',
-                },
-                {
-                    title: 'apiKey', ellipsis: true, width: 200, valueType: "text", dataIndex: 'apiKey',
-                },
-                {
-                    title: '模型请求地址', ellipsis: true, width: 200, valueType: "text", dataIndex: 'baseUrl',
-                },
+        {
+            title: '供应商',
+            ellipsis: true,
+            width: 200,
+            valueType: 'text',
+            dataIndex: 'modelSupplier',
+        },
+        {
+            title: '模型类型',
+            ellipsis: true,
+            width: 200,
+            valueType: 'text',
+            dataIndex: 'modelType',
+        },
+        {
+            title: '模型',
+            ellipsis: true,
+            width: 200,
+            valueType: 'text',
+            dataIndex: 'model',
+        },
+        {
+            title: '别名',
+            ellipsis: true,
+            width: 200,
+            valueType: 'text',
+            dataIndex: 'alias',
+        },
         {
             title: '操作',
             fixed: 'right',
             width: 320,
-            valueType: "option",
+            valueType: 'option',
             dataIndex: 'operation',
             render: (_, row) => {
                 return (
                     <>
                         <a onClick={() => refPut(row)}>
                             <Space>
-                                <EditOutlined/>
-                                {useIntl().formatMessage({id: 'system.update'})}
+                                <EditOutlined />
+                                {useIntl().formatMessage({ id: 'system.update' })}
                             </Space>
                         </a>
 
-                        <Divider type="vertical"/>
+                        <Divider type="vertical" />
 
-                        <Popconfirm
-                            onConfirm={() => refRemove(row.modelId)}
-                            title="确定删除吗"
-                        >
-                            <a href='#'>
+                        <Popconfirm onConfirm={() => refRemove(row.modelId)} title="确定删除吗">
+                            <a href="#">
                                 <Space>
-                                    <CloseOutlined/>
-                                    {useIntl().formatMessage({id: 'system.delete'})}
+                                    <CloseOutlined />
+                                    {useIntl().formatMessage({ id: 'system.delete' })}
                                 </Space>
                             </a>
                         </Popconfirm>
                     </>
-                )
-            }
+                );
+            },
         },
-    ]
+    ];
 
     return (
         <PageContainer>
@@ -248,8 +240,8 @@ const Model: React.FC = () => {
                 rowKey="modelId"
                 columns={columns}
                 request={async (params) => {
-                    const {data} = await pageQueryModel(params);
-                    const {records, total} = data;
+                    const { data } = await pageQueryModel(params);
+                    const { records, total } = data;
                     return Promise.resolve({
                         data: records,
                         success: true,
@@ -257,41 +249,41 @@ const Model: React.FC = () => {
                     });
                 }}
                 rowSelection={{}}
-                toolBarRender={(action, {selectedRowKeys}) => [
-                    <Button key='add' type="default" onClick={refPost}>
-                        <PlusOutlined/>
-                        {useIntl().formatMessage({id: 'system.add'})}
+                toolBarRender={(action, { selectedRowKeys }) => [
+                    <Button key="add" type="default" onClick={refPost}>
+                        <PlusOutlined />
+                        {useIntl().formatMessage({ id: 'system.add' })}
                     </Button>,
                     <Popconfirm
-                        key='batchDelete'
+                        key="batchDelete"
                         disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
                         onConfirm={() => refRemove(selectedRowKeys)}
                         title="是否删除选中数据"
                     >
                         <Button
                             disabled={!(selectedRowKeys && selectedRowKeys.length > 0)}
-                            type="primary" danger
+                            type="primary"
+                            danger
                         >
-                            <DeleteOutlined/>
-                            {useIntl().formatMessage({id: 'system.delete.batch'})}
+                            <DeleteOutlined />
+                            {useIntl().formatMessage({ id: 'system.delete.batch' })}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
-                        key='export'
+                        key="export"
                         title="是否导出数据"
                         onConfirm={() => {
                             exportModel({
-                                ...formRef.current?.getFieldsValue()
-                            })
+                                ...formRef.current?.getFieldsValue(),
+                            });
                         }}
                     >
                         <Button type="default">
-                            <FundProjectionScreenOutlined/>
-                            {useIntl().formatMessage({id: 'system.export'})}
+                            <FundProjectionScreenOutlined />
+                            {useIntl().formatMessage({ id: 'system.export' })}
                         </Button>
-                    </Popconfirm>
+                    </Popconfirm>,
                 ]}
-
             />
 
             <Modal
@@ -304,10 +296,7 @@ const Model: React.FC = () => {
                 // 销毁组件，要求重新装载
                 destroyOnClose
             >
-
-                <Form
-                    form={form}
-                >
+                <Form form={form}>
                     <Form.Item
                         hidden
                         {...formItemLayout}
@@ -315,71 +304,66 @@ const Model: React.FC = () => {
                         name="modelId"
                         initialValue={0}
                     >
-                        <Input/>
+                        <Input />
                     </Form.Item>
 
-                                    <Form.Item
-                                        {...formItemLayout}
-                                        label="供应商，枚举：ModelEnums.ModelSupplierEnums"
-                                        rules={[{required: false, message: '供应商，枚举：ModelEnums.ModelSupplierEnums不能为空'}]}
-                                        name="modelSupplier"
-                                    >
-                                        <Input/>
-                                    </Form.Item>
+                    <Form.Item
+                        {...formItemLayout}
+                        label="供应商"
+                        rules={[{ required: false, message: '供应商不能为空' }]}
+                        name="modelSupplier"
+                    >
+                        <Input />
+                    </Form.Item>
 
-                                    <Form.Item
-                                        {...formItemLayout}
-                                        label="模型"
-                                        rules={[{required: false, message: '模型不能为空'}]}
-                                        name="model"
-                                    >
-                                        <Input/>
-                                    </Form.Item>
+                    <Form.Item
+                        {...formItemLayout}
+                        label="模型类型"
+                        rules={[{ required: false, message: '模型类型不能为空' }]}
+                        name="modelType"
+                    >
+                        <Input />
+                    </Form.Item>
 
+                    <Form.Item
+                        {...formItemLayout}
+                        label="模型"
+                        rules={[{ required: false, message: '模型不能为空' }]}
+                        name="model"
+                    >
+                        <Input />
+                    </Form.Item>
 
-                                    <Form.Item
-                                        {...formItemLayout}
-                                        label="别名"
-                                        rules={[{required: false, message: '别名不能为空'}]}
-                                        name="alias"
-                                    >
-                                        <Input/>
-                                    </Form.Item>
+                    <Form.Item
+                        {...formItemLayout}
+                        label="别名"
+                        rules={[{ required: false, message: '别名不能为空' }]}
+                        name="alias"
+                    >
+                        <Input />
+                    </Form.Item>
 
-                                    <Form.Item
-                                        {...formItemLayout}
-                                        label="apiKey"
-                                        rules={[{required: false, message: 'apiKey不能为空'}]}
-                                        name="apiKey"
-                                    >
-                                        <Input/>
-                                    </Form.Item>
+                    <Form.Item
+                        {...formItemLayout}
+                        label="apiKey"
+                        rules={[{ required: false, message: 'apiKey不能为空' }]}
+                        name="apiKey"
+                    >
+                        <Input />
+                    </Form.Item>
 
-                                    <Form.Item
-                                        {...formItemLayout}
-                                        label="模型请求地址"
-                                        rules={[{required: true, message: '模型请求地址不能为空'}]}
-                                        name="baseUrl"
-                                    >
-                                        <Input/>
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        {...formItemLayout}
-                                        label="是否删除 0：正常，0：删除"
-                                        rules={[{required: true, message: '是否删除 0：正常，0：删除不能为空'}]}
-                                        name="delFlag"
-                                    >
-                                        <Input/>
-                                    </Form.Item>
-
+                    <Form.Item
+                        {...formItemLayout}
+                        label="模型请求地址"
+                        rules={[{ required: true, message: '模型请求地址不能为空' }]}
+                        name="baseUrl"
+                    >
+                        <Input />
+                    </Form.Item>
                 </Form>
-
-
             </Modal>
         </PageContainer>
-    )
+    );
+};
 
-}
-
-export default Model
+export default Model;
