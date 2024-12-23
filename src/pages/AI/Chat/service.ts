@@ -46,7 +46,7 @@ export const sendMessage = async (
     handleMessage: (data: any) => void,
     handleDone: () => void,
 ): Promise<void> => {
-    eventSource(`${controller}/multi`, data, handleMessage, handleDone);
+    eventSource(`${controller}`, data, handleMessage, handleDone);
 };
 
 // export const sendMessage = async (
