@@ -1,21 +1,20 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Col, Flex, Input, Row, message } from 'antd';
+import { Button, Card, Col, Flex, Input, message, Row } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { listKnowledgeQueryDoc, sendMessage, tts } from './service';
 import Markdown from 'react-markdown';
 import {
     CodeOutlined,
-    CopyOutlined, GlobalOutlined,
+    CopyOutlined,
+    GlobalOutlined,
     HistoryOutlined,
     MutedFilled,
-    MutedOutlined,
     OpenAIOutlined,
     SendOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import styles from './styles.less';
 import moment from 'moment';
-import { wait } from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 /**
  * AI助手模块
@@ -24,8 +23,13 @@ const AIChat: React.FC = () => {
     // 聊天内容框
     const chatListCtnRef = useRef<HTMLDivElement | null>(null);
 
-    // 是否携带上下文
-    const [carryContextFlag, setCarryContextFlag] = useState<boolean>(true);
+    // 聊天选择参数
+    const [chatOptions, setChatOptions] = useState<AIChat.ChatOptionsType>({
+        knowledgeId: undefined,
+        chatType: 'TEXT',
+        carryContextFlag: true,
+        internetFlag: false,
+    });
 
     // 是否处于处理数据中
     const [processingDataFlag, setProcessingDataFlag] = useState<boolean>(false);
@@ -33,10 +37,11 @@ const AIChat: React.FC = () => {
     // 输入内容，准备发送sse内容
     const [content, setContent] = useState<string>('');
 
-    const [knowledgeData, setKnowledgeData] = useState<AIChat.knowledgeDataType>({});
+    // 对应知识库消息列表
+    const [knowledgeData, setKnowledgeData] = useState<AIChat.KnowledgeDataType>({});
 
     // 当前使用的知识库
-    const [knowledgeId, setKnowledgeId] = useState<number>();
+    //const [knowledgeId, setKnowledgeId] = useState<number>();
 
     // 知识库列表
     const [knowledgeList, setKnowledgeList] = useState<
@@ -61,8 +66,12 @@ const AIChat: React.FC = () => {
         if (data.length === 0) {
             return message.warning('知识库为空，请先进行创建再来对话吧~');
         }
-        const knowledgeDataList = [];
-        const chatDataListTemp: AIChat.knowledgeDataType = {};
+
+        const knowledgeDataList:{
+            knowledgeId: number,
+            knowledgeName: string
+        }[] = [];
+        const chatDataListTemp: AIChat.KnowledgeDataType = {};
         for (let knowledge of data) {
             knowledgeDataList.push({
                 knowledgeId: knowledge.knowledgeId,
@@ -75,7 +84,12 @@ const AIChat: React.FC = () => {
             };
         }
         // 默认使用第一个知识库
-        setKnowledgeId(knowledgeDataList[0].knowledgeId);
+        setChatOptions((prevData) => {
+            const newData = { ...prevData };
+            newData.knowledgeId = knowledgeDataList[0]?.knowledgeId;
+            return newData;
+        });
+
         // 设置初始化聊天信息
         setKnowledgeData(chatDataListTemp);
         setKnowledgeList(knowledgeDataList);
@@ -102,7 +116,7 @@ const AIChat: React.FC = () => {
      * 发起SSE请求
      */
     const doSse = async () => {
-        if (knowledgeId === undefined) {
+        if (chatOptions.knowledgeId === undefined) {
             message.error('请选择一个知识库进行提问');
             return;
         }
@@ -138,17 +152,19 @@ const AIChat: React.FC = () => {
         // 重新赋值数据
         setKnowledgeData((prevData) => {
             const newData = { ...prevData };
-            const newChatDataList = newData[knowledgeId].chatDataList;
+            const newChatDataList = newData[chatOptions!.knowledgeId].chatDataList;
 
-            newData[knowledgeId].chatDataList = [...newChatDataList, userChat, aiChat];
+            newData[chatOptions!.knowledgeId].chatDataList = [...newChatDataList, userChat, aiChat];
             return newData;
         });
 
         const sendData = {
-            knowledgeId: knowledgeId,
+            knowledgeId: chatOptions.knowledgeId,
+            chatType: chatOptions.chatType,
             content: content,
             // 是否携带上下文
-            carryContextFlag,
+            carryContextFlag: chatOptions.carryContextFlag,
+            internetFlag: chatOptions.internetFlag,
         };
         // 清空输入
         setContent('');
@@ -158,7 +174,7 @@ const AIChat: React.FC = () => {
             (value) => {
                 setKnowledgeData((prevData) => {
                     const newData = { ...prevData };
-                    const newChatDataList = [...newData[knowledgeId].chatDataList];
+                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                     const aiContent = newChatDataList[newChatDataList.length - 1];
                     // 插入数据
@@ -177,7 +193,7 @@ const AIChat: React.FC = () => {
                 // 完成输出显示工具
                 setKnowledgeData((prevData) => {
                     const newData = { ...prevData };
-                    const newChatDataList = [...newData[knowledgeId].chatDataList];
+                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                     const aiContent = newChatDataList[newChatDataList.length - 1];
                     aiContent.okFlag = true;
@@ -226,38 +242,42 @@ const AIChat: React.FC = () => {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
         // 解码音频数据并播放
-        audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
-            const source = audioContext.createBufferSource();
-            source.buffer = audioBuffer;
-            source.connect(audioContext.destination);
+        audioContext.decodeAudioData(
+            arrayBuffer,
+            (audioBuffer) => {
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
 
-            // 开始播放音频
-            source.start(0);
+                // 开始播放音频
+                source.start(0);
 
-            //let currentIndex = 0;
+                //let currentIndex = 0;
 
-            // 定时检查音频播放的时间
-            const intervalId = setInterval(() => {
-                const currentTime = audioContext.currentTime;
+                // 定时检查音频播放的时间
+                const intervalId = setInterval(() => {
+                    const currentTime = audioContext.currentTime;
 
-                console.log("播放时间戳：", currentTime)
-                // 检查当前时间是否跨越了下一个字/词的时间段
-                // if (currentIndex < content.length && (currentTime * 1000) >= textData[currentIndex].beginTime) {
-                //
-                //     // 显示当前字并添加高亮
-                //     const word = textData[currentIndex].text;
-                //     textDisplay.innerHTML += `<span class="highlight">${word}</span>`;
-                //     currentIndex++;
-                // }
+                    console.log('播放时间戳：', currentTime);
+                    // 检查当前时间是否跨越了下一个字/词的时间段
+                    // if (currentIndex < content.length && (currentTime * 1000) >= textData[currentIndex].beginTime) {
+                    //
+                    //     // 显示当前字并添加高亮
+                    //     const word = textData[currentIndex].text;
+                    //     textDisplay.innerHTML += `<span class="highlight">${word}</span>`;
+                    //     currentIndex++;
+                    // }
 
-                // 如果音频播放完毕，清除定时器
-                if (currentTime >= audioBuffer.duration) {
-                    clearInterval(intervalId);
-                }
-            }, 100); // 每100毫秒检查一次
-        }, (error) => {
-            console.error("解码音频失败", error);
-        });
+                    // 如果音频播放完毕，清除定时器
+                    if (currentTime >= audioBuffer.duration) {
+                        clearInterval(intervalId);
+                    }
+                }, 100); // 每100毫秒检查一次
+            },
+            (error) => {
+                console.error('解码音频失败', error);
+            },
+        );
     };
 
     /**
@@ -289,7 +309,11 @@ const AIChat: React.FC = () => {
      * @param knowledgeId 知识库ID
      */
     const changeknowledge = (knowledgeId: number) => {
-        setKnowledgeId(knowledgeId);
+        setChatOptions((prevData) => {
+            const newData = { ...prevData };
+            newData.knowledgeId = knowledgeId;
+            return newData;
+        });
     };
 
     return (
@@ -309,7 +333,7 @@ const AIChat: React.FC = () => {
                                 <li
                                     onClick={() => changeknowledge(knowledgeItem.knowledgeId)}
                                     className={`${styles.knowledgeItem} ${
-                                        knowledgeId === knowledgeItem.knowledgeId
+                                        chatOptions!.knowledgeId === knowledgeItem.knowledgeId
                                             ? styles.knowledgeItemActive
                                             : ''
                                     }`}
@@ -335,8 +359,8 @@ const AIChat: React.FC = () => {
                             <Flex vertical={true} className={styles.autoHeight}>
                                 <div ref={chatListCtnRef} className={styles.chatListCtn}>
                                     <div className={styles.maxCtn}>
-                                        {knowledgeId !== undefined &&
-                                            knowledgeData[knowledgeId].chatDataList.map(
+                                        {chatOptions!.knowledgeId !== undefined &&
+                                            knowledgeData[chatOptions!.knowledgeId].chatDataList.map(
                                                 (chatData, index) => (
                                                     <>
                                                         <div
@@ -440,13 +464,35 @@ const AIChat: React.FC = () => {
                                 {/*全局工具框*/}
                                 <Flex gap="small" className={styles.chatToolCtn}>
                                     <GlobalOutlined
+                                        onClick={() => {
+                                            if (!chatOptions.internetFlag) {
+                                                message
+                                                    .success(
+                                                        '已开启联网搜索',
+                                                    )
+                                                    .then();
+                                            } else {
+                                                message
+                                                    .success(
+                                                        '已关闭联网搜索',
+                                                    )
+                                                    .then();
+                                            }
+                                            setChatOptions((prevData) => {
+                                                const newData = { ...prevData };
+                                                newData.internetFlag =
+                                                    !newData.internetFlag;
+                                                return newData;
+                                            });
+                                        }}
                                         className={`${styles.chatTool} ${
-                                            false ? styles.enableTool : ''
+                                            chatOptions.internetFlag ? styles.enableTool : ''
                                         }`}
-                                        title={"开启联网"}/>
+                                        title={'开启联网'}
+                                    />
                                     <HistoryOutlined
                                         onClick={() => {
-                                            if (!carryContextFlag) {
+                                            if (!chatOptions.carryContextFlag) {
                                                 message
                                                     .success(
                                                         '当前模式下，发送消息会携带之前的聊天记录',
@@ -459,13 +505,20 @@ const AIChat: React.FC = () => {
                                                     )
                                                     .then();
                                             }
-                                            setCarryContextFlag((prevData) => !prevData);
+                                            setChatOptions((prevData) => {
+                                                const newData = { ...prevData };
+                                                newData.carryContextFlag =
+                                                    !newData.carryContextFlag;
+                                                return newData;
+                                            });
                                         }}
                                         className={`${styles.chatTool} ${
-                                            carryContextFlag ? styles.enableTool : ''
+                                            chatOptions.carryContextFlag ? styles.enableTool : ''
                                         }`}
                                         title={
-                                            carryContextFlag ? '取消关联上下文' : '启用关联上下文'
+                                            chatOptions.carryContextFlag
+                                                ? '取消关联上下文'
+                                                : '启用关联上下文'
                                         }
                                     />
                                 </Flex>
