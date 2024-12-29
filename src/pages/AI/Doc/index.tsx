@@ -24,6 +24,7 @@ import {
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
+import DocSlice from '@/pages/AI/Doc/componets/Slice';
 
 /**
  * AI知识库文档模块
@@ -35,6 +36,13 @@ const Doc: React.FC = () => {
         pageSize: number;
     }>({
         pageSize: 10,
+    });
+
+    const [docSliceInfo, setDocSliceInfo] = useState<{
+        docId?: number;
+        visible: boolean;
+    }>({
+        visible: false,
     });
 
     // 显示Modal
@@ -231,7 +239,15 @@ const Doc: React.FC = () => {
                             </a>
                         </Popconfirm>
                         <Divider type="vertical" />
-                        <a href="#" onClick={() => history.push('/ai/doc/slice')}>
+                        <a
+                            href="#"
+                            onClick={() => {
+                                setDocSliceInfo({
+                                    docId: row.docId,
+                                    visible: true,
+                                });
+                            }}
+                        >
                             <Space>
                                 <CopyOutlined />
                                 切片
@@ -367,6 +383,17 @@ const Doc: React.FC = () => {
                     </Form.Item>
                 </Form>
             </Modal>
+
+            {/*文档切片*/}
+            <DocSlice
+                onClose={() => {
+                    setDocSliceInfo({
+                        docId: 0,
+                        visible: false,
+                    });
+                }}
+                info={docSliceInfo}
+            />
         </PageContainer>
     );
 };

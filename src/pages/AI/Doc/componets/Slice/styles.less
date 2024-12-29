@@ -1,0 +1,31 @@
+.table-ctn {
+    .ant-table-tbody {
+        display: flex;
+        // 允许换行
+        flex-wrap: wrap;
+
+        .row-ctn {
+            width: 33.33%;
+
+            .ant-table-cell {
+                display: inline-block;
+                width: 100%;
+                border-bottom: none;
+
+                .row {
+                    width: 100%;
+                    height: 450px;
+
+                    .row-info {
+                        width: 100%;
+                        height: 300px;
+                        white-space: normal; /* 允许正常换行 */
+                        overflow-y: scroll;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
