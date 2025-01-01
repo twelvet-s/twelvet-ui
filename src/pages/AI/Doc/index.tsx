@@ -1,25 +1,36 @@
-import React, { useState, useRef } from 'react';
-import { useIntl, history } from '@umijs/max';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import React, { useEffect, useRef, useState } from 'react';
+import { useIntl } from '@umijs/max';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import {
+    CloseOutlined,
+    CopyOutlined,
     DeleteOutlined,
     FundProjectionScreenOutlined,
     PlusOutlined,
-    CloseOutlined,
     ScissorOutlined,
-    CopyOutlined,
 } from '@ant-design/icons';
-import { Popconfirm, Button, message, Modal, Form, Input, Space, Select, Divider } from 'antd';
+import {
+    Button,
+    Divider,
+    Form,
+    Input,
+    message,
+    Modal,
+    Popconfirm,
+    Select,
+    Space,
+    Upload,
+} from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import {
-    pageQueryDoc,
-    getDoc,
-    delDoc,
     addDoc,
-    updateDoc,
+    delDoc,
     exportDoc,
+    getDoc,
     listKnowledgeQueryDoc,
+    pageQueryDoc,
+    updateDoc,
 } from './service';
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
@@ -62,6 +73,8 @@ const Doc: React.FC = () => {
         }>
     >([]);
 
+    const [knowledgeTreeData, setKnowledgeTreeData] = useState<React.ReactNode[]>([]);
+
     const acForm = useRef<ActionType>();
 
     const formRef = useRef<FormInstance>();
@@ -78,6 +91,10 @@ const Doc: React.FC = () => {
             sm: { span: 18 },
         },
     };
+
+    useEffect(() => {
+        selectKnowledgeData();
+    }, []);
 
     /**
      * 获取知识库列表
@@ -96,6 +113,19 @@ const Doc: React.FC = () => {
                     value: knowledge.knowledgeId,
                 });
             }
+
+            // 制作选择数据
+            const tree: React.ReactNode[] = [];
+            data.forEach((item: { knowledgeId: number; knowledgeName: string }) => {
+                tree.push(
+                    <Select.Option key={item.knowledgeId} value={item.knowledgeId}>
+                        {item.knowledgeName}
+                    </Select.Option>,
+                );
+            });
+
+            setKnowledgeTreeData(tree);
+
             setKnowledgeData(selectData);
         } catch (e) {
             system.error(e);
@@ -211,6 +241,17 @@ const Doc: React.FC = () => {
 
     // Form参数
     const columns: ProColumns<any>[] = [
+        {
+            title: '知识库',
+            ellipsis: true,
+            dataIndex: 'knowledgeId',
+            hideInTable: true,
+            renderFormItem: () => (
+                <Select placeholder="知识库" showSearch allowClear>
+                    {knowledgeTreeData}
+                </Select>
+            ),
+        },
         {
             title: '文档名称',
             ellipsis: true,
@@ -366,8 +407,47 @@ const Doc: React.FC = () => {
 
                     <Form.Item
                         {...formItemLayout}
+                        label="来源"
+                        name="sourceType"
+                        initialValue={`UPLOAD`}
+                    >
+                        <Select showSearch placeholder="请选择数据来源" optionFilterProp="label" />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
+                        label="资料"
+                        name="sourceType"
+                        initialValue={`UPLOAD`}
+                    >
+                        <Upload.Dragger
+                            // 设置默认可选择支持上传的文件类型
+                            accept="
+                            image/jpeg,
+                            image/png,
+                            image/jpeg,
+                            image/gif,
+                            text/markdown,
+                            .md,
+                            application/msword,
+                            application/vnd.ms-excel,
+                            application/vnd.ms-powerpoint,
+                            text/plain,
+                            application/pdf,
+                            application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                            application/vnd.openxmlformats-officedocument.presentationml.presentation
+                            "
+                        >
+                            将文件拖到此处，或 <span>点击上传</span>
+                        </Upload.Dragger>
+                        <span>请上传 大小不超过 10MB格式为 jpeg/png/jpg/gif/md/doc/xls/ppt/txt/pdf/docx/xlsx/pptx 的文件</span>
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
                         label="文档名称"
-                        rules={[{ required: false, message: '文档名称不能为空' }]}
+                        rules={[{ required: true, message: '文档名称不能为空' }]}
                         name="docName"
                     >
                         <Input />
@@ -376,10 +456,10 @@ const Doc: React.FC = () => {
                     <Form.Item
                         {...formItemLayout}
                         label="内容"
-                        rules={[{ required: false, message: '内容' }]}
+                        rules={[{ required: true, message: '请输入内容' }]}
                         name="content"
                     >
-                        <Input.TextArea />
+                        <Input.TextArea rows={5} showCount maxLength={1800} />
                     </Form.Item>
                 </Form>
             </Modal>

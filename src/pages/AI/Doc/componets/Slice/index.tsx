@@ -1,19 +1,11 @@
 import React, { ReactNode, useRef, useState } from 'react';
-import { Card, Col, Divider, Drawer, Popconfirm, Row, Space } from 'antd';
+import { Card, Drawer, Popconfirm, Space, Switch } from 'antd';
 import { proTableConfigs } from '@/setting';
 import { type ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { pageQuerySlice } from '@/pages/AI/Doc/componets/Slice/service';
 import { FormInstance } from 'antd/lib/form';
 import './styles.less';
 import Markdown from 'react-markdown';
-import {
-    CloseOutlined,
-    CopyOutlined,
-    EditOutlined,
-    EllipsisOutlined,
-    ScissorOutlined,
-    SettingOutlined,
-} from '@ant-design/icons';
 import { useIntl } from '@@/exports';
 
 /**
@@ -26,6 +18,8 @@ const DocSlice: React.FC<{
     };
     onClose: () => void;
 }> = (props) => {
+    const { formatMessage } = useIntl();
+
     const [state] = useState<{
         pageSize: number;
     }>({
@@ -58,19 +52,19 @@ const DocSlice: React.FC<{
                 // 将每一行的值包装成一个方块 div
                 return (
                     <Card
-                        title={record.sliceName}
+                        // TODO 需要改为文档切片对应的数值
+                        title={`切片${index}`}
                         actions={[
-                            <span>字符数：{record.content.length}</span>,
+                            <span key={record.sliceId}>字符数：{record.content.length}</span>,
 
-                            <Popconfirm title="确定删除吗">
-                                <a href="#">
-                                    <Space>
-                                        {useIntl().formatMessage({ id: 'system.delete' })}
-                                    </Space>
-                                </a>
-                            </Popconfirm>,
+                            <span key={record.sliceId}>
+                                {formatMessage({id: 'system.update'})}
+                            </span>,
                         ]}
-                        extra={<span>命中次数：1</span>}
+                        extra={
+                            // TODO 需要支持切片开关
+                            <Switch defaultChecked />
+                        }
                         className={'row'}
                         bordered={false}
                     >

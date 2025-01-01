@@ -18,7 +18,7 @@ const DrawerInfo: React.FC<any> = (props) => {
 
             // 制作数据
             const tree: React.ReactNode[] = []
-            data.map((item: {
+            data.forEach((item: {
                 dictId: number
                 dictType: string
                 dictName: string
