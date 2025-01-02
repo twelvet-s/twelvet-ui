@@ -8,7 +8,6 @@ import {
     DeleteOutlined,
     FundProjectionScreenOutlined,
     PlusOutlined,
-    ScissorOutlined,
 } from '@ant-design/icons';
 import {
     Button,
@@ -36,6 +35,8 @@ import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
 import DocSlice from '@/pages/AI/Doc/componets/Slice';
+import DictionariesRadio from '@/components/TwelveT/Dictionaries/DictionariesRadio';
+import './styles.less';
 
 /**
  * AI知识库文档模块
@@ -49,6 +50,10 @@ const Doc: React.FC = () => {
         pageSize: 10,
     });
 
+    // 默认的数据来源
+    const [sourceType, setSourceType] = useState<string>(`INPUT`);
+
+    // 进入Model处理的切片信息
     const [docSliceInfo, setDocSliceInfo] = useState<{
         docId?: number;
         visible: boolean;
@@ -199,7 +204,8 @@ const Doc: React.FC = () => {
      */
     const handleCancel = () => {
         setModal({ title: '', visible: false });
-
+        // 恢复默认选择
+        setSourceType('INPUT')
         form.resetFields();
     };
 
@@ -268,17 +274,6 @@ const Doc: React.FC = () => {
             render: (_, row) => {
                 return (
                     <>
-                        <Popconfirm
-                            onConfirm={() => refRemove(row.docId)}
-                            title="确定重新进行切片吗"
-                        >
-                            <a href="#">
-                                <Space>
-                                    <ScissorOutlined />
-                                    重新切片
-                                </Space>
-                            </a>
-                        </Popconfirm>
                         <Divider type="vertical" />
                         <a
                             href="#"
@@ -299,7 +294,7 @@ const Doc: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({ id: 'system.delete' })}
+                                    {formatMessage({ id: 'system.delete' })}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -336,7 +331,7 @@ const Doc: React.FC = () => {
                 toolBarRender={(action, { selectedRowKeys }) => [
                     <Button key="add" type="default" onClick={refPost}>
                         <PlusOutlined />
-                        {useIntl().formatMessage({ id: 'system.add' })}
+                        {formatMessage({ id: 'system.add' })}
                     </Button>,
                     <Popconfirm
                         key="batchDelete"
@@ -350,7 +345,7 @@ const Doc: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined />
-                            {useIntl().formatMessage({ id: 'system.delete.batch' })}
+                            {formatMessage({ id: 'system.delete.batch' })}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -364,7 +359,7 @@ const Doc: React.FC = () => {
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined />
-                            {useIntl().formatMessage({ id: 'system.export' })}
+                            {formatMessage({ id: 'system.export' })}
                         </Button>
                     </Popconfirm>,
                 ]}
@@ -407,22 +402,30 @@ const Doc: React.FC = () => {
 
                     <Form.Item
                         {...formItemLayout}
+                        rules={[{ required: true, message: '请选择来源' }]}
                         label="来源"
                         name="sourceType"
-                        initialValue={`UPLOAD`}
+                        initialValue={`INPUT`}
                     >
-                        <Select showSearch placeholder="请选择数据来源" optionFilterProp="label" />
+                        <DictionariesRadio
+                            onChange={(e) => {
+                                // 设置数据来源
+                                setSourceType(e.target.value);
+                            }}
+                            type="rag_source_type"
+                        />
                     </Form.Item>
 
-                    <Form.Item
-                        {...formItemLayout}
-                        label="资料"
-                        name="sourceType"
-                        initialValue={`UPLOAD`}
-                    >
-                        <Upload.Dragger
-                            // 设置默认可选择支持上传的文件类型
-                            accept="
+                    {sourceType === 'UPLOAD' && (
+                        <Form.Item
+                            {...formItemLayout}
+                            label="资料"
+                            name="files"
+                            rules={[{ required: true, message: '请上传资料' }]}
+                        >
+                            <Upload.Dragger
+                                // 设置默认可选择支持上传的文件类型
+                                accept="
                             image/jpeg,
                             image/png,
                             image/jpeg,
@@ -438,29 +441,40 @@ const Doc: React.FC = () => {
                             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
                             application/vnd.openxmlformats-officedocument.presentationml.presentation
                             "
-                        >
-                            将文件拖到此处，或 <span>点击上传</span>
-                        </Upload.Dragger>
-                        <span>请上传 大小不超过 10MB格式为 jpeg/png/jpg/gif/md/doc/xls/ppt/txt/pdf/docx/xlsx/pptx 的文件</span>
-                    </Form.Item>
+                            >
+                                将文件拖到此处，或 <span className={`color-blue`}>点击上传</span>
+                            </Upload.Dragger>
+                            <span>
+                                请上传 大小不超过 <span className={`color-red`}>10MB</span>格式为
+                                <span className={`color-red`}>
+                                    jpeg/png/jpg/gif/md/doc/xls/ppt/txt/pdf/docx/xlsx/pptx
+                                </span>
+                                的文件
+                            </span>
+                        </Form.Item>
+                    )}
 
-                    <Form.Item
-                        {...formItemLayout}
-                        label="文档名称"
-                        rules={[{ required: true, message: '文档名称不能为空' }]}
-                        name="docName"
-                    >
-                        <Input />
-                    </Form.Item>
+                    {sourceType === 'INPUT' && (
+                        <>
+                            <Form.Item
+                                {...formItemLayout}
+                                label="文档名称"
+                                rules={[{ required: true, message: '文档名称不能为空' }]}
+                                name="docName"
+                            >
+                                <Input />
+                            </Form.Item>
 
-                    <Form.Item
-                        {...formItemLayout}
-                        label="内容"
-                        rules={[{ required: true, message: '请输入内容' }]}
-                        name="content"
-                    >
-                        <Input.TextArea rows={5} showCount maxLength={1800} />
-                    </Form.Item>
+                            <Form.Item
+                                {...formItemLayout}
+                                label="内容"
+                                rules={[{ required: true, message: '请输入内容' }]}
+                                name="content"
+                            >
+                                <Input.TextArea rows={5} showCount maxLength={1800} />
+                            </Form.Item>
+                        </>
+                    )}
                 </Form>
             </Modal>
 
