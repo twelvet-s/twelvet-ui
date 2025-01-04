@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Col, Flex, Input, message, Row } from 'antd';
+import { Button, Card, Col, Flex, Input, message, Row, Skeleton, Spin } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { listKnowledgeQueryDoc, sendMessage, tts } from './service';
 import Markdown from 'react-markdown';
@@ -22,6 +22,11 @@ import moment from 'moment';
 const AIChat: React.FC = () => {
     // 聊天内容框
     const chatListCtnRef = useRef<HTMLDivElement | null>(null);
+
+    /**
+     * 是否全局加载中
+     */
+    const [loading, setLoading] = useState<boolean>(true);
 
     // 聊天选择参数
     const [chatOptions, setChatOptions] = useState<AIChat.ChatOptionsType>({
@@ -67,9 +72,9 @@ const AIChat: React.FC = () => {
             return message.warning('知识库为空，请先进行创建再来对话吧~');
         }
 
-        const knowledgeDataList:{
-            knowledgeId: number,
-            knowledgeName: string
+        const knowledgeDataList: {
+            knowledgeId: number;
+            knowledgeName: string;
         }[] = [];
         const chatDataListTemp: AIChat.KnowledgeDataType = {};
         for (let knowledge of data) {
@@ -99,7 +104,10 @@ const AIChat: React.FC = () => {
      * 初始化数据
      */
     useEffect(() => {
-        initData().then();
+        initData().then(() => {
+            // 取消全局加载中
+            setLoading(false)
+        });
     }, []);
 
     /**
@@ -107,8 +115,10 @@ const AIChat: React.FC = () => {
      */
     useEffect(() => {
         // 移动到底部
-        if (chatListCtnRef!.current!.scrollTop !== chatListCtnRef!.current!.scrollHeight) {
-            chatListCtnRef!.current!.scrollTop = chatListCtnRef!.current!.scrollHeight;
+        if (!loading) {
+            if (chatListCtnRef!.current!.scrollTop !== chatListCtnRef!.current!.scrollHeight) {
+                chatListCtnRef!.current!.scrollTop = chatListCtnRef!.current!.scrollHeight;
+            }
         }
     }, [knowledgeData]);
 
@@ -319,49 +329,53 @@ const AIChat: React.FC = () => {
     return (
         <PageContainer>
             <Card>
-                <Row className={styles.ctn}>
-                    <Col
-                        xs={{ span: 0 }}
-                        sm={{ span: 0 }}
-                        md={{ span: 0 }}
-                        lg={{ span: 0 }}
-                        xxl={{ span: 3 }}
-                        className={styles.autoHeight}
-                    >
-                        <ul className={styles.knowledgeCtn}>
-                            {knowledgeList.map((knowledgeItem, index) => (
-                                <li
-                                    onClick={() => changeknowledge(knowledgeItem.knowledgeId)}
-                                    className={`${styles.knowledgeItem} ${
-                                        chatOptions!.knowledgeId === knowledgeItem.knowledgeId
-                                            ? styles.knowledgeItemActive
-                                            : ''
-                                    }`}
-                                    key={index}
-                                >
-                                    <OpenAIOutlined className={styles.knowledgeItemIcon} />
-                                    <div className={styles.knowledgeItemInfo}>
-                                        <p>{knowledgeItem.knowledgeName}</p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </Col>
-                    <Col
-                        xs={{ span: 24 }}
-                        sm={{ span: 24 }}
-                        md={{ span: 24 }}
-                        lg={{ span: 24 }}
-                        xxl={{ span: 21 }}
-                        className={styles.autoHeight}
-                    >
-                        <Flex gap={'small'} vertical={true} className={styles.autoHeight}>
-                            <Flex vertical={true} className={styles.autoHeight}>
-                                <div ref={chatListCtnRef} className={styles.chatListCtn}>
-                                    <div className={styles.maxCtn}>
-                                        {chatOptions!.knowledgeId !== undefined &&
-                                            knowledgeData[chatOptions!.knowledgeId].chatDataList.map(
-                                                (chatData, index) => (
+                {loading ? (
+                    <Skeleton active />
+                ) : (
+                    <Row className={styles.ctn}>
+                        <Col
+                            xs={{ span: 0 }}
+                            sm={{ span: 0 }}
+                            md={{ span: 0 }}
+                            lg={{ span: 0 }}
+                            xxl={{ span: 3 }}
+                            className={styles.autoHeight}
+                        >
+                            <ul className={styles.knowledgeCtn}>
+                                {knowledgeList.map((knowledgeItem, index) => (
+                                    <li
+                                        onClick={() => changeknowledge(knowledgeItem.knowledgeId)}
+                                        className={`${styles.knowledgeItem} ${
+                                            chatOptions!.knowledgeId === knowledgeItem.knowledgeId
+                                                ? styles.knowledgeItemActive
+                                                : ''
+                                        }`}
+                                        key={index}
+                                    >
+                                        <OpenAIOutlined className={styles.knowledgeItemIcon} />
+                                        <div className={styles.knowledgeItemInfo}>
+                                            <p>{knowledgeItem.knowledgeName}</p>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Col>
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 24 }}
+                            lg={{ span: 24 }}
+                            xxl={{ span: 21 }}
+                            className={styles.autoHeight}
+                        >
+                            <Flex gap={'small'} vertical={true} className={styles.autoHeight}>
+                                <Flex vertical={true} className={styles.autoHeight}>
+                                    <div ref={chatListCtnRef} className={styles.chatListCtn}>
+                                        <div className={styles.maxCtn}>
+                                            {chatOptions!.knowledgeId !== undefined &&
+                                                knowledgeData[
+                                                    chatOptions!.knowledgeId
+                                                ].chatDataList.map((chatData, index) => (
                                                     <>
                                                         <div
                                                             key={index}
@@ -456,113 +470,106 @@ const AIChat: React.FC = () => {
                                                             </div>
                                                         </div>
                                                     </>
-                                                ),
-                                            )}
+                                                ))}
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/*全局工具框*/}
-                                <Flex gap="small" className={styles.chatToolCtn}>
-                                    <GlobalOutlined
-                                        onClick={() => {
-                                            if (!chatOptions.internetFlag) {
-                                                message
-                                                    .success(
-                                                        '已开启联网搜索',
-                                                    )
-                                                    .then();
-                                            } else {
-                                                message
-                                                    .success(
-                                                        '已关闭联网搜索',
-                                                    )
-                                                    .then();
+                                    {/*全局工具框*/}
+                                    <Flex gap="small" className={styles.chatToolCtn}>
+                                        <GlobalOutlined
+                                            onClick={() => {
+                                                if (!chatOptions.internetFlag) {
+                                                    message.success('已开启联网搜索').then();
+                                                } else {
+                                                    message.success('已关闭联网搜索').then();
+                                                }
+                                                setChatOptions((prevData) => {
+                                                    const newData = { ...prevData };
+                                                    newData.internetFlag = !newData.internetFlag;
+                                                    return newData;
+                                                });
+                                            }}
+                                            className={`${styles.chatTool} ${
+                                                chatOptions.internetFlag ? styles.enableTool : ''
+                                            }`}
+                                            title={'开启联网'}
+                                        />
+                                        <HistoryOutlined
+                                            onClick={() => {
+                                                if (!chatOptions.carryContextFlag) {
+                                                    message
+                                                        .success(
+                                                            '当前模式下，发送消息会携带之前的聊天记录',
+                                                        )
+                                                        .then();
+                                                } else {
+                                                    message
+                                                        .success(
+                                                            '当前模式下，发送消息不会携带之前的聊天记录',
+                                                        )
+                                                        .then();
+                                                }
+                                                setChatOptions((prevData) => {
+                                                    const newData = { ...prevData };
+                                                    newData.carryContextFlag =
+                                                        !newData.carryContextFlag;
+                                                    return newData;
+                                                });
+                                            }}
+                                            className={`${styles.chatTool} ${
+                                                chatOptions.carryContextFlag
+                                                    ? styles.enableTool
+                                                    : ''
+                                            }`}
+                                            title={
+                                                chatOptions.carryContextFlag
+                                                    ? '取消关联上下文'
+                                                    : '启用关联上下文'
                                             }
-                                            setChatOptions((prevData) => {
-                                                const newData = { ...prevData };
-                                                newData.internetFlag =
-                                                    !newData.internetFlag;
-                                                return newData;
-                                            });
-                                        }}
-                                        className={`${styles.chatTool} ${
-                                            chatOptions.internetFlag ? styles.enableTool : ''
-                                        }`}
-                                        title={'开启联网'}
-                                    />
-                                    <HistoryOutlined
-                                        onClick={() => {
-                                            if (!chatOptions.carryContextFlag) {
-                                                message
-                                                    .success(
-                                                        '当前模式下，发送消息会携带之前的聊天记录',
-                                                    )
-                                                    .then();
-                                            } else {
-                                                message
-                                                    .success(
-                                                        '当前模式下，发送消息不会携带之前的聊天记录',
-                                                    )
-                                                    .then();
-                                            }
-                                            setChatOptions((prevData) => {
-                                                const newData = { ...prevData };
-                                                newData.carryContextFlag =
-                                                    !newData.carryContextFlag;
-                                                return newData;
-                                            });
-                                        }}
-                                        className={`${styles.chatTool} ${
-                                            chatOptions.carryContextFlag ? styles.enableTool : ''
-                                        }`}
-                                        title={
-                                            chatOptions.carryContextFlag
-                                                ? '取消关联上下文'
-                                                : '启用关联上下文'
-                                        }
-                                    />
-                                </Flex>
-                                {/*发送内容框*/}
-                                <Flex
-                                    gap="small"
-                                    justify={'justify'}
-                                    align={'center'}
-                                    className={styles.chatCtn}
-                                >
-                                    <Input.TextArea
-                                        autoSize={{
-                                            minRows: 1,
-                                            maxRows: 5,
-                                        }}
-                                        value={content}
-                                        onChange={(e) => setContent(e.target.value)}
-                                        placeholder="输入提问内容，Enter回车发送，Shift+Enter回车换行"
-                                        onKeyDown={(e) => {
-                                            if (e.shiftKey) {
-                                                // 如果按下shift键将不走发送逻辑，允许回车输入
-                                                return;
-                                            }
-
-                                            // 回车发送
-                                            if (e.key === 'Enter') {
-                                                // 阻止默认的换行行为
-                                                e.preventDefault();
-                                                doSse().then();
-                                            }
-                                        }}
-                                    />
-                                    <Button
-                                        type="primary"
-                                        onClick={doSse}
-                                        disabled={processingDataFlag}
+                                        />
+                                    </Flex>
+                                    {/*发送内容框*/}
+                                    <Flex
+                                        gap="small"
+                                        justify={'justify'}
+                                        align={'center'}
+                                        className={styles.chatCtn}
                                     >
-                                        <SendOutlined rotate={-45} />
-                                    </Button>
+                                        <Input.TextArea
+                                            autoSize={{
+                                                minRows: 1,
+                                                maxRows: 5,
+                                            }}
+                                            value={content}
+                                            onChange={(e) => setContent(e.target.value)}
+                                            placeholder="输入提问内容，Enter回车发送，Shift+Enter回车换行"
+                                            onKeyDown={(e) => {
+                                                if (e.shiftKey) {
+                                                    // 如果按下shift键将不走发送逻辑，允许回车输入
+                                                    return;
+                                                }
+
+                                                // 回车发送
+                                                if (e.key === 'Enter') {
+                                                    // 阻止默认的换行行为
+                                                    e.preventDefault();
+                                                    doSse().then();
+                                                }
+                                            }}
+                                        />
+                                        <Button
+                                            type="primary"
+                                            onClick={doSse}
+                                            disabled={processingDataFlag}
+                                        >
+                                            <SendOutlined rotate={-45} />
+                                        </Button>
+                                    </Flex>
                                 </Flex>
                             </Flex>
-                        </Flex>
-                    </Col>
-                </Row>
+                        </Col>
+                    </Row>
+                )}
             </Card>
         </PageContainer>
     );
