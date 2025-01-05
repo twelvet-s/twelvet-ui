@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons';
 import styles from './styles.less';
 import moment from 'moment';
+import { cutParagraphByPunctuation } from '@/utils/twelvet';
 
 /**
  * AI助手模块
@@ -268,7 +269,6 @@ const AIChat: React.FC = () => {
                 const intervalId = setInterval(() => {
                     const currentTime = audioContext.currentTime;
 
-                    console.log('播放时间戳：', currentTime);
                     // 检查当前时间是否跨越了下一个字/词的时间段
                     // if (currentIndex < content.length && (currentTime * 1000) >= textData[currentIndex].beginTime) {
                     //
