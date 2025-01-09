@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef, useState } from 'react';
-import { Card, Drawer, Popconfirm, Space, Switch } from 'antd';
+import { Card, Drawer, Switch } from 'antd';
 import { proTableConfigs } from '@/setting';
 import { type ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { pageQuerySlice } from '@/pages/AI/Doc/componets/Slice/service';
