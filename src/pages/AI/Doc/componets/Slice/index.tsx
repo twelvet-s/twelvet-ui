@@ -61,10 +61,10 @@ const DocSlice: React.FC<{
                                 {formatMessage({id: 'system.update'})}
                             </span>,
                         ]}
-                        extra={
+                        /*extra={
                             // TODO 需要支持切片开关
                             <Switch defaultChecked />
-                        }
+                        }*/
                         className={'row'}
                         bordered={false}
                     >

@@ -24,6 +24,7 @@ import {
 import { FormInstance } from 'antd/lib/form';
 import {
     addDoc,
+    batchUpload,
     delDoc,
     exportDoc,
     getDoc,
@@ -33,10 +34,11 @@ import {
 } from './service';
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
-import { proTableConfigs } from '@/setting';
+import TWT, { proTableConfigs } from '@/setting';
 import DocSlice from '@/pages/AI/Doc/componets/Slice';
 import DictionariesRadio from '@/components/TwelveT/Dictionaries/DictionariesRadio';
 import './styles.less';
+import type { RcFile } from 'antd/lib/upload';
 
 /**
  * AI知识库文档模块
@@ -44,11 +46,44 @@ import './styles.less';
 const Doc: React.FC = () => {
     const { formatMessage } = useIntl();
 
+    const { Dragger } = Upload;
+
     const [state] = useState<{
         pageSize: number;
     }>({
         pageSize: 10,
     });
+
+    /**
+     * 单个文件上传最大（单位MB）
+     */
+    const fileMax = 10;
+
+    /**
+     * 上传文件最大数量
+     */
+    const fileNumberMax = 5;
+
+    /**
+     * 允许上传的文件类型
+     */
+    const allowFileType = [
+        'text/markdown',
+        '.md',
+        'application/msword',
+        'application/vnd.ms-excel',
+        'application/vnd.ms-powerpoint',
+        'text/plain',
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    ];
+
+    /**
+     * 上传文件列表
+     */
+    const [fileList, setFileList] = useState<RcFile[]>([]);
 
     // 默认的数据来源
     const [sourceType, setSourceType] = useState<string>(`INPUT`);
@@ -203,10 +238,15 @@ const Doc: React.FC = () => {
      * 取消Modal的显示
      */
     const handleCancel = () => {
+        // 数据保存中不允许关闭
+        if (loadingModal) {
+            return
+        }
         setModal({ title: '', visible: false });
         // 恢复默认选择
-        setSourceType('INPUT')
+        setSourceType('INPUT');
         form.resetFields();
+        setFileList([]);
     };
 
     /**
@@ -218,6 +258,44 @@ const Doc: React.FC = () => {
                 try {
                     // 开启加载中
                     setLoadingModal(true);
+
+                    // 如果是上传文件类型，需要特殊处理
+                    if (fields.sourceType === 'UPLOAD') {
+                        // 表单数据
+                        const formData = new FormData();
+
+                        // 添加文件数据源
+                        if (fileList.length <= 0) {
+                            return message.error('资料不能为空');
+                        }
+                        fileList.forEach((file: RcFile) => {
+                            formData.append('files', file);
+                        });
+
+                        const { code, msg, data } = await batchUpload(formData);
+                        if (code !== 200) {
+                            return message.error(msg);
+                        }
+
+                        const files: {
+                            fileName: string;
+                            fileUrl: string;
+                        }[] = [];
+
+                        // 基础路径
+                        const fileBase =
+                            TWT.static?.charAt(0) === '/' ? TWT.static : `${TWT.static}/`;
+
+                        // 插入文件列表
+                        for (let fileItem of data) {
+                            files.push({
+                                fileName: fileItem.originalFileName,
+                                fileUrl: `${fileBase}${fileItem.path}`,
+                            });
+                        }
+                        // 插入数据
+                        fields.fileList = files;
+                    }
 
                     // ID为0则insert，否则将update
                     const { code, msg } =
@@ -420,34 +498,85 @@ const Doc: React.FC = () => {
                         <Form.Item
                             {...formItemLayout}
                             label="资料"
-                            name="files"
-                            rules={[{ required: true, message: '请上传资料' }]}
+                            name="fileList"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: '请上传资料',
+                                    validator: () => {
+                                        if (fileList.length <= 0) {
+                                            return Promise.reject(new Error('请上传资料'));
+                                        }
+                                        return Promise.resolve();
+                                    },
+                                },
+                            ]}
                         >
-                            <Upload.Dragger
+                            <Dragger
+                                name="fileList"
                                 // 设置默认可选择支持上传的文件类型
-                                accept="
-                            image/jpeg,
-                            image/png,
-                            image/jpeg,
-                            image/gif,
-                            text/markdown,
-                            .md,
-                            application/msword,
-                            application/vnd.ms-excel,
-                            application/vnd.ms-powerpoint,
-                            text/plain,
-                            application/pdf,
-                            application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-                            application/vnd.openxmlformats-officedocument.presentationml.presentation
-                            "
+                                accept={allowFileType.join(',')}
+                                // 支持多文件上传
+                                multiple={true}
+                                // 文件列表
+                                fileList={fileList}
+                                onChange={(info) => {
+                                    const fileList: any[] = info.fileList;
+
+                                    if (fileList.length > fileNumberMax) {
+                                        return message.warning(
+                                            `上传文件数量超出限制，最多允许上传 ${fileNumberMax} 个文件`,
+                                        );
+                                    }
+
+                                    let files: any[] = [];
+
+                                    fileList.forEach(
+                                        (file: {
+                                            type: string;
+                                            name: string;
+                                            size: number;
+                                            originFileObj: RcFile;
+                                        }) => {
+                                            if (file.size > 1024 * 1024 * fileMax) {
+                                                return message.warning(
+                                                    `文件大小不允许超出${fileMax}MB`,
+                                                );
+                                            }
+                                            // md 文件可能识别为空类型
+                                            if (
+                                                file.type === '' ||
+                                                allowFileType.includes(file.type)
+                                            ) {
+                                                // 加入数组
+                                                if (file.originFileObj) {
+                                                    // files.push(file.originFileObj)
+                                                    files.push(file.originFileObj);
+                                                } else {
+                                                    // files.push(file)
+                                                    files.push(file);
+                                                }
+                                            } else {
+                                                message.warning(`不支持此文件类型`);
+                                            }
+                                        },
+                                    );
+
+                                    setFileList(files);
+                                }}
+                                // 继续限制上传文件
+                                beforeUpload={() => {
+                                    // 不允许直接上传, 手动操作
+                                    return false;
+                                }}
                             >
                                 将文件拖到此处，或 <span className={`color-blue`}>点击上传</span>
-                            </Upload.Dragger>
+                            </Dragger>
                             <span>
-                                请上传 大小不超过 <span className={`color-red`}>10MB</span>格式为
+                                请上传 大小不超过 <span className={`color-red`}>{fileMax}MB</span>
+                                格式为
                                 <span className={`color-red`}>
-                                    jpeg/png/jpg/gif/md/doc/xls/ppt/txt/pdf/docx/xlsx/pptx
+                                    md/doc/xls/ppt/txt/pdf/docx/xlsx/pptx
                                 </span>
                                 的文件
                             </span>

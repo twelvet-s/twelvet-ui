@@ -111,7 +111,7 @@ const DFS: React.FC = () => {
             render: (_, row) => {
                 return (
                     <>
-                        <a href={`${TWT.static}${row.path}`} target={'_blank'} rel="noreferrer">
+                        <a href={`${TWT.static?.charAt(0) === '/' ? TWT.static : `${TWT.static}/` }${row.path}`} target={'_blank'} rel="noreferrer">
                             <Space>
                                 <DownloadOutlined/>
                                 {formatMessage({id: 'system.check'})}

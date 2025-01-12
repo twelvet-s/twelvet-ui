@@ -1,5 +1,5 @@
 import { request } from '@umijs/max'
-import { download } from '@/utils/twelvet'
+import { download, upload } from '@/utils/twelvet';
 
 // 请求的控制器名称
 const controller = "/ai/doc";
@@ -74,4 +74,12 @@ export async function listKnowledgeQueryDoc(query: { [key: string]: any }) {
         method: `get`,
         params: query
     })
+}
+
+/**
+ * 上传数据
+ * @param formData
+ */
+export async function batchUpload(formData: FormData) {
+    return upload(`/dfs/batchUpload`, formData);
 }
