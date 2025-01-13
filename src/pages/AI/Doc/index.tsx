@@ -27,7 +27,6 @@ import {
     batchUpload,
     delDoc,
     exportDoc,
-    getDoc,
     listKnowledgeQueryDoc,
     pageQueryDoc,
     updateDoc,
@@ -132,10 +131,6 @@ const Doc: React.FC = () => {
         },
     };
 
-    useEffect(() => {
-        selectKnowledgeData();
-    }, []);
-
     /**
      * 获取知识库列表
      */
@@ -172,35 +167,16 @@ const Doc: React.FC = () => {
         }
     };
 
+    useEffect(() => {
+        selectKnowledgeData();
+    }, []);
+
     /**
      * 新增AI知识库文档数据
      */
     const refPost = async () => {
         selectKnowledgeData();
         setModal({ title: formatMessage({ id: 'system.add' }), visible: true });
-    };
-
-    /**
-     * 获取修改AI知识库文档信息
-     * @param row row
-     */
-    const refPut = async (row: { [key: string]: any }) => {
-        try {
-            selectKnowledgeData();
-
-            const { code, msg, data } = await getDoc(row.docId);
-            if (code !== 200) {
-                return message.error(msg);
-            }
-
-            // 赋值表单数据
-            form.setFieldsValue(data);
-
-            // 设置Modal状态
-            setModal({ title: formatMessage({ id: 'system.update' }), visible: true });
-        } catch (e) {
-            system.error(e);
-        }
     };
 
     /**
