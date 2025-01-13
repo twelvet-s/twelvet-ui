@@ -35,14 +35,6 @@ const DocSlice: React.FC<{
     // Form参数
     const columns: ProColumns<any>[] = [
         {
-            title: '文档名称',
-            ellipsis: true,
-            hideInTable: true,
-            width: 200,
-            valueType: 'text',
-            dataIndex: 'sliceName',
-        },
-        {
             title: '卡片',
             fixed: 'right',
             width: 320,
@@ -96,6 +88,10 @@ const DocSlice: React.FC<{
                     // 每页显示条数
                     defaultPageSize: state.pageSize,
                 }}
+                // 禁用搜索
+                search={false}
+                // 禁用工具
+                toolBarRender={false}
                 // 关闭选择框
                 rowSelection={false}
                 // 隐藏标头
