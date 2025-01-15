@@ -31,19 +31,29 @@ const KnowledgeModal: React.FC<{
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
+    // 是否执行Modal数据操作中
+    const [loadingDataModal, setLoadingDataModal] = useState<boolean>(false);
+
     /**
      * 初始化表单数据
      */
-    const initKnowledge = async () => {
+    const initKnowledge = () => {
         if (info.knowledgeId !== 0) {
-            const { code, msg, data } = await getKnowledge(info.knowledgeId);
+            setLoadingDataModal(true);
+            getKnowledge(info.knowledgeId)
+                .then((res) => {
+                    const { code, msg, data } = res;
 
-            if (code !== 200) {
-                return message.error(msg);
-            }
-
-            // 赋值表单数据
-            form.setFieldsValue(data);
+                    if (code !== 200) {
+                        return message.error(msg);
+                    }
+                    // 赋值表单数据
+                    form.setFieldsValue(data);
+                })
+                .finally(() => {
+                    // 取消数据加载中
+                    setLoadingDataModal(false);
+                });
         }
     };
 
@@ -51,7 +61,7 @@ const KnowledgeModal: React.FC<{
      * 初始化设置表单信息
      */
     useEffect(() => {
-        initKnowledge().then();
+        initKnowledge();
     }, [info]);
 
     /**
@@ -98,9 +108,10 @@ const KnowledgeModal: React.FC<{
 
     return (
         <Drawer
-            title={`新增知识库`}
+            title={`${info.knowledgeId !== 0 ? '更新' : '新增'}知识库`}
             width="80%"
             placement="right"
+            loading={loadingDataModal}
             closable={false}
             destroyOnClose={true}
             onClose={() => {
