@@ -16,40 +16,8 @@ export async function pageQueryKnowledge(query: { [key: string]: any }) {
 }
 
 /**
- * 查询AI知识库详细
- * @param 主键
- */
-export async function getKnowledge(knowledgeId: string | number) {
-    return request(`${controller}/${knowledgeId}`, {
-        method: `get`
-    })
-}
-
-/**
- * 新增AI知识库
- * @param data 数据参数
- */
-export async function addKnowledge(data: { [key: string]: any }) {
-    return request(`${controller}`, {
-        method: `post`,
-        data: data
-    })
-}
-
-/**
- * 修改AI知识库
- * @param data 数据参数
- */
-export async function updateKnowledge(data: { [key: string]: any }) {
-    return request(`${controller}`, {
-        method: `put`,
-        data: data
-    })
-}
-
-/**
  * 删除AI知识库
- * @param 主键
+ * @param knowledgeId
  */
 export async function delKnowledge(knowledgeId: string | number) {
     return request(`${controller}/${knowledgeId}`, {

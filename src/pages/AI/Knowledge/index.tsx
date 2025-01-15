@@ -31,9 +31,10 @@ const Knowledge: React.FC = () => {
 
     // 进入Model处理的切片信息
     const [knowledgeModal, setKnowledgeModal] = useState<{
-        knowledgeId?: number;
+        knowledgeId: number;
         visible: boolean;
     }>({
+        knowledgeId: 0,
         visible: false,
     });
 

@@ -1,24 +1,20 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useIntl } from '@umijs/max';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import {
+    CloseOutlined,
     DeleteOutlined,
+    EditOutlined,
     FundProjectionScreenOutlined,
     PlusOutlined,
-    EditOutlined,
-    CloseOutlined,
 } from '@ant-design/icons';
-import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider } from 'antd';
+import { Button, Divider, Form, Input, message, Modal, Popconfirm, Space } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect/Index';
-import { pageQueryModel, getModel, delModel, addModel, updateModel, exportModel } from './service';
+import { addModel, delModel, exportModel, getModel, pageQueryModel, updateModel } from './service';
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
-
-import DatePickerTWT from '@/components/TwelveT/DatePicker/Index';
-import moment from 'moment';
 
 /**
  * AI大模型模块
@@ -60,7 +56,6 @@ const Model: React.FC = () => {
 
     /**
      * 新增AI大模型数据
-     * @param row row
      */
     const refPost = async () => {
         setModal({ title: formatMessage({ id: 'system.add' }), visible: true });
@@ -205,7 +200,7 @@ const Model: React.FC = () => {
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined />
-                                {useIntl().formatMessage({ id: 'system.update' })}
+                                {formatMessage({ id: 'system.update' })}
                             </Space>
                         </a>
 
@@ -215,7 +210,7 @@ const Model: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CloseOutlined />
-                                    {useIntl().formatMessage({ id: 'system.delete' })}
+                                    {formatMessage({ id: 'system.delete' })}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -252,7 +247,7 @@ const Model: React.FC = () => {
                 toolBarRender={(action, { selectedRowKeys }) => [
                     <Button key="add" type="default" onClick={refPost}>
                         <PlusOutlined />
-                        {useIntl().formatMessage({ id: 'system.add' })}
+                        {formatMessage({ id: 'system.add' })}
                     </Button>,
                     <Popconfirm
                         key="batchDelete"
@@ -266,7 +261,7 @@ const Model: React.FC = () => {
                             danger
                         >
                             <DeleteOutlined />
-                            {useIntl().formatMessage({ id: 'system.delete.batch' })}
+                            {formatMessage({ id: 'system.delete.batch' })}
                         </Button>
                     </Popconfirm>,
                     <Popconfirm
@@ -280,7 +275,7 @@ const Model: React.FC = () => {
                     >
                         <Button type="default">
                             <FundProjectionScreenOutlined />
-                            {useIntl().formatMessage({ id: 'system.export' })}
+                            {formatMessage({ id: 'system.export' })}
                         </Button>
                     </Popconfirm>,
                 ]}

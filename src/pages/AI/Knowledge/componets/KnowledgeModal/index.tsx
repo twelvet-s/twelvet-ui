@@ -1,100 +1,100 @@
-import React from 'react';
-import { Drawer, Form, Input, InputNumber } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Divider, Drawer, Form, Input, InputNumber, message, Slider } from 'antd';
+import { system } from '@/utils/twelvet';
+import { addKnowledge, updateKnowledge, getKnowledge } from './service';
 
 /**
  * 新增/更新知识库
  */
 const KnowledgeModal: React.FC<{
     info: {
-        knowledgeId?: number;
+        knowledgeId: number;
         visible: boolean;
     };
     onClose: () => void;
 }> = (props) => {
     const { info, onClose } = props;
 
-    const [form] = Form.useForm()
+    const [form] = Form.useForm();
 
     const formItemLayout = {
         labelCol: {
-            xs: { span: 5 },
-            sm: { span: 5 },
+            xs: { span: 2 },
+            sm: { span: 2 },
         },
         wrapperCol: {
-            xs: { span: 20 },
-            sm: { span: 20 },
+            xs: { span: 22 },
+            sm: { span: 22 },
         },
-    }
+    };
+
+    // 是否执行Modal数据操作中
+    const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
     /**
-     * 新增AI知识库数据
+     * 初始化表单数据
      */
-    const refPost = async () => {
-        setModal({ title: formatMessage({ id: 'system.add' }), visible: true })
-    }
+    const initKnowledge = async () => {
+        if (info.knowledgeId !== 0) {
+            const { code, msg, data } = await getKnowledge(info.knowledgeId);
 
-    /**
-     * 获取修改AI知识库信息
-     * @param row row
-     */
-    const refPut = async (row: { [key: string]: any }) => {
-        try {
-            const { code, msg, data } = await getKnowledge(row.knowledgeId)
             if (code !== 200) {
-                return message.error(msg)
+                return message.error(msg);
             }
 
-
             // 赋值表单数据
-            form.setFieldsValue(data)
-
-            // 设置Modal状态
-            setModal({ title: formatMessage({ id: 'system.update' }), visible: true })
-
-        } catch (e) {
-            system.error(e)
+            form.setFieldsValue(data);
         }
-    }
+    };
+
+    /**
+     * 初始化设置表单信息
+     */
+    useEffect(() => {
+        initKnowledge().then();
+    }, [info]);
+
+    /**
+     * 取消窗口
+     */
+    const handleCancel = () => {
+        form.resetFields();
+        onClose();
+    };
 
     /**
      * 保存AI知识库数据
      */
     const onSave = () => {
-        form
-            .validateFields()
-            .then(
-                async (fields) => {
-                    try {
-                        // 开启加载中
-                        setLoadingModal(true)
+        form.validateFields()
+            .then(async (fields) => {
+                try {
+                    // 开启加载中
+                    setLoadingModal(true);
 
-
-                        // ID为0则insert，否则将update
-                        const {
-                            code,
-                            msg
-                        } = fields.knowledgeId === 0 ? await addKnowledge(fields) : await updateKnowledge(fields)
-                        if (code !== 200) {
-                            return message.error(msg)
-                        }
-
-                        message.success(msg)
-
-                        if (acForm.current) {
-                            acForm.current.reload()
-                        }
-
-                        // 关闭模态框
-                        handleCancel()
-                    } catch (e) {
-                        system.error(e)
-                    } finally {
-                        setLoadingModal(false)
+                    // ID为0则insert，否则将update
+                    const { code, msg } =
+                        fields.knowledgeId === 0
+                            ? await addKnowledge(fields)
+                            : await updateKnowledge(fields);
+                    if (code !== 200) {
+                        return message.error(msg);
                     }
-                }).catch(e => {
-            system.error(e)
-        })
-    }
+
+                    message.success(msg);
+
+                    // 关闭
+                    handleCancel();
+                } catch (e) {
+                    system.error(e);
+                } finally {
+                    setLoadingModal(false);
+                }
+            })
+            .catch((e) => {
+                system.error(e);
+            });
+    };
 
     return (
         <Drawer
@@ -104,9 +104,22 @@ const KnowledgeModal: React.FC<{
             closable={false}
             destroyOnClose={true}
             onClose={() => {
-                onClose();
+                handleCancel();
             }}
             open={info.visible}
+            footer={
+                <div
+                    style={{
+                        textAlign: 'right',
+                    }}
+                >
+                    <Button onClick={() => handleCancel()}>取消</Button>
+                    <Divider type="vertical" />
+                    <Button loading={loadingModal} type="primary" onClick={() => onSave()}>
+                        保存
+                    </Button>
+                </div>
+            }
         >
             <Form form={form}>
                 <Form.Item
@@ -134,7 +147,7 @@ const KnowledgeModal: React.FC<{
                     rules={[{ required: true, message: '欢迎语不能为空' }]}
                     name="welcomeMsg"
                 >
-                    <Input.TextArea />
+                    <Input.TextArea rows={5} />
                 </Form.Item>
 
                 <Form.Item
@@ -163,6 +176,26 @@ const KnowledgeModal: React.FC<{
                     rules={[{ required: false, message: '知识库排序不能为空' }]}
                     name="knowledgeSort"
                     initialValue={1}
+                >
+                    <InputNumber />
+                </Form.Item>
+
+                <Form.Item
+                    {...formItemLayout}
+                    label="匹配率"
+                    rules={[{ required: false, message: '匹配率不能为空' }]}
+                    name="score"
+                    initialValue={0.5}
+                >
+                    <Slider defaultValue={0.5} min={0} max={1} step={0.01} />
+                </Form.Item>
+
+                <Form.Item
+                    {...formItemLayout}
+                    label="切片值"
+                    rules={[{ required: false, message: '切片值不能为空' }]}
+                    name="sliceSize"
+                    initialValue={3000}
                 >
                     <InputNumber />
                 </Form.Item>
