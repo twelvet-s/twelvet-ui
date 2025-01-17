@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Drawer, Form, Input, InputNumber, message, Slider } from 'antd';
+import { Button, Collapse, Divider, Drawer, Form, Input, InputNumber, message, Slider } from 'antd';
 import { system } from '@/utils/twelvet';
 import { addKnowledge, updateKnowledge, getKnowledge } from './service';
 
@@ -191,25 +191,37 @@ const KnowledgeModal: React.FC<{
                     <InputNumber />
                 </Form.Item>
 
-                <Form.Item
-                    {...formItemLayout}
-                    label="匹配率"
-                    rules={[{ required: false, message: '匹配率不能为空' }]}
-                    name="score"
-                    initialValue={0.5}
-                >
-                    <Slider defaultValue={0.5} min={0} max={1} step={0.01} />
-                </Form.Item>
+                <Collapse
+                    items={[
+                        {
+                            key: 1,
+                            label: '高级配置',
+                            children: (
+                                <>
+                                    <Form.Item
+                                        {...formItemLayout}
+                                        label="匹配率"
+                                        rules={[{ required: false, message: '匹配率不能为空' }]}
+                                        name="score"
+                                        initialValue={0.5}
+                                    >
+                                        <Slider defaultValue={0.5} min={0} max={1} step={0.01} />
+                                    </Form.Item>
 
-                <Form.Item
-                    {...formItemLayout}
-                    label="切片值"
-                    rules={[{ required: false, message: '切片值不能为空' }]}
-                    name="sliceSize"
-                    initialValue={3000}
-                >
-                    <InputNumber />
-                </Form.Item>
+                                    <Form.Item
+                                        {...formItemLayout}
+                                        label="切片值"
+                                        rules={[{ required: false, message: '切片值不能为空' }]}
+                                        name="sliceSize"
+                                        initialValue={3000}
+                                    >
+                                        <InputNumber />
+                                    </Form.Item>
+                                </>
+                            ),
+                        },
+                    ]}
+                />
             </Form>
         </Drawer>
     );
