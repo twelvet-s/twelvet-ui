@@ -2,18 +2,15 @@ import Footer from '@/components/Footer';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { PageLoading } from '@ant-design/pro-components';
+import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
 import { errorConfig } from './requestErrorConfig';
-import { SettingDrawer } from '@ant-design/pro-components';
-import { RunTimeLayoutConfig, SelectLang } from '@umijs/max';
-import { history } from '@umijs/max';
+import { history, RunTimeLayoutConfig, SelectLang, useIntl as i18n } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { message } from 'antd';
 import TWT from './setting';
 import { getCurrentUser, getRouters } from './pages/Login/service';
-import { system, timedRefreshToken } from "@/utils/twelvet";
+import { system, timedRefreshToken } from '@/utils/twelvet';
 import { Question } from './components/RightContent';
-import {useIntl as i18n} from '@umijs/max';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
@@ -29,32 +26,35 @@ export async function getInitialState(): Promise<{
 }> {
     const fetchUserInfo = async () => {
         try {
-            const { user = {}, roles, permissions, code, msg } = await getCurrentUser()
+            const { user = {}, roles, permissions, code, msg } = await getCurrentUser();
             if (code !== 200) {
-                return message.error(msg)
+                return message.error(msg);
             }
 
-            localStorage.setItem(TWT.preAuthorize, JSON.stringify(permissions))
+            localStorage.setItem(TWT.preAuthorize, JSON.stringify(permissions));
 
-            const { data } = await getRouters()
+            const { data } = await getRouters();
 
             return {
                 user,
                 menus: data,
                 roles,
-                permissions
-            }
+                permissions,
+            };
         } catch (error) {
-            history.push(loginPath)
+            history.push(loginPath);
         }
-        return undefined
+        return undefined;
     };
     // 如果不是登录页面，执行
-    if (history.location.pathname !== loginPath) {
+    if (
+        history.location.pathname !== loginPath &&
+        !TWT.authIgnore.includes(history.location.pathname)
+    ) {
         const currentUser = await fetchUserInfo();
 
         // 定时刷新Token
-        timedRefreshToken()
+        timedRefreshToken();
 
         return {
             fetchUserInfo,
@@ -82,7 +82,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         // 自定义底部
         footerRender: () => <Footer />,
         // 渲染菜单数据
-        menuDataRender: () => initialState?.currentUser?.menus ? initialState?.currentUser?.menus : [],
+        menuDataRender: () =>
+            initialState?.currentUser?.menus ? initialState?.currentUser?.menus : [],
         actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
         avatarProps: {
             src: `${TWT.static}${initialState?.currentUser?.user?.avatar}`,
@@ -99,7 +100,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         onPageChange: () => {
             const { location } = history;
             // 如果没有登录，重定向到 login
-            if (!initialState?.currentUser && location.pathname !== loginPath) {
+            if (
+                !initialState?.currentUser &&
+                location.pathname !== loginPath &&
+                !TWT.authIgnore.includes(history.location.pathname)
+            ) {
                 history.push(loginPath);
             }
         },
@@ -110,15 +115,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         },
         links: isDev
             ? [
-                <a key='docs' href="https://twelvet.cn/docs/" target="_blank" rel="noreferrer">
-                    <QuestionCircleOutlined />
-                    <span>{i18n().formatMessage({id: 'app.development.documentation'})}</span>
-                </a>,
-                <a key='openapi' href="http://127.0.0.1:8080/doc.html" target="_blank" rel="noreferrer">
-                    <QuestionCircleOutlined />
-                    <span>Swagger</span>
-                </a>
-            ]
+                  <a key="docs" href="https://doc.twelvet.cn/" target="_blank" rel="noreferrer">
+                      <QuestionCircleOutlined />
+                      <span>{i18n().formatMessage({ id: 'app.development.documentation' })}</span>
+                  </a>,
+                  <a
+                      key="openapi"
+                      href="http://127.0.0.1:8080/doc.html"
+                      target="_blank"
+                      rel="noreferrer"
+                  >
+                      <QuestionCircleOutlined />
+                      <span>Swagger</span>
+                  </a>,
+              ]
             : [],
         menuHeaderRender: undefined,
         // 自定义 403 页面
@@ -140,7 +150,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                                     settings,
                                 })).then((r: any) => {
                                     if (r !== undefined) {
-                                        system.log(r)
+                                        system.log(r);
                                     }
                                 });
                             }}

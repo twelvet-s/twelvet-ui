@@ -50,6 +50,10 @@ const TWT: any = {
     action: `${REQUEST_URI}/`,
     uploadUrl: `${REQUEST_URI}/dfs/commonUpload`,
     static: 'https://static.twelvet.cn',
+    // 忽略无需登录的路径
+    authIgnore: [
+        '/login/oauth2/github'
+    ]
 };
 
 export default TWT;

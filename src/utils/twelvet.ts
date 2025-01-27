@@ -1,6 +1,6 @@
 import { refreshToken } from '@/pages/Login/service';
 import TWT from '@/setting';
-import { request, history } from '@umijs/max';
+import { history, request } from '@umijs/max';
 import { notification } from 'antd';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 
@@ -36,10 +36,10 @@ export const system = {
  * @returns 返回token
  */
 export function getToken() {
-    const local = localStorage.getItem(TWT.accessToken)
+    const local = localStorage.getItem(TWT.accessToken);
 
-    const { access_token } = local ? JSON.parse(local) : { access_token: '' }
-    return access_token
+    const { access_token } = local ? JSON.parse(local) : { access_token: '' };
+    return access_token;
 }
 
 /**
@@ -47,6 +47,7 @@ export function getToken() {
  * @param expires 过期时间
  */
 let tokenTimed: NodeJS.Timeout;
+
 export function timedRefreshToken() {
     // 取消定时任务
     clearTimeout(tokenTimed);
@@ -346,7 +347,6 @@ export const auth = (authStr: string) => {
     return !authArr.includes(authStr);
 };
 
-
 /**
  * 处理流请求
  * @param eventSourceUrl 请求地址
@@ -360,34 +360,36 @@ export const eventSource = async (
     handleMessage: (data: any) => void,
     handleDone: () => void,
 ): Promise<void> => {
-
-    const requestUri = TWT.requestUri.endsWith('/')
-        ? TWT.requestUri.slice(0, -1)
-        : TWT.requestUri;
+    const requestUri = TWT.requestUri.endsWith('/') ? TWT.requestUri.slice(0, -1) : TWT.requestUri;
 
     const controller = new AbortController();
 
-    fetchEventSource(eventSourceUrl?.charAt(0) === '/' ? `${requestUri}${eventSourceUrl}` : `${requestUri}/${eventSourceUrl}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getToken()}`,
+    fetchEventSource(
+        eventSourceUrl?.charAt(0) === '/'
+            ? `${requestUri}${eventSourceUrl}`
+            : `${requestUri}/${eventSourceUrl}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify(data),
+            signal: controller.signal,
+            openWhenHidden: true,
+            onmessage: (event) => {
+                // 处理收到的消息
+                handleMessage(JSON.parse(event.data));
+            },
+            onerror: (err) => {
+                console.error('EventSource error:', err);
+                controller.abort(); // 处理错误时中止连接
+                // 抛出错误，否则会自动重试
+                throw err;
+            },
+            onclose: () => {
+                handleDone();
+            },
         },
-        body: JSON.stringify(data),
-        signal: controller.signal,
-        openWhenHidden: true,
-        onmessage: (event) => {
-            // 处理收到的消息
-            handleMessage(JSON.parse(event.data));
-        },
-        onerror: (err) => {
-            console.error('EventSource error:', err);
-            controller.abort(); // 处理错误时中止连接
-            // 抛出错误，否则会自动重试
-            throw err
-        },
-        onclose: () => {
-            handleDone()
-        }
-    });
+    );
 };

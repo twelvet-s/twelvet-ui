@@ -17,6 +17,8 @@ export async function login(params: Record<string, any>) {
         method: 'POST',
         headers: {
             Authorization: auth,
+            'X-Requested-With': 'XMLHttpRequest',
+            Accept: '*/*',
         },
         data: {
             ...params,
@@ -24,6 +26,26 @@ export async function login(params: Record<string, any>) {
         params: {
             ...params,
             grant_type: params.grantType,
+            scope: 'server',
+        },
+    });
+}
+
+/**
+ * 第三方授权登录
+ * @param params 登录参数
+ * @returns
+ */
+export async function oauth2Login(params: Record<string, any>) {
+    return request(`${controller}/oauth2/token`, {
+        method: 'POST',
+        headers: {
+            Authorization: auth,
+            'X-Requested-With': 'XMLHttpRequest',
+            Accept: '*/*',
+        },
+        params: {
+            ...params,
             scope: 'server',
         },
     });

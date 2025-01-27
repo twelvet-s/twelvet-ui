@@ -1,12 +1,5 @@
 import Footer from '@/components/Footer';
-import {
-    GithubOutlined,
-    LockOutlined,
-    MobileOutlined,
-    UserOutlined,
-    VerifiedOutlined,
-    WechatOutlined,
-} from '@ant-design/icons';
+import { LockOutlined, MobileOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons';
 import {
     CaptFieldRef,
     LoginForm,
@@ -14,7 +7,7 @@ import {
     ProFormCheckbox,
     ProFormText,
 } from '@ant-design/pro-components';
-import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
+import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import Settings from '../../../config/defaultSettings';
 import React, { useRef, useState } from 'react';
@@ -23,6 +16,7 @@ import { flushSync } from 'react-dom';
 import { setAuthority } from '@/utils/twelvet';
 import { login } from './service';
 import { createStyles } from 'antd-style';
+import OAuth2LoginGitHub from '@/pages/Login/componets/oauth2/github';
 
 const useStyles = createStyles(({ token }) => {
     return {
@@ -65,8 +59,7 @@ const ActionIcons = () => {
 
     return (
         <>
-            <GithubOutlined key="GithubOutlined" className={styles.action} />
-            <WechatOutlined key="WechatOutlined" className={styles.action} />
+            <OAuth2LoginGitHub />
         </>
     );
 };
@@ -103,7 +96,7 @@ const Login: React.FC = () => {
     const { styles } = useStyles();
     const intl = useIntl();
     const captchaRef = useRef<CaptFieldRef | null | undefined>();
-    const [captchPhone, setCaptchPhone] = useState<string>('')
+    const [captchPhone, setCaptchPhone] = useState<string>('');
 
     const fetchUserInfo = async () => {
         const userInfo = await initialState?.fetchUserInfo?.();
@@ -116,31 +109,29 @@ const Login: React.FC = () => {
                         user: userInfo.user,
                         menus: userInfo.menus,
                         permissions: userInfo.permissions,
-                        roles: userInfo.roles
-                    }
+                        roles: userInfo.roles,
+                    },
                 }));
-            })
+            });
         }
     };
 
     const handleSubmit = async (values: API.LoginParams) => {
         try {
             if (type === 'account') {
-                values.grantType = 'password'
+                values.grantType = 'password';
             } else {
-                values.grantType = 'sms'
+                values.grantType = 'sms';
             }
             // 登录
             const data = await login({ ...values, type });
             if (data.code === 200) {
-
                 setAuthority(data);
 
                 const defaultloginSuccessMessage = intl.formatMessage({
                     id: 'pages.login.success',
                     defaultMessage: '登录成功！',
                 });
-
 
                 message.success(defaultloginSuccessMessage);
 
@@ -197,7 +188,7 @@ const Login: React.FC = () => {
                         autoLogin: true,
                         // 默认账号密码
                         username: 'admin',
-                        password: '123456'
+                        password: '123456',
                     }}
                     actions={[
                         <FormattedMessage
@@ -290,7 +281,9 @@ const Login: React.FC = () => {
                         </>
                     )}
 
-                    {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
+                    {status === 'error' && loginType === 'mobile' && (
+                        <LoginMessage content="验证码错误" />
+                    )}
                     {type === 'mobile' && (
                         <>
                             <ProFormText
@@ -304,7 +297,7 @@ const Login: React.FC = () => {
                                     defaultMessage: '手机号',
                                 })}(Test：15788888888)`}
                                 onChange={(v: any) => {
-                                    setCaptchPhone(v.target.value)
+                                    setCaptchPhone(v.target.value);
                                 }}
                                 rules={[
                                     {
@@ -375,20 +368,20 @@ const Login: React.FC = () => {
                                     },
                                 ]}
                                 onGetCaptcha={async (phone) => {
-                                    const regex = /^1[3-9]\d{9}$/
-                                    if(!regex.test(captchPhone)) {
+                                    const regex = /^1[3-9]\d{9}$/;
+                                    if (!regex.test(captchPhone)) {
                                         return new Promise((resolve, reject) => {
                                             reject();
-                                        })
+                                        });
                                     }
-                                    console.log(`手机号码${captchPhone}`)
+                                    console.log(`手机号码${captchPhone}`);
                                     // const result = await getFakeCaptcha({
                                     //     phone: captchPhone,
                                     // })
                                     // if (!result) {
                                     //     return;
                                     // }
-                                    message.success('获取验证码成功！验证码为：1234')
+                                    message.success('获取验证码成功！验证码为：1234');
                                 }}
                             />
                         </>
@@ -399,14 +392,20 @@ const Login: React.FC = () => {
                         }}
                     >
                         <ProFormCheckbox noStyle name="autoLogin">
-                            <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
+                            <FormattedMessage
+                                id="pages.login.rememberMe"
+                                defaultMessage="自动登录"
+                            />
                         </ProFormCheckbox>
                         <a
                             style={{
                                 float: 'right',
                             }}
                         >
-                            <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+                            <FormattedMessage
+                                id="pages.login.forgotPassword"
+                                defaultMessage="忘记密码"
+                            />
                         </a>
                     </div>
                 </LoginForm>

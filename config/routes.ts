@@ -16,6 +16,12 @@ export default [
         component: './Login',
     },
     {
+        path: '/login/oauth2/:oauth2',
+        layout: false,
+        name: '第三方登录授权处理',
+        component: './Login/OAuth2',
+    },
+    {
         path: '/',
         name: '欢迎页',
         icon: 'icon-home',
