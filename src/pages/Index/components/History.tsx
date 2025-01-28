@@ -5,8 +5,19 @@ import styles from './styles.less';
  * TwelveT发展史组件
  */
 const History = () => {
-
     const items: CollapseProps['items'] = [
+        {
+            key: 14,
+            label: 'v3.4.0 - 2025-10-01',
+            children: (
+                <ol>
+                    <li>RAG知识库（LLM、TTS、STT）</li>
+                    <li>支持第三方GitHub直接授权登录</li>
+                    <li>优化相关逻辑</li>
+                    <li>修正已知BUG</li>
+                </ol>
+            ),
+        },
         {
             key: 13,
             label: 'v3.3.0 - 2024-04-31',
@@ -202,9 +213,7 @@ const History = () => {
         },
     ];
 
-    return (
-        <Collapse items={items} defaultActiveKey={[13]} className={styles.historyOl} />
-    );
+    return <Collapse items={items} defaultActiveKey={[14]} className={styles.historyOl} />;
 };
 
 export default History;
