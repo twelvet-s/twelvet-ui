@@ -75,6 +75,7 @@ const OAuth2: React.FC = () => {
         }
 
         message.error(data.msg);
+        history.push('/login');
     };
 
     useEffect(() => {
