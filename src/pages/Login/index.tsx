@@ -48,14 +48,13 @@ const useStyles = createStyles(({ token }) => {
             height: '100vh',
             overflow: 'auto',
             backgroundImage:
-                "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+                "url('./assets/images/bg.png')",
             backgroundSize: '100% 100%',
         },
     };
 });
 
 const ActionIcons = () => {
-    const { styles } = useStyles();
 
     return (
         <>
@@ -367,7 +366,7 @@ const Login: React.FC = () => {
                                         ),
                                     },
                                 ]}
-                                onGetCaptcha={async (phone) => {
+                                onGetCaptcha={async (phone: string) => {
                                     const regex = /^1[3-9]\d{9}$/;
                                     if (!regex.test(captchPhone)) {
                                         return new Promise((resolve, reject) => {
