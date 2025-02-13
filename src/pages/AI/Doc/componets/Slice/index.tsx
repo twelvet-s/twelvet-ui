@@ -49,9 +49,9 @@ const DocSlice: React.FC<{
                         actions={[
                             <span key={record.sliceId}>字符数：{record.content.length}</span>,
 
-                            <span key={record.sliceId}>
+                            /*<span key={record.sliceId}>
                                 {formatMessage({id: 'system.update'})}
-                            </span>,
+                            </span>,*/
                         ]}
                         /*extra={
                             // TODO 需要支持切片开关
