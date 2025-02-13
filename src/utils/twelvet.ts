@@ -129,7 +129,7 @@ export const makeTree = (params: {
     const id = params.id || 'id';
     const parentId = params.parentId || 'parentId';
     const children = params.children || 'children';
-    const enhance = params.enhance || [];
+    const enhance = params.enhance || {};
     const rootId = params.rootId || 0;
 
     // 对源数据深克隆
@@ -138,8 +138,10 @@ export const makeTree = (params: {
     // 循环所有项
     const treeData = cloneData.filter((father: { [key: string]: any; children: any }) => {
         // 增强参数
-        for (const key in enhance) {
-            father[key] = father[enhance[key]];
+        for (let key in enhance) {
+            if (enhance.hasOwnProperty(key)) {
+                father[key] = father[enhance[key]];
+            }
         }
 
         // 循环找出每个父目录的子目录

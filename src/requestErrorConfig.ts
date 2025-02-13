@@ -14,6 +14,17 @@ interface ResponseStructure {
 }
 
 /**
+ * 自定义刷新token失效
+ */
+class RefreshTokenError extends Error {
+    constructor(message: string) {
+        super(message); // 调用父类的构造函数，设置错误消息
+        this.name = 'RefreshTokenError'; // 可以设置自定义的错误名称
+        this.stack = new Error().stack; // 捕获堆栈信息
+    }
+}
+
+/**
  * 刷新token
  * @param url 访问URL（成功刷新后重新请求地址）
  * @param method 请求方式
@@ -38,14 +49,15 @@ const refreshToken = async (
             message: `续签失败`,
             description: `续签失败,请重新登录`,
         });
-        return logout();
+        logout();
+        throw new RefreshTokenError('刷新token操作失败');
     }
 
     setAuthority(res);
 
     // 重新请求本次数据
     if (url) {
-        return await request(url, {
+        return await request(url?.replace(TWT.requestUri, ''), {
             method,
             responseType: responseType === 'blob' ? 'blob' : 'json',
             // 需要原始响应头
@@ -54,7 +66,7 @@ const refreshToken = async (
             params,
         });
     }
-    throw Error('刷新token操作失败');
+    throw new RefreshTokenError('刷新token操作失败');
 };
 
 /**
@@ -132,6 +144,10 @@ export const errorConfig: RequestConfig = {
                     throw error;
                 }
             } catch (error) {
+                if (error instanceof RefreshTokenError) {
+                    system.error(error);
+                    return;
+                }
                 system.error(error);
                 message.error('无法链接API，请联系管理！');
             }
@@ -149,9 +165,9 @@ export const errorConfig: RequestConfig = {
             if (!config.headers?.Authorization) {
                 authHeader = {
                     ...config.headers,
-                    "Authorization": `Bearer ${access_token}`,
+                    Authorization: `Bearer ${access_token}`,
                     // 国际化
-                    "Accept-Language": getLocale()
+                    'Accept-Language': getLocale(),
                 };
             } else {
                 authHeader = {
