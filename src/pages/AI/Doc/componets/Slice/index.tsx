@@ -40,7 +40,7 @@ const DocSlice: React.FC<{
             width: 320,
             valueType: 'option',
             dataIndex: 'operation',
-            render: (text: ReactNode, record, index: number, action) => {
+            render: (text: ReactNode, record, index: number) => {
                 // 将每一行的值包装成一个方块 div
                 return (
                     <Card
