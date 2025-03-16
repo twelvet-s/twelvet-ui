@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Col, Flex, Input, message, Row, Skeleton, Spin } from 'antd';
+import { Button, Card, Col, Flex, Input, message, Row, Skeleton } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { listKnowledgeQueryDoc, sendMessage, tts } from './service';
 import Markdown from 'react-markdown';
@@ -8,14 +8,15 @@ import {
     CopyOutlined,
     GlobalOutlined,
     HistoryOutlined,
+    LoadingOutlined,
     MutedFilled,
     OpenAIOutlined,
+    PauseOutlined,
     SendOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import styles from './styles.less';
 import moment from 'moment';
-import { cutParagraphByPunctuation } from '@/utils/twelvet';
 
 /**
  * AI助手模块
@@ -35,6 +36,7 @@ const AIChat: React.FC = () => {
         chatType: 'TEXT',
         carryContextFlag: true,
         internetFlag: false,
+        voicePlayFlag: true,
     });
 
     // 是否处于处理数据中
@@ -107,7 +109,7 @@ const AIChat: React.FC = () => {
     useEffect(() => {
         initData().then(() => {
             // 取消全局加载中
-            setLoading(false)
+            setLoading(false);
         });
     }, []);
 
@@ -183,35 +185,47 @@ const AIChat: React.FC = () => {
         await sendMessage(
             sendData,
             (value) => {
-                setKnowledgeData((prevData) => {
-                    const newData = { ...prevData };
-                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+                // 需要进行自动播报
+                if (chatOptions.voicePlayFlag) {
+                } else {
+                    // 非语音播报直接显示文字
+                    setKnowledgeData((prevData) => {
+                        const newData = { ...prevData };
+                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
-                    const aiContent = newChatDataList[newChatDataList.length - 1];
-                    // 插入数据
-                    if (aiContent.content !== undefined) {
-                        aiContent.content += value.content;
-                    } else {
-                        aiContent.msgId = value.msgId;
-                        aiContent.sendTime = moment().format('YYYY-MM-DD HH:mm:ss');
-                        aiContent.content = value.content;
-                    }
-                    newChatDataList[newChatDataList.length - 1] = aiContent;
-                    return newData;
-                });
+                        const aiContent = newChatDataList[newChatDataList.length - 1];
+                        // 插入数据
+                        if (aiContent.content !== undefined) {
+                            aiContent.content += value.content;
+                        } else {
+                            aiContent.msgId = value.msgId;
+                            aiContent.sendTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                            aiContent.content = value.content;
+                        }
+                        newChatDataList[newChatDataList.length - 1] = aiContent;
+                        return newData;
+                    });
+                }
             },
             () => {
-                // 完成输出显示工具
-                setKnowledgeData((prevData) => {
-                    const newData = { ...prevData };
-                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+                // 需要进行自动播报
+                if (chatOptions.voicePlayFlag) {
+                } else {
+                    // 非语音播报直接显示文字
+                    // 完成输出显示工具
+                    setKnowledgeData((prevData) => {
+                        const newData = { ...prevData };
+                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
-                    const aiContent = newChatDataList[newChatDataList.length - 1];
-                    aiContent.okFlag = true;
-                    newChatDataList[newChatDataList.length - 1] = aiContent;
+                        const aiContent = newChatDataList[newChatDataList.length - 1];
+                        aiContent.okFlag = true;
+                        // 如果开启了自动播放需要调用自动转语音的方法进行播放
+                        aiContent.tTSContentFlag = chatOptions.voicePlayFlag ? 'playing' : 'wait';
+                        newChatDataList[newChatDataList.length - 1] = aiContent;
 
-                    return newData;
-                });
+                        return newData;
+                    });
+                }
 
                 // 关闭处理数据中
                 setProcessingDataFlag((prevData) => !prevData);
@@ -223,6 +237,20 @@ const AIChat: React.FC = () => {
      * TTS文字转语音播报
      */
     const tTSContent = async (index: number) => {
+        // TODO 需要实现暂停播放相关功能
+
+        // 开始播放前需要加入转换中状态
+        setKnowledgeData((prevData) => {
+            const newData = { ...prevData };
+            const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+            const aiContent = newChatDataList[index];
+            aiContent.tTSContentFlag = 'transition';
+            newChatDataList[newChatDataList.length - 1] = aiContent;
+
+            return newData;
+        });
+
         const content = chatDataRefs.current[index]!.innerText;
 
         const { code, msg, data } = await tts({
@@ -232,6 +260,18 @@ const AIChat: React.FC = () => {
         if (code !== 200) {
             message.error(msg);
             return;
+        } else {
+            // 设置为正在播放中
+            setKnowledgeData((prevData) => {
+                const newData = { ...prevData };
+                const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+                const aiContent = newChatDataList[index];
+                aiContent.tTSContentFlag = 'playing';
+                newChatDataList[newChatDataList.length - 1] = aiContent;
+
+                return newData;
+            });
         }
 
         // Base64字符串
@@ -281,6 +321,18 @@ const AIChat: React.FC = () => {
                     // 如果音频播放完毕，清除定时器
                     if (currentTime >= audioBuffer.duration) {
                         clearInterval(intervalId);
+                        setKnowledgeData((prevData) => {
+                            const newData = { ...prevData };
+                            const newChatDataList = [
+                                ...newData[chatOptions!.knowledgeId].chatDataList,
+                            ];
+
+                            const aiContent = newChatDataList[index];
+                            aiContent.tTSContentFlag = 'wait';
+                            newChatDataList[newChatDataList.length - 1] = aiContent;
+
+                            return newData;
+                        });
                     }
                 }, 100); // 每100毫秒检查一次
             },
@@ -430,17 +482,35 @@ const AIChat: React.FC = () => {
                                                                                 styles.chatInfoToolCtn
                                                                             }
                                                                         >
-                                                                            <MutedFilled
-                                                                                onClick={() => {
-                                                                                    tTSContent(
-                                                                                        index,
-                                                                                    );
-                                                                                }}
-                                                                                className={
-                                                                                    styles.chatInfoTool
-                                                                                }
-                                                                                title={'语音播报'}
-                                                                            />
+                                                                            {chatData.voicePlay ===
+                                                                            'wait' ? (
+                                                                                <MutedFilled
+                                                                                    onClick={() => {
+                                                                                        tTSContent(
+                                                                                            index,
+                                                                                        );
+                                                                                    }}
+                                                                                    className={
+                                                                                        styles.chatInfoTool
+                                                                                    }
+                                                                                    title={
+                                                                                        '语音播报'
+                                                                                    }
+                                                                                />
+                                                                            ) : chatData.voicePlay ===
+                                                                              'transition' ? (
+                                                                                <LoadingOutlined
+                                                                                    className={
+                                                                                        styles.chatInfoTool
+                                                                                    }
+                                                                                />
+                                                                            ) : (
+                                                                                <PauseOutlined
+                                                                                    className={
+                                                                                        styles.chatInfoTool
+                                                                                    }
+                                                                                />
+                                                                            )}
 
                                                                             <CopyOutlined
                                                                                 onClick={() =>
@@ -525,6 +595,28 @@ const AIChat: React.FC = () => {
                                                 chatOptions.carryContextFlag
                                                     ? '取消关联上下文'
                                                     : '启用关联上下文'
+                                            }
+                                        />
+                                        <MutedFilled
+                                            onClick={() => {
+                                                if (!chatOptions.voicePlayFlag) {
+                                                    message.success('已开启自动语音播报').then();
+                                                } else {
+                                                    message.success('已关闭自动语音播报').then();
+                                                }
+                                                setChatOptions((prevData) => {
+                                                    const newData = { ...prevData };
+                                                    newData.voicePlayFlag = !newData.voicePlayFlag;
+                                                    return newData;
+                                                });
+                                            }}
+                                            className={`${styles.chatTool} ${
+                                                chatOptions.voicePlayFlag ? styles.enableTool : ''
+                                            }`}
+                                            title={
+                                                chatOptions.voicePlayFlag
+                                                    ? '关闭自动语音播报'
+                                                    : '开启自动语音播报'
                                             }
                                         />
                                     </Flex>
