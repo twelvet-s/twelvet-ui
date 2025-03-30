@@ -36,7 +36,7 @@ const AIChat: React.FC = () => {
         chatType: 'TEXT',
         carryContextFlag: true,
         internetFlag: false,
-        voicePlayFlag: true,
+        voicePlayFlag: false,
     });
 
     // 是否处于处理数据中
@@ -210,6 +210,21 @@ const AIChat: React.FC = () => {
             () => {
                 // 需要进行自动播报
                 if (chatOptions.voicePlayFlag) {
+                    // TODO 需要实现自动语音播放
+                    // 非语音播报直接显示文字
+                    // 完成输出显示工具
+                    setKnowledgeData((prevData) => {
+                        const newData = { ...prevData };
+                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+                        const aiContent = newChatDataList[newChatDataList.length - 1];
+                        aiContent.okFlag = true;
+                        // 如果开启了自动播放需要调用自动转语音的方法进行播放
+                        aiContent.voicePlay = 'wait';
+                        newChatDataList[newChatDataList.length - 1] = aiContent;
+
+                        return newData;
+                    });
                 } else {
                     // 非语音播报直接显示文字
                     // 完成输出显示工具
@@ -220,7 +235,7 @@ const AIChat: React.FC = () => {
                         const aiContent = newChatDataList[newChatDataList.length - 1];
                         aiContent.okFlag = true;
                         // 如果开启了自动播放需要调用自动转语音的方法进行播放
-                        aiContent.tTSContentFlag = chatOptions.voicePlayFlag ? 'playing' : 'wait';
+                        aiContent.voicePlay = 'wait';
                         newChatDataList[newChatDataList.length - 1] = aiContent;
 
                         return newData;
@@ -245,7 +260,7 @@ const AIChat: React.FC = () => {
             const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
             const aiContent = newChatDataList[index];
-            aiContent.tTSContentFlag = 'transition';
+            aiContent.voicePlay = 'transition';
             newChatDataList[newChatDataList.length - 1] = aiContent;
 
             return newData;
@@ -267,7 +282,7 @@ const AIChat: React.FC = () => {
                 const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                 const aiContent = newChatDataList[index];
-                aiContent.tTSContentFlag = 'playing';
+                aiContent.voicePlay = 'playing';
                 newChatDataList[newChatDataList.length - 1] = aiContent;
 
                 return newData;
@@ -328,7 +343,7 @@ const AIChat: React.FC = () => {
                             ];
 
                             const aiContent = newChatDataList[index];
-                            aiContent.tTSContentFlag = 'wait';
+                            aiContent.voicePlay = 'wait';
                             newChatDataList[newChatDataList.length - 1] = aiContent;
 
                             return newData;

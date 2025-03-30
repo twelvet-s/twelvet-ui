@@ -31,7 +31,7 @@ declare namespace AIChat {
                 sendTime?: string;
                 // 是否处理完成
                 okFlag: boolean;
-                // 是否正在进行语音播报
+                // 是否正在进行语音播报 wait: 等等执行播放，transition: 转换语音中，playing: 播放中
                 voicePlay: 'wait' | 'transition' | 'playing';
             }[];
         };
