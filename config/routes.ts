@@ -203,6 +203,13 @@ export default [
                 component: './AI/Model',
             },
             {
+                title: 'MCP服务',
+                name: 'aiMCP',
+                icon: 'icon-ai-mcp',
+                path: '/ai/mcp',
+                component: './AI/Mcp',
+            },
+            {
                 title: '知识库管理',
                 name: 'aiKnowledge',
                 icon: 'icon-ai-knowledge',
@@ -217,7 +224,6 @@ export default [
                 path: '/ai/doc',
                 component: './AI/Doc',
             },
-
             {
                 title: 'AI助手',
                 name: 'aiChat',
