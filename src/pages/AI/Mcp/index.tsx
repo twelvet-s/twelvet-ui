@@ -8,8 +8,20 @@ import {
     EditOutlined,
     FundProjectionScreenOutlined,
     PlusOutlined,
+    QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Divider, Form, Input, message, Modal, Popconfirm, Radio, Space } from 'antd';
+import {
+    Button,
+    Divider,
+    Form,
+    Input,
+    message,
+    Modal,
+    Popconfirm,
+    Radio,
+    Space,
+    Tooltip,
+} from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { addMcp, delMcp, exportMcp, getMcp, pageQueryMcp, updateMcp } from './service';
 import { system } from '@/utils/twelvet';
@@ -17,6 +29,7 @@ import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
 import DictionariesRadio from '@/components/TwelveT/Dictionaries/DictionariesRadio';
+import StaffStatusSwitch from '@/pages/Human/Staff/components/staffStatusSwitch';
 
 /**
  * AI MCP服务模块
@@ -176,7 +189,7 @@ const Mcp: React.FC = () => {
             ellipsis: true,
             width: 200,
             valueType: 'text',
-            dataIndex: 'desc',
+            dataIndex: 'description',
         },
         {
             title: '请求类型',
@@ -195,27 +208,14 @@ const Mcp: React.FC = () => {
             dataIndex: 'command',
         },
         {
-            title: '参数',
+            title: '状态',
             search: false,
             ellipsis: true,
             width: 200,
-            valueType: 'text',
-            dataIndex: 'args',
-        },
-        {
-            title: '环境变量',
-            search: false,
-            ellipsis: true,
-            width: 200,
-            valueType: 'text',
-            dataIndex: 'env',
-        },
-        {
-            title: '启用状态',
-            search: false,
-            ellipsis: true,
-            width: 200,
-            valueType: 'text',
+            valueEnum: {
+                true: {text: '启用', status: 'success'},
+                false: {text: '停用', status: 'error'},
+            },
             dataIndex: 'statusFlag',
         },
         {
@@ -346,7 +346,7 @@ const Mcp: React.FC = () => {
                         {...formItemLayout}
                         label="描述"
                         rules={[{ required: false, message: '描述不能为空' }]}
-                        name="desc"
+                        name="description"
                     >
                         <Input.TextArea rows={5} />
                     </Form.Item>
@@ -356,22 +356,40 @@ const Mcp: React.FC = () => {
                         label="类型"
                         rules={[{ required: true, message: '类型不能为空' }]}
                         name="mcpType"
+                        initialValue={'STDIO'}
                     >
-                        <DictionariesRadio type='ai_mcp_type' />
+                        <DictionariesRadio type="ai_mcp_type" />
                     </Form.Item>
 
                     <Form.Item
                         {...formItemLayout}
-                        label="命令"
+                        label={
+                            <Tooltip
+                                title="
+                                服务器必须安装了对应命令才可以使用
+                            "
+                            >
+                                命令 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
                         rules={[{ required: true, message: '命令不能为空' }]}
                         name="command"
+                        initialValue={'NPX'}
                     >
-                        <DictionariesSelect type='ai_mcp_command' />
+                        <DictionariesSelect type="ai_mcp_command" />
                     </Form.Item>
 
                     <Form.Item
                         {...formItemLayout}
-                        label="参数"
+                        label={
+                            <Tooltip
+                                title="
+                                参数一行一个
+                            "
+                            >
+                                参数 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
                         rules={[{ required: true, message: '参数不能为空' }]}
                         name="args"
                     >
@@ -380,7 +398,15 @@ const Mcp: React.FC = () => {
 
                     <Form.Item
                         {...formItemLayout}
-                        label="环境变量"
+                        label={
+                            <Tooltip
+                                title="
+                                变量一行一个，key=value
+                            "
+                            >
+                                环境变量 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
                         rules={[{ required: false, message: '环境变量不能为空' }]}
                         name="env"
                     >
