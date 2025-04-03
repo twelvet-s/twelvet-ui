@@ -401,7 +401,7 @@ const Mcp: React.FC = () => {
                         label={
                             <Tooltip
                                 title="
-                                变量一行一个，key=value
+                                使用json格式
                             "
                             >
                                 环境变量 <QuestionCircleOutlined />
