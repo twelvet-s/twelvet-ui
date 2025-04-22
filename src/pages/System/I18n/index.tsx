@@ -162,6 +162,18 @@ const I18n: React.FC = () => {
             });
     };
 
+    /**
+     * 初始化国际化数据
+     */
+    const doInitI18n = async () => {
+        const { code, msg } = await initI18n();
+        if (code !== 200) {
+            return message.error(msg);
+        }
+
+        message.success(msg);
+    };
+
     // Form参数
     const columns: ProColumns<any>[] = [
         {
@@ -261,7 +273,7 @@ const I18n: React.FC = () => {
                 toolBarRender={(action, { selectedRowKeys }) => [
                     <Popconfirm
                         key="init"
-                        onConfirm={initI18n}
+                        onConfirm={doInitI18n}
                         title="是否强制执行初始化全局国际化缓存"
                     >
                         <Button type="primary">
