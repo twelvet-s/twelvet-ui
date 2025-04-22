@@ -47,11 +47,11 @@
     ],
     "dependencies": {
         "@ant-design/icons": "^4.8.1",
-        "@ant-design/pro-components": "^2.6.48",
+        "@ant-design/pro-components": "^2.8.6",
         "@microsoft/fetch-event-source": "^2.0.1",
         "@umijs/route-utils": "^2.2.2",
         "ace-builds": "^1.32.8",
-        "antd": "^5.13.2",
+        "antd": "^5.24.7",
         "antd-img-crop": "^4.21.0",
         "antd-style": "^3.6.1",
         "classnames": "^2.5.1",
