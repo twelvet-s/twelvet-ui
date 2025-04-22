@@ -15,7 +15,6 @@ export default {
     'app.welcome.link.fetch-blocks': 'Get all block',
     'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
 
-
     'app.development.documentation': 'Development Documentation',
     'system.check': 'Check',
     'system.add': 'Add',
@@ -33,6 +32,7 @@ export default {
     'system.forceful.retreat': 'Forceful Retreat',
     'system.execute': 'Execute',
     'system.log': 'Log',
+    'system.init.i18n': 'Initialize I18n data',
 
     'system.gen.code': 'Generate Code',
     ...globalHeader,

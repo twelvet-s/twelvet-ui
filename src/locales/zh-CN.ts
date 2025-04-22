@@ -32,6 +32,7 @@ export default {
     'system.forceful.retreat': '强退',
     'system.execute': '执行',
     'system.log': '日志',
+    'system.init.i18n': '初始化国际化数据',
 
     'system.gen.code': '生成代码',
     ...pages,

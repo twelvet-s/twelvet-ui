@@ -6,23 +6,22 @@ import {
     PlusOutlined,
     EditOutlined,
     CloseOutlined,
+    ThunderboltOutlined,
 } from '@ant-design/icons';
 import { Popconfirm, Button, message, Modal, Form, Input, Space, Divider } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
-import { pageQueryI18n, getI18n, delI18n, addI18n, updateI18n } from './service';
+import { pageQueryI18n, getI18n, delI18n, addI18n, updateI18n, initI18n } from './service';
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
 import { useIntl } from '@umijs/max';
 
-
 /**
  * 国际化模块
  */
 const I18n: React.FC = () => {
-
-    const {formatMessage} = useIntl()
+    const { formatMessage } = useIntl();
 
     const [state] = useState<{
         pageSize: number;
@@ -37,7 +36,7 @@ const I18n: React.FC = () => {
     });
 
     // 默认使用语言
-    const defaultLanguage: string = 'zh_CN'
+    const defaultLanguage: string = 'zh_CN';
 
     // 是否执行Modal数据操作中
     const [loadingModal, setLoadingModal] = useState<boolean>(false);
@@ -63,7 +62,7 @@ const I18n: React.FC = () => {
      * 新增国际化数据
      */
     const refPost = async () => {
-        setModal({title: formatMessage({id: 'system.add'}), visible: true});
+        setModal({ title: formatMessage({ id: 'system.add' }), visible: true });
     };
 
     /**
@@ -81,7 +80,7 @@ const I18n: React.FC = () => {
             form.setFieldsValue(data);
 
             // 设置Modal状态
-            setModal({title: formatMessage({id: 'system.update'}), visible: true});
+            setModal({ title: formatMessage({ id: 'system.update' }), visible: true });
         } catch (e) {
             system.error(e);
         }
@@ -179,7 +178,7 @@ const I18n: React.FC = () => {
             width: 200,
             dataIndex: 'type',
             hideInTable: true,
-            renderFormItem: () => <DictionariesSelect type='i18n' />,
+            renderFormItem: () => <DictionariesSelect type="i18n" />,
         },
         {
             title: '唯一Code',
@@ -215,7 +214,7 @@ const I18n: React.FC = () => {
                         <a onClick={() => refPut(row)}>
                             <Space>
                                 <EditOutlined />
-                                {formatMessage({id: 'system.update'})}
+                                {formatMessage({ id: 'system.update' })}
                             </Space>
                         </a>
 
@@ -225,7 +224,7 @@ const I18n: React.FC = () => {
                             <a href="#">
                                 <Space>
                                     <CloseOutlined />
-                                    {formatMessage({id: 'system.delete'})}
+                                    {formatMessage({ id: 'system.delete' })}
                                 </Space>
                             </a>
                         </Popconfirm>
@@ -260,9 +259,19 @@ const I18n: React.FC = () => {
                 }}
                 rowSelection={{}}
                 toolBarRender={(action, { selectedRowKeys }) => [
+                    <Popconfirm
+                        key="init"
+                        onConfirm={initI18n}
+                        title="是否强制执行初始化全局国际化缓存"
+                    >
+                        <Button type="primary">
+                            <ThunderboltOutlined />
+                            {formatMessage({ id: 'system.init.i18n' })}
+                        </Button>
+                    </Popconfirm>,
                     <Button key="add" type="default" onClick={refPost}>
                         <PlusOutlined />
-                        {formatMessage({id: 'system.add'})}
+                        {formatMessage({ id: 'system.add' })}
                     </Button>,
                     <Popconfirm
                         key="batchDelete"
@@ -275,8 +284,8 @@ const I18n: React.FC = () => {
                             type="primary"
                             danger
                         >
-                            <DeleteOutlined/>
-                            {formatMessage({id: 'system.delete.batch'})}
+                            <DeleteOutlined />
+                            {formatMessage({ id: 'system.delete.batch' })}
                         </Button>
                     </Popconfirm>,
                 ]}
@@ -319,7 +328,7 @@ const I18n: React.FC = () => {
                         name="type"
                         initialValue={defaultLanguage}
                     >
-                        <DictionariesSelect type='i18n' />
+                        <DictionariesSelect type="i18n" />
                     </Form.Item>
 
                     <Form.Item
