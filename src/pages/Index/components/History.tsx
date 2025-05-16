@@ -8,9 +8,11 @@ const History = () => {
     const items: CollapseProps['items'] = [
         {
             key: 14,
-            label: 'v3.4.0 - 2025-10-01',
+            label: 'v4.0.0 - 2025-10-01',
             children: (
                 <ol>
+                    <li>支持 Nacos V3.0.0</li>
+                    <li>大模型视觉分析</li>
                     <li>RAG知识库（LLM、TTS、STT）</li>
                     <li>支持第三方GitHub直接授权登录</li>
                     <li>优化相关逻辑</li>
