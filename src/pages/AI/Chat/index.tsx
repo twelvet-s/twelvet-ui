@@ -34,7 +34,7 @@ const AIChat: React.FC = () => {
     const [chatOptions, setChatOptions] = useState<AIChat.ChatOptionsType>({
         knowledgeId: undefined,
         chatType: 'TEXT',
-        carryContextFlag: true,
+        carryContextFlag: false,
         internetFlag: false,
         voicePlayFlag: false,
     });

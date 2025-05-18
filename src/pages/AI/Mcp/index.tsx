@@ -43,6 +43,9 @@ const Mcp: React.FC = () => {
         pageSize: 10,
     });
 
+    // mcp类型
+    const [mcpTypeState, setMcpTypeState] = useState<'STDIO' | 'SSE'>('STDIO');
+
     // 显示Modal
     const [modal, setModal] = useState<{ title: string; visible: boolean }>({
         title: ``,
@@ -74,6 +77,7 @@ const Mcp: React.FC = () => {
      * @param row row
      */
     const refPost = async () => {
+        setMcpTypeState('STDIO')
         setModal({ title: formatMessage({ id: 'system.add' }), visible: true });
     };
 
@@ -90,6 +94,7 @@ const Mcp: React.FC = () => {
 
             // 赋值表单数据
             form.setFieldsValue(data);
+            setMcpTypeState(data.mcpType)
 
             // 设置Modal状态
             setModal({ title: formatMessage({ id: 'system.update' }), visible: true });
@@ -213,8 +218,8 @@ const Mcp: React.FC = () => {
             ellipsis: true,
             width: 200,
             valueEnum: {
-                true: {text: '启用', status: 'success'},
-                false: {text: '停用', status: 'error'},
+                true: { text: '启用', status: 'success' },
+                false: { text: '停用', status: 'error' },
             },
             dataIndex: 'statusFlag',
         },
@@ -358,61 +363,92 @@ const Mcp: React.FC = () => {
                         name="mcpType"
                         initialValue={'STDIO'}
                     >
-                        <DictionariesRadio type="ai_mcp_type" />
+                        <DictionariesRadio
+                            type="ai_mcp_type"
+                            onChange={(v) => {
+                                setMcpTypeState(v.target.value);
+                            }}
+                        />
                     </Form.Item>
 
-                    <Form.Item
-                        {...formItemLayout}
-                        label={
-                            <Tooltip
-                                title="
+                    {mcpTypeState === 'SSE' && (
+                        <>
+                            <Form.Item
+                                {...formItemLayout}
+                                label="SSE 基础地址"
+                                rules={[{ required: true, message: 'SSE 基础地址不能为空' }]}
+                                name="sseBaseUrl"
+                            >
+                                <Input placeholder="https:twelvet.cn" />
+                            </Form.Item>
+
+                            <Form.Item
+                                {...formItemLayout}
+                                label="SSE 访问端点"
+                                rules={[{ required: true, message: 'SSE 访问端点不能为空' }]}
+                                name="sseEndpoint"
+                            >
+                                <Input placeholder="/sse" />
+                            </Form.Item>
+                        </>
+                    )}
+
+                    {mcpTypeState === 'STDIO' && (
+                        <>
+                            <Form.Item
+                                {...formItemLayout}
+                                label={
+                                    <Tooltip
+                                        title="
                                 服务器必须安装了对应命令才可以使用
                             "
+                                    >
+                                        命令 <QuestionCircleOutlined />
+                                    </Tooltip>
+                                }
+                                rules={[{ required: true, message: '命令不能为空' }]}
+                                name="command"
+                                initialValue={'NPX'}
                             >
-                                命令 <QuestionCircleOutlined />
-                            </Tooltip>
-                        }
-                        rules={[{ required: true, message: '命令不能为空' }]}
-                        name="command"
-                        initialValue={'NPX'}
-                    >
-                        <DictionariesSelect type="ai_mcp_command" />
-                    </Form.Item>
+                                <DictionariesSelect type="ai_mcp_command" />
+                            </Form.Item>
 
-                    <Form.Item
-                        {...formItemLayout}
-                        label={
-                            <Tooltip
-                                title="
+                            <Form.Item
+                                {...formItemLayout}
+                                label={
+                                    <Tooltip
+                                        title="
                                 参数一行一个
                             "
+                                    >
+                                        参数 <QuestionCircleOutlined />
+                                    </Tooltip>
+                                }
+                                rules={[{ required: true, message: '参数不能为空' }]}
+                                name="args"
                             >
-                                参数 <QuestionCircleOutlined />
-                            </Tooltip>
-                        }
-                        rules={[{ required: true, message: '参数不能为空' }]}
-                        name="args"
-                    >
-                        <Input.TextArea rows={5} />
-                    </Form.Item>
+                                <Input.TextArea rows={5} placeholder={'-y\n@server'} />
+                            </Form.Item>
 
-                    <Form.Item
-                        {...formItemLayout}
-                        label={
-                            <Tooltip
-                                title="
+                            <Form.Item
+                                {...formItemLayout}
+                                label={
+                                    <Tooltip
+                                        title="
                                 参数一行一个
                                 数据格式 key=value
                             "
+                                    >
+                                        环境变量 <QuestionCircleOutlined />
+                                    </Tooltip>
+                                }
+                                rules={[{ required: false, message: '环境变量不能为空' }]}
+                                name="env"
                             >
-                                环境变量 <QuestionCircleOutlined />
-                            </Tooltip>
-                        }
-                        rules={[{ required: false, message: '环境变量不能为空' }]}
-                        name="env"
-                    >
-                        <Input.TextArea rows={5} />
-                    </Form.Item>
+                                <Input.TextArea rows={5} placeholder={'key=value'} />
+                            </Form.Item>
+                        </>
+                    )}
 
                     <Form.Item
                         {...formItemLayout}
