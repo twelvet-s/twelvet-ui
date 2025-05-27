@@ -144,12 +144,16 @@ export const errorConfig: RequestConfig = {
                     throw error;
                 }
             } catch (error) {
-                if (error instanceof RefreshTokenError) {
-                    system.error(error);
-                    return;
-                }
+                const { status } = error.response;
                 system.error(error);
-                message.error('无法链接API，请联系管理！');
+                if (error instanceof RefreshTokenError) {
+                    return;
+                } else if (status === 500) {
+                    return;
+                } else {
+                    system.error('=====', error);
+                    message.error('无法链接API，请联系管理！');
+                }
             }
         },
     },
