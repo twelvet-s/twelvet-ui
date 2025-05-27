@@ -29,7 +29,6 @@ import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
 import DictionariesRadio from '@/components/TwelveT/Dictionaries/DictionariesRadio';
-import StaffStatusSwitch from '@/pages/Human/Staff/components/staffStatusSwitch';
 
 /**
  * AI MCP服务模块
@@ -74,10 +73,9 @@ const Mcp: React.FC = () => {
 
     /**
      * 新增AI MCP服务数据
-     * @param row row
      */
     const refPost = async () => {
-        setMcpTypeState('STDIO')
+        setMcpTypeState('STDIO');
         setModal({ title: formatMessage({ id: 'system.add' }), visible: true });
     };
 
@@ -94,7 +92,7 @@ const Mcp: React.FC = () => {
 
             // 赋值表单数据
             form.setFieldsValue(data);
-            setMcpTypeState(data.mcpType)
+            setMcpTypeState(data.mcpType);
 
             // 设置Modal状态
             setModal({ title: formatMessage({ id: 'system.update' }), visible: true });
@@ -340,7 +338,15 @@ const Mcp: React.FC = () => {
 
                     <Form.Item
                         {...formItemLayout}
-                        label="服务名称"
+                        label={
+                            <Tooltip
+                                title="
+                                也为clientId，请注意唯一性
+                            "
+                            >
+                                服务名称 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
                         rules={[{ required: true, message: '服务名称不能为空' }]}
                         name="name"
                     >
