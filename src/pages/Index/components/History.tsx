@@ -11,6 +11,7 @@ const History = () => {
             label: 'v4.0.0 - 2025-10-01',
             children: (
                 <ol>
+                    <li>Spring Cloud v2025.0.0</li>
                     <li>支持 Nacos V3.0.0</li>
                     <li>大模型视觉分析</li>
                     <li>RAG知识库（LLM、TTS、STT）</li>
