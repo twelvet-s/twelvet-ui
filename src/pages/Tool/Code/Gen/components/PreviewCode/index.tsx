@@ -1,21 +1,21 @@
-import React, { useState, useEffect, ReactElement, useRef } from 'react'
-import { Button, Col, Modal, Row, Tree, message } from 'antd'
-import AceEditor from "react-ace"
-import "ace-builds/src-noconflict/mode-java"
-import "ace-builds/src-noconflict/theme-monokai"
-import "ace-builds/src-noconflict/ext-language_tools"
-import { getInfo } from './service'
-import { system } from '@/utils/twelvet'
-import { CopyOutlined, DownOutlined, FileTextOutlined } from '@ant-design/icons'
+import React, { useState, useEffect, ReactElement, useRef } from 'react';
+import { Button, Col, Modal, Row, Tree, message } from 'antd';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-java';
+import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/ext-language_tools';
+import { getInfo } from './service';
+import { system } from '@/utils/twelvet';
+import { CopyOutlined, DownOutlined, FileTextOutlined } from '@ant-design/icons';
 
 type treeType = {
-    title: string
-    code?: string
-    key: string
-    codePath?: string
-    fileName?: string
-    children: treeType[]
-    icon?: ReactElement
+    title: string;
+    code?: string;
+    key: string;
+    codePath?: string;
+    fileName?: string;
+    children: treeType[];
+    icon?: ReactElement;
 };
 
 /**
@@ -30,9 +30,9 @@ const PreviewCode: React.FC<{
 }> = (props) => {
     const { info, onClose } = props;
 
-    const [codeData, setCodeData] = useState<treeType[]>([])
+    const [codeData, setCodeData] = useState<treeType[]>([]);
 
-    const [aceValue, setAceValue] = useState<string>('')
+    const [aceValue, setAceValue] = useState<string>('');
 
     const editorRef = useRef<any>();
 
@@ -40,11 +40,14 @@ const PreviewCode: React.FC<{
         // 获取编辑器的内容
         const content = editorRef.current?.editor.getValue();
         // 将内容复制到剪切板
-        navigator.clipboard.writeText(content).then(() => {
-            message.success('Success to Copy')
-        }, (err) => {
-            message.error(`Failed to Copy：${err}`)
-        });
+        navigator.clipboard.writeText(content).then(
+            () => {
+                message.success('Success to Copy');
+            },
+            (err) => {
+                message.error(`Failed to Copy：${err}`);
+            },
+        );
     };
 
     /**
@@ -53,31 +56,28 @@ const PreviewCode: React.FC<{
      */
     const refGetInfo = async (tableId: number) => {
         try {
-            const { data } = await getInfo(tableId)
+            const { data } = await getInfo(tableId);
 
+            const result: treeType[] = [];
 
-            const result: treeType[] = []
-
-            data.forEach((item: {
-                code: string
-                codePath: string
-            }) => {
+            data.forEach((item: { code: string; codePath: string }) => {
                 const pathParts = item.codePath.replace(/\\/g, '/').replace(/\/+/g, '/').split('/');
                 let currentLevel = result;
                 for (let i = 0; i < pathParts.length - 1; i++) {
-                    if (!currentLevel.some(child => child.title === pathParts[i])) {
+                    if (!currentLevel.some((child) => child.title === pathParts[i])) {
                         currentLevel.push({
                             title: pathParts[i],
                             key: `${i}-${Math.random().toString(36).substring(2, 8)}`,
-                            children: []
+                            children: [],
                         });
                     }
 
-                    currentLevel = currentLevel.find(child => child.title === pathParts[i])!.children
-
+                    currentLevel = currentLevel.find(
+                        (child) => child.title === pathParts[i],
+                    )!.children;
                 }
                 if (!aceValue) {
-                    setAceValue(item.code)
+                    setAceValue(item.code);
                 }
                 currentLevel.push({
                     title: pathParts[pathParts.length - 1],
@@ -88,9 +88,9 @@ const PreviewCode: React.FC<{
                 });
             });
 
-            setCodeData(result)
+            setCodeData(result);
         } catch (e) {
-            system.error(e)
+            system.error(e);
         }
     };
 
@@ -109,7 +109,7 @@ const PreviewCode: React.FC<{
             width={'90%'}
             open={info.visible}
             onCancel={() => {
-                setAceValue('')
+                setAceValue('');
                 onClose();
             }}
             footer={null}
@@ -124,17 +124,18 @@ const PreviewCode: React.FC<{
                         defaultExpandAll={true}
                         onSelect={(_, e) => {
                             if (e.node.code) {
-                                setAceValue(e.node.code)
+                                setAceValue(e.node.code);
                             }
-
                         }}
                     />
                 </Col>
 
                 <Col sm={16} xs={24}>
-                    <div style={{
-                        position: 'relative'
-                    }}>
+                    <div
+                        style={{
+                            position: 'relative',
+                        }}
+                    >
                         <AceEditor
                             ref={editorRef}
                             mode={'java'}
@@ -147,6 +148,7 @@ const PreviewCode: React.FC<{
                             showGutter={true}
                             highlightActiveLine={true}
                             value={aceValue}
+                            // 是否只读
                             readOnly={true}
                             setOptions={{
                                 enableBasicAutocompletion: true,
@@ -160,7 +162,7 @@ const PreviewCode: React.FC<{
                             style={{
                                 position: 'absolute',
                                 top: 10,
-                                right: 35
+                                right: 35,
                             }}
                             onClick={handleCopyClick}
                         >

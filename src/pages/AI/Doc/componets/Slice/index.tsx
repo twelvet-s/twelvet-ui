@@ -6,8 +6,8 @@ import { getSlice, pageQuerySlice, updateSlice } from '@/pages/AI/Doc/componets/
 import { FormInstance } from 'antd/lib/form';
 import './styles.less';
 import Markdown from 'react-markdown';
-import { useIntl } from '@@/exports';
 import { system } from '@/utils/twelvet';
+import { useIntl } from '@@/exports';
 
 /**
  * AI知识库文档分片模块

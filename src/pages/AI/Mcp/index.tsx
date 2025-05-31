@@ -29,6 +29,10 @@ import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
 import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
 import DictionariesRadio from '@/components/TwelveT/Dictionaries/DictionariesRadio';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/ext-language_tools';
 
 /**
  * AI MCP服务模块
@@ -422,36 +426,69 @@ const Mcp: React.FC = () => {
                             <Form.Item
                                 {...formItemLayout}
                                 label={
-                                    <Tooltip
-                                        title="
-                                参数一行一个
-                            "
-                                    >
+                                    <Tooltip title="参数一行一个">
                                         参数 <QuestionCircleOutlined />
                                     </Tooltip>
                                 }
                                 rules={[{ required: true, message: '参数不能为空' }]}
                                 name="args"
                             >
-                                <Input.TextArea rows={5} placeholder={'-y\n@server'} />
+                                {/*<Input.TextArea rows={5} placeholder={'-y\n@server'} />*/}
+                                <AceEditor
+                                    mode={'json'}
+                                    theme={'monokai'}
+                                    width={'100%'}
+                                    fontSize={14}
+                                    showPrintMargin={true}
+                                    showGutter={true}
+                                    highlightActiveLine={true}
+                                    // 是否只读
+                                    readOnly={false}
+                                    setOptions={{
+                                        enableBasicAutocompletion: true,
+                                        enableLiveAutocompletion: true,
+                                        enableSnippets: true,
+                                        showLineNumbers: true,
+                                        tabSize: 2,
+                                        maxLines: 10, // 设置最大行数，超出时显示滚动条
+                                        minLines: 5, // 设置最小行数
+                                        wrapEnabled: true, // 启用自动换行
+                                    }}
+                                />
                             </Form.Item>
 
                             <Form.Item
                                 {...formItemLayout}
                                 label={
-                                    <Tooltip
-                                        title="
-                                参数一行一个
-                                数据格式 key=value
-                            "
-                                    >
+                                    <Tooltip title="使用json格式参数">
                                         环境变量 <QuestionCircleOutlined />
                                     </Tooltip>
                                 }
                                 rules={[{ required: false, message: '环境变量不能为空' }]}
                                 name="env"
+                                initialValue={'{}'}
                             >
-                                <Input.TextArea rows={5} placeholder={'key=value'} />
+                                <AceEditor
+                                    mode={'json'}
+                                    theme={'monokai'}
+                                    width={'100%'}
+                                    fontSize={14}
+                                    showPrintMargin={true}
+                                    showGutter={true}
+                                    highlightActiveLine={true}
+                                    // 是否只读
+                                    readOnly={false}
+                                    setOptions={{
+                                        enableBasicAutocompletion: true,
+                                        enableLiveAutocompletion: true,
+                                        enableSnippets: true,
+                                        showLineNumbers: true,
+                                        tabSize: 2,
+                                        maxLines: 10, // 设置最大行数，超出时显示滚动条
+                                        minLines: 5, // 设置最小行数
+                                        wrapEnabled: true, // 启用自动换行
+                                    }}
+                                />
                             </Form.Item>
                         </>
                     )}

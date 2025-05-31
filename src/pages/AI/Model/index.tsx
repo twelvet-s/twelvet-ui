@@ -8,13 +8,30 @@ import {
     EditOutlined,
     FundProjectionScreenOutlined,
     PlusOutlined,
+    QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Divider, Form, Input, message, Modal, Popconfirm, Space } from 'antd';
+import {
+    Button,
+    Divider,
+    Form,
+    Input,
+    message,
+    Modal,
+    Popconfirm,
+    Slider,
+    Space,
+    Tooltip,
+} from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { addModel, delModel, exportModel, getModel, pageQueryModel, updateModel } from './service';
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
+import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-java';
+import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/ext-language_tools';
 
 /**
  * AI大模型模块
@@ -282,6 +299,7 @@ const Model: React.FC = () => {
             />
 
             <Modal
+                width={800}
                 title={`${modal.title}AI大模型`}
                 open={modal.visible}
                 okText={`${modal.title}`}
@@ -305,25 +323,29 @@ const Model: React.FC = () => {
                     <Form.Item
                         {...formItemLayout}
                         label="供应商"
-                        rules={[{ required: false, message: '供应商不能为空' }]}
+                        rules={[{ required: true, message: '供应商不能为空' }]}
                         name="modelSupplier"
                     >
-                        <Input />
+                        <DictionariesSelect type="ai_model_provider" />
                     </Form.Item>
 
                     <Form.Item
                         {...formItemLayout}
                         label="模型类型"
-                        rules={[{ required: false, message: '模型类型不能为空' }]}
+                        rules={[{ required: true, message: '模型类型不能为空' }]}
                         name="modelType"
                     >
-                        <Input />
+                        <DictionariesSelect type="ai_model_type" />
                     </Form.Item>
 
                     <Form.Item
                         {...formItemLayout}
-                        label="模型"
-                        rules={[{ required: false, message: '模型不能为空' }]}
+                        label={
+                            <Tooltip title="模型平台的标准名称，用于用户识别平台对应">
+                                模型 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
+                        rules={[{ required: true, message: '模型不能为空' }]}
                         name="model"
                     >
                         <Input />
@@ -331,8 +353,12 @@ const Model: React.FC = () => {
 
                     <Form.Item
                         {...formItemLayout}
-                        label="别名"
-                        rules={[{ required: false, message: '别名不能为空' }]}
+                        label={
+                            <Tooltip title="主要用于程序调用，对应关系请看Spring AI">
+                                别名 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
+                        rules={[{ required: true, message: '别名不能为空' }]}
                         name="alias"
                     >
                         <Input />
@@ -341,7 +367,7 @@ const Model: React.FC = () => {
                     <Form.Item
                         {...formItemLayout}
                         label="apiKey"
-                        rules={[{ required: false, message: 'apiKey不能为空' }]}
+                        rules={[{ required: true, message: 'apiKey不能为空' }]}
                         name="apiKey"
                     >
                         <Input />
@@ -354,6 +380,94 @@ const Model: React.FC = () => {
                         name="baseUrl"
                     >
                         <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
+                        label={
+                            <Tooltip
+                                title="
+                                响应限制
+                            "
+                            >
+                                响应限制 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
+                        rules={[{ required: true, message: '匹配率不能为空' }]}
+                        name="responseLimit"
+                        initialValue={1142}
+                    >
+                        <Slider defaultValue={1142} min={0} max={4096} step={1} />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
+                        label={
+                            <Tooltip
+                                title="
+                                顶层概率
+                            "
+                            >
+                                顶层概率 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
+                        rules={[{ required: true, message: '匹配率不能为空' }]}
+                        name="temperature"
+                        initialValue={0.5}
+                    >
+                        <Slider defaultValue={0.4} min={0} max={1} step={0.1} />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
+                        label={
+                            <Tooltip
+                                title="
+                                顶层概率
+                            "
+                            >
+                                顶层概率 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
+                        rules={[{ required: true, message: '匹配率不能为空' }]}
+                        name="topP"
+                        initialValue={0.5}
+                    >
+                        <Slider defaultValue={0.5} min={0} max={1} step={0.1} />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...formItemLayout}
+                        label={
+                            <Tooltip title="部分模型参考文档配置">
+                                特殊参数 <QuestionCircleOutlined />
+                            </Tooltip>
+                        }
+                        rules={[{ required: false, message: '模型不能为空' }]}
+                        name="extData"
+                        initialValue={'{}'}
+                    >
+                        <AceEditor
+                            mode={'json'}
+                            theme={'monokai'}
+                            width={'100%'}
+                            fontSize={14}
+                            showPrintMargin={true}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            // 是否只读
+                            readOnly={false}
+                            setOptions={{
+                                enableBasicAutocompletion: true,
+                                enableLiveAutocompletion: true,
+                                enableSnippets: true,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                                maxLines: 10, // 设置最大行数，超出时显示滚动条
+                                minLines: 5, // 设置最小行数
+                                wrapEnabled: true, // 启用自动换行
+                            }}
+                        />
                     </Form.Item>
                 </Form>
             </Modal>
