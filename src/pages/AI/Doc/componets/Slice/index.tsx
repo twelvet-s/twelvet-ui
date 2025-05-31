@@ -8,6 +8,10 @@ import './styles.less';
 import Markdown from 'react-markdown';
 import { system } from '@/utils/twelvet';
 import { useIntl } from '@@/exports';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/ext-language_tools';
 
 /**
  * AI知识库文档分片模块
@@ -223,7 +227,26 @@ const DocSlice: React.FC<{
                     </Form.Item>
 
                     <Form.Item {...formItemLayout} label="内容" name="content">
-                        <Input.TextArea rows={30} />
+                        <AceEditor
+                            mode={'json'}
+                            theme={'monokai'}
+                            width={'100%'}
+                            fontSize={14}
+                            showPrintMargin={true}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            // 是否只读
+                            readOnly={false}
+                            setOptions={{
+                                enableBasicAutocompletion: true,
+                                enableLiveAutocompletion: true,
+                                enableSnippets: true,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                                minLines: 5, // 设置最小行数
+                                wrapEnabled: true, // 启用自动换行
+                            }}
+                        />
                     </Form.Item>
                 </Form>
             </Modal>
