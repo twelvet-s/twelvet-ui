@@ -213,7 +213,7 @@ const DocSlice: React.FC<{
                 onCancel={handleCancel}
                 // 销毁组件，要求重新装载
                 destroyOnClose
-                width={'50%'}
+                width={'100vw'}
             >
                 <Form form={form}>
                     <Form.Item
@@ -226,7 +226,18 @@ const DocSlice: React.FC<{
                         <Input />
                     </Form.Item>
 
-                    <Form.Item {...formItemLayout} label="内容" name="content">
+                    <Form.Item
+                        labelCol={{
+                            xs: { span: 2 },
+                            sm: { span: 2 },
+                        }}
+                        wrapperCol={{
+                            xs: { span: 20 },
+                            sm: { span: 20 },
+                        }}
+                        label="内容"
+                        name="content"
+                    >
                         <AceEditor
                             mode={'json'}
                             theme={'monokai'}

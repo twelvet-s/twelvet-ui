@@ -385,35 +385,13 @@ const Model: React.FC = () => {
                     <Form.Item
                         {...formItemLayout}
                         label={
-                            <Tooltip
-                                title="
-                                响应限制
-                            "
-                            >
-                                响应限制 <QuestionCircleOutlined />
+                            <Tooltip title="数值越大，回答越有创意和想象力；数值越小，回答越严谨">
+                                创意活跃度 <QuestionCircleOutlined />
                             </Tooltip>
                         }
-                        rules={[{ required: true, message: '匹配率不能为空' }]}
-                        name="responseLimit"
-                        initialValue={1142}
-                    >
-                        <Slider defaultValue={1142} min={0} max={4096} step={1} />
-                    </Form.Item>
-
-                    <Form.Item
-                        {...formItemLayout}
-                        label={
-                            <Tooltip
-                                title="
-                                顶层概率
-                            "
-                            >
-                                顶层概率 <QuestionCircleOutlined />
-                            </Tooltip>
-                        }
-                        rules={[{ required: true, message: '匹配率不能为空' }]}
+                        rules={[{ required: true, message: '创意活跃度不能为空' }]}
                         name="temperature"
-                        initialValue={0.5}
+                        initialValue={0.8}
                     >
                         <Slider defaultValue={0.4} min={0} max={1} step={0.1} />
                     </Form.Item>
@@ -421,17 +399,13 @@ const Model: React.FC = () => {
                     <Form.Item
                         {...formItemLayout}
                         label={
-                            <Tooltip
-                                title="
-                                顶层概率
-                            "
-                            >
-                                顶层概率 <QuestionCircleOutlined />
+                            <Tooltip title="考虑多少种可能性，值越大，接受更多可能的回答；值越小，倾向选择最可能的回答。不推荐和创意活跃度一起更改">
+                                思维开放度 <QuestionCircleOutlined />
                             </Tooltip>
                         }
-                        rules={[{ required: true, message: '匹配率不能为空' }]}
+                        rules={[{ required: true, message: '思维开放度不能为空' }]}
                         name="topP"
-                        initialValue={0.5}
+                        initialValue={0.8}
                     >
                         <Slider defaultValue={0.5} min={0} max={1} step={0.1} />
                     </Form.Item>
@@ -444,7 +418,7 @@ const Model: React.FC = () => {
                             </Tooltip>
                         }
                         rules={[{ required: false, message: '模型不能为空' }]}
-                        name="extData"
+                        name="extParam"
                         initialValue={'{}'}
                     >
                         <AceEditor
