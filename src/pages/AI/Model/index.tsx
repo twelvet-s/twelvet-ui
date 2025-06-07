@@ -45,6 +45,11 @@ const Model: React.FC = () => {
         pageSize: 10,
     });
 
+    /**
+     * 是否为llm模型
+     */
+    const [llmFlag, setLLMFlag] = useState<boolean>(true);
+
     // 显示Modal
     const [modal, setModal] = useState<{ title: string; visible: boolean }>({
         title: ``,
@@ -75,6 +80,7 @@ const Model: React.FC = () => {
      * 新增AI大模型数据
      */
     const refPost = async () => {
+        setLLMFlag(true);
         setModal({ title: formatMessage({ id: 'system.add' }), visible: true });
     };
 
@@ -94,6 +100,11 @@ const Model: React.FC = () => {
 
             // 设置Modal状态
             setModal({ title: formatMessage({ id: 'system.update' }), visible: true });
+            if (data.modelType !== 'LLM') {
+                setLLMFlag(false);
+            } else {
+                setLLMFlag(true);
+            }
         } catch (e) {
             system.error(e);
         }
@@ -335,7 +346,16 @@ const Model: React.FC = () => {
                         rules={[{ required: true, message: '模型类型不能为空' }]}
                         name="modelType"
                     >
-                        <DictionariesSelect type="ai_model_type" />
+                        <DictionariesSelect
+                            onChange={(v) => {
+                                if (v !== 'LLM') {
+                                    setLLMFlag(false);
+                                } else {
+                                    setLLMFlag(true);
+                                }
+                            }}
+                            type="ai_model_type"
+                        />
                     </Form.Item>
 
                     <Form.Item
@@ -382,33 +402,37 @@ const Model: React.FC = () => {
                         <Input />
                     </Form.Item>
 
-                    <Form.Item
-                        {...formItemLayout}
-                        label={
-                            <Tooltip title="数值越大，回答越有创意和想象力；数值越小，回答越严谨">
-                                创意活跃度 <QuestionCircleOutlined />
-                            </Tooltip>
-                        }
-                        rules={[{ required: true, message: '创意活跃度不能为空' }]}
-                        name="temperature"
-                        initialValue={0.8}
-                    >
-                        <Slider defaultValue={0.4} min={0} max={1} step={0.1} />
-                    </Form.Item>
+                    {llmFlag && (
+                        <>
+                            <Form.Item
+                                {...formItemLayout}
+                                label={
+                                    <Tooltip title="数值越大，回答越有创意和想象力；数值越小，回答越严谨">
+                                        创意活跃度 <QuestionCircleOutlined />
+                                    </Tooltip>
+                                }
+                                rules={[{ required: true, message: '创意活跃度不能为空' }]}
+                                name="temperature"
+                                initialValue={0.8}
+                            >
+                                <Slider defaultValue={0.4} min={0} max={1} step={0.1} />
+                            </Form.Item>
 
-                    <Form.Item
-                        {...formItemLayout}
-                        label={
-                            <Tooltip title="考虑多少种可能性，值越大，接受更多可能的回答；值越小，倾向选择最可能的回答。不推荐和创意活跃度一起更改">
-                                思维开放度 <QuestionCircleOutlined />
-                            </Tooltip>
-                        }
-                        rules={[{ required: true, message: '思维开放度不能为空' }]}
-                        name="topP"
-                        initialValue={0.8}
-                    >
-                        <Slider defaultValue={0.5} min={0} max={1} step={0.1} />
-                    </Form.Item>
+                            <Form.Item
+                                {...formItemLayout}
+                                label={
+                                    <Tooltip title="考虑多少种可能性，值越大，接受更多可能的回答；值越小，倾向选择最可能的回答。不推荐和创意活跃度一起更改">
+                                        思维开放度 <QuestionCircleOutlined />
+                                    </Tooltip>
+                                }
+                                rules={[{ required: true, message: '思维开放度不能为空' }]}
+                                name="topP"
+                                initialValue={0.8}
+                            >
+                                <Slider defaultValue={0.5} min={0} max={1} step={0.1} />
+                            </Form.Item>
+                        </>
+                    )}
 
                     <Form.Item
                         {...formItemLayout}
