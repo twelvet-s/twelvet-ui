@@ -1,7 +1,7 @@
 import { refreshToken } from '@/pages/Login/service';
 import TWT from '@/setting';
 import { history, request } from '@umijs/max';
-import { notification } from 'antd';
+import { message, notification } from 'antd';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 
 /**
@@ -352,7 +352,7 @@ export const auth = (authStr: string) => {
 /**
  * 处理流请求
  * @param eventSourceUrl 请求地址
- * @param message
+ * @param data
  * @param handleMessage
  * @param handleDone
  */
@@ -386,6 +386,7 @@ export const eventSource = async (
             onerror: (err) => {
                 console.error('EventSource error:', err);
                 controller.abort(); // 处理错误时中止连接
+                message.error('链接发生异常');
                 // 抛出错误，否则会自动重试
                 throw err;
             },
