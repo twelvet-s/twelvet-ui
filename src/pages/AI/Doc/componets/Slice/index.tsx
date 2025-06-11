@@ -255,7 +255,7 @@ const DocSlice: React.FC<{
                                 showLineNumbers: true,
                                 tabSize: 2,
                                 minLines: 5, // 设置最小行数
-                                wrapEnabled: true, // 启用自动换行
+                                wrapBehavioursEnabled: true, // 启用自动换行
                             }}
                         />
                     </Form.Item>

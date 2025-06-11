@@ -415,7 +415,7 @@ const Model: React.FC = () => {
                                 name="temperature"
                                 initialValue={0.8}
                             >
-                                <Slider defaultValue={0.4} min={0} max={1} step={0.1} />
+                                <Slider min={0} max={1} step={0.1} />
                             </Form.Item>
 
                             <Form.Item
@@ -429,7 +429,7 @@ const Model: React.FC = () => {
                                 name="topP"
                                 initialValue={0.8}
                             >
-                                <Slider defaultValue={0.5} min={0} max={1} step={0.1} />
+                                <Slider min={0} max={1} step={0.1} />
                             </Form.Item>
                         </>
                     )}
@@ -463,7 +463,7 @@ const Model: React.FC = () => {
                                 tabSize: 2,
                                 maxLines: 10, // 设置最大行数，超出时显示滚动条
                                 minLines: 5, // 设置最小行数
-                                wrapEnabled: true, // 启用自动换行
+                                wrapBehavioursEnabled: true, // 启用自动换行
                             }}
                         />
                     </Form.Item>
