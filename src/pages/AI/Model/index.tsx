@@ -193,14 +193,14 @@ const Model: React.FC = () => {
             ellipsis: true,
             width: 200,
             valueType: 'text',
-            dataIndex: 'modelSupplier',
+            dataIndex: 'modelProviderName',
         },
         {
             title: '模型类型',
             ellipsis: true,
             width: 200,
             valueType: 'text',
-            dataIndex: 'modelType',
+            dataIndex: 'modelTypeName',
         },
         {
             title: '模型',
