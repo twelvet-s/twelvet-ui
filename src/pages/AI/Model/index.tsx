@@ -32,6 +32,7 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/ext-language_tools';
+import StatusSwitch from './staffStatusSwitch/Index';
 
 /**
  * AI大模型模块
@@ -170,7 +171,7 @@ const Model: React.FC = () => {
                     message.success(msg);
 
                     if (acForm.current) {
-                        acForm.current.reload();
+                        acForm!.current.reload();
                     }
 
                     // 关闭模态框
@@ -215,6 +216,17 @@ const Model: React.FC = () => {
             width: 200,
             valueType: 'text',
             dataIndex: 'alias',
+        },
+        {
+            title: '默认',
+            ellipsis: true,
+            width: 200,
+            dataIndex: 'defaultFlag',
+            valueEnum: {
+                true: { text: '默认', status: 'default' },
+                false: { text: '非默认', status: 'notDefault' },
+            },
+            render: (_, row) => <StatusSwitch row={row} />,
         },
         {
             title: '操作',

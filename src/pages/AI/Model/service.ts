@@ -1,8 +1,8 @@
-import {request} from '@umijs/max'
-import {download} from '@/utils/twelvet'
+import { request } from '@umijs/max';
+import { download } from '@/utils/twelvet';
 
 // 请求的控制器名称
-const controller = "/ai/model";
+const controller = '/ai/model';
 
 /**
  * 查询AI大模型列表
@@ -11,18 +11,18 @@ const controller = "/ai/model";
 export async function pageQueryModel(query: { [key: string]: any }) {
     return request(`${controller}/pageQuery`, {
         method: `get`,
-        params: query
-    })
+        params: query,
+    });
 }
 
 /**
  * 查询AI大模型详细
- * @param 主键
+ * @param modelId
  */
 export async function getModel(modelId: string | number) {
     return request(`${controller}/${modelId}`, {
-        method: `get`
-    })
+        method: `get`,
+    });
 }
 
 /**
@@ -32,8 +32,8 @@ export async function getModel(modelId: string | number) {
 export async function addModel(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `post`,
-        data: data
-    })
+        data: data,
+    });
 }
 
 /**
@@ -43,18 +43,18 @@ export async function addModel(data: { [key: string]: any }) {
 export async function updateModel(data: { [key: string]: any }) {
     return request(`${controller}`, {
         method: `put`,
-        data: data
-    })
+        data: data,
+    });
 }
 
 /**
  * 删除AI大模型
- * @param 主键
+ * @param modelId
  */
 export async function delModel(modelId: string | number) {
     return request(`${controller}/${modelId}`, {
-        method: `delete`
-    })
+        method: `delete`,
+    });
 }
 
 /**
@@ -63,4 +63,17 @@ export async function delModel(modelId: string | number) {
  */
 export async function exportModel(params?: { [key: string]: any }) {
     return download(`${controller}/export`, params);
+}
+
+/**
+ *
+ * @param params
+ */
+export async function changeStatus(params: Record<string, any>) {
+    return request(`${controller}/changeStatus`, {
+        method: 'PUT',
+        data: {
+            ...params,
+        },
+    });
 }
