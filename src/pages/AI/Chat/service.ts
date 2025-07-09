@@ -20,7 +20,7 @@ export async function listKnowledgeQueryDoc(query: { [key: string]: any }) {
  * @param query 查询参数
  */
 export async function pageQueryDoc(query: { [key: string]: any }) {
-    return request(`/ai/chat/history/page`, {
+    return request(`${controller}/history/page`, {
         method: `get`,
         params: query,
     });
@@ -31,7 +31,7 @@ export async function pageQueryDoc(query: { [key: string]: any }) {
  * @param data 查询参数
  */
 export async function tts(data: { [key: string]: any }) {
-    return request(`/ai/chat/tts`, {
+    return request(`${controller}/tts`, {
         method: `post`,
         data: data,
     });

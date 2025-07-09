@@ -1,7 +1,7 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Col, Flex, Input, message, Row, Skeleton } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
-import { listKnowledgeQueryDoc, sendMessage, tts } from './service';
+import { Button, Card, Col, Flex, Input, message, Row, Skeleton, Spin } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { listKnowledgeQueryDoc, pageQueryDoc, sendMessage, tts } from './service';
 import Markdown from 'react-markdown';
 import {
     CodeOutlined,
@@ -59,6 +59,18 @@ const AIChat: React.FC = () => {
         }[]
     >([]);
 
+    // 分页信息状态 - 为每个知识库维护分页信息
+    const [paginationInfo, setPaginationInfo] = useState<{
+        [knowledgeId: number]: {
+            current: number;
+            hasMore: boolean;
+            loading: boolean;
+        };
+    }>({});
+
+    // 防抖定时器
+    const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     // 储存每一个div控制，用于获取value
     const chatDataRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -101,6 +113,23 @@ const AIChat: React.FC = () => {
         // 设置初始化聊天信息
         setKnowledgeData(chatDataListTemp);
         setKnowledgeList(knowledgeDataList);
+
+        // 初始化分页信息
+        const paginationTemp: {
+            [knowledgeId: number]: {
+                current: number;
+                hasMore: boolean;
+                loading: boolean;
+            };
+        } = {};
+        for (let knowledge of data) {
+            paginationTemp[knowledge.knowledgeId] = {
+                current: 1,
+                hasMore: true,
+                loading: false,
+            };
+        }
+        setPaginationInfo(paginationTemp);
     };
 
     /**
@@ -114,7 +143,184 @@ const AIChat: React.FC = () => {
     }, []);
 
     /**
-     * 需要时刻保持在底部
+     * 加载历史消息
+     */
+    const loadHistoryMessages = useCallback(
+        async (knowledgeId: number) => {
+            const currentPagination = paginationInfo[knowledgeId];
+            if (!currentPagination || currentPagination.loading || !currentPagination.hasMore) {
+                return;
+            }
+
+            // 设置加载状态
+            setPaginationInfo((prev) => ({
+                ...prev,
+                [knowledgeId]: {
+                    ...prev[knowledgeId],
+                    loading: true,
+                },
+            }));
+
+            try {
+                const { code, msg, data } = await pageQueryDoc({
+                    knowledgeId,
+                    current: currentPagination.current,
+                    pageSize: 10, // 每次加载10条历史消息
+                });
+
+                if (code !== 200) {
+                    message.error(msg);
+                    return;
+                }
+
+                const historyMessages = data.records || [];
+                const pageSize = 10;
+                const hasMore = historyMessages.length === pageSize; // 如果返回的数据少于pageSize，说明没有更多数据了
+
+                // 如果没有历史消息，提示用户
+                if (historyMessages.length === 0 && currentPagination.current === 1) {
+                    message.info('暂无历史消息');
+                    setPaginationInfo((prev) => ({
+                        ...prev,
+                        [knowledgeId]: {
+                            ...prev[knowledgeId],
+                            hasMore: false,
+                            loading: false,
+                        },
+                    }));
+                    return;
+                }
+
+                // 转换历史消息格式
+                const formattedMessages = historyMessages
+                    .map((record: any) => {
+                        // 调试信息：打印原始数据结构
+                        console.log('历史消息原始数据:', record);
+
+                        // 尝试多个可能的内容字段
+                        const content =
+                            record.content || record.remark || record.message || record.text || '';
+
+                        // 尝试多个可能的用户类型字段
+                        const userType =
+                            record.createByType || record.userType || record.role || '';
+                        const role = userType === 'USER' || userType === 'user' ? 'USER' : 'AI';
+
+                        // 尝试多个可能的时间字段
+                        const sendTime = record.createTime || record.sendTime || record.time || '';
+
+                        console.log('转换后的消息:', { content, role, sendTime });
+
+                        return {
+                            msgId: record.msgId || record.id || '',
+                            role,
+                            content,
+                            sendTime,
+                            okFlag: true,
+                            voicePlay: 'wait' as const,
+                        };
+                    })
+                    .filter((msg) => msg.content.trim() !== ''); // 过滤掉空内容的消息
+
+                // 记录当前滚动位置
+                const container = chatListCtnRef.current;
+                const oldScrollHeight = container?.scrollHeight || 0;
+
+                // 调试信息：打印格式化后的消息
+                console.log('格式化后的历史消息:', formattedMessages);
+
+                // 将历史消息插入到现有消息列表的开头
+                setKnowledgeData((prevData) => {
+                    const newData = { ...prevData };
+                    const currentMessages = newData[knowledgeId].chatDataList;
+                    const updatedMessages = [...formattedMessages, ...currentMessages];
+
+                    console.log('合并后的消息列表:', updatedMessages);
+
+                    newData[knowledgeId].chatDataList = updatedMessages;
+                    return newData;
+                });
+
+                // 在下一个渲染周期中调整滚动位置，保持用户当前查看的内容位置不变
+                setTimeout(() => {
+                    if (container) {
+                        const newScrollHeight = container.scrollHeight;
+                        const scrollDiff = newScrollHeight - oldScrollHeight;
+                        container.scrollTop = container.scrollTop + scrollDiff;
+                    }
+                }, 0);
+
+                // 更新分页信息
+                setPaginationInfo((prev) => ({
+                    ...prev,
+                    [knowledgeId]: {
+                        current: prev[knowledgeId].current + 1,
+                        hasMore,
+                        loading: false,
+                    },
+                }));
+            } catch (error) {
+                console.error('加载历史消息失败:', error);
+                message.error('加载历史消息失败');
+
+                // 重置加载状态
+                setPaginationInfo((prev) => ({
+                    ...prev,
+                    [knowledgeId]: {
+                        ...prev[knowledgeId],
+                        loading: false,
+                    },
+                }));
+            }
+        },
+        [paginationInfo],
+    );
+
+    /**
+     * 处理鼠标滚轮事件
+     */
+    const handleWheel = useCallback(
+        (event: WheelEvent) => {
+            if (!chatListCtnRef.current || chatOptions.knowledgeId === undefined) {
+                return;
+            }
+
+            const container = chatListCtnRef.current;
+            const scrollTop = container.scrollTop;
+            const deltaY = event.deltaY;
+            const currentPagination = paginationInfo[chatOptions.knowledgeId];
+
+            // 只有向上滚动（deltaY < 0）时才处理
+            if (deltaY < 0) {
+                // 如果滚动到顶部（scrollTop <= 10）
+                if (scrollTop <= 10) {
+                    // 如果没有更多数据，不做任何操作（UI会显示提示）
+                    if (currentPagination && !currentPagination.hasMore) {
+                        return;
+                    }
+
+                    // 如果正在加载中，不重复请求
+                    if (currentPagination && currentPagination.loading) {
+                        return;
+                    }
+
+                    // 清除之前的定时器
+                    if (scrollTimeoutRef.current) {
+                        clearTimeout(scrollTimeoutRef.current);
+                    }
+
+                    // 防抖处理，避免频繁请求
+                    scrollTimeoutRef.current = setTimeout(() => {
+                        loadHistoryMessages(chatOptions.knowledgeId!);
+                    }, 150);
+                }
+            }
+        },
+        [chatOptions.knowledgeId, loadHistoryMessages, paginationInfo],
+    );
+
+    /**
+     * 需要时刻保持在底部（仅在新消息时）
      */
     useEffect(() => {
         // 移动到底部
@@ -124,6 +330,23 @@ const AIChat: React.FC = () => {
             }
         }
     }, [knowledgeData]);
+
+    /**
+     * 添加鼠标滚轮事件监听
+     */
+    useEffect(() => {
+        const container = chatListCtnRef.current;
+        if (container) {
+            container.addEventListener('wheel', handleWheel, { passive: false });
+            return () => {
+                container.removeEventListener('wheel', handleWheel);
+                // 清理定时器
+                if (scrollTimeoutRef.current) {
+                    clearTimeout(scrollTimeoutRef.current);
+                }
+            };
+        }
+    }, [handleWheel]);
 
     /**
      * 发起SSE请求
@@ -386,11 +609,27 @@ const AIChat: React.FC = () => {
      * @param knowledgeId 知识库ID
      */
     const changeknowledge = (knowledgeId: number) => {
+        // 清除之前的定时器
+        if (scrollTimeoutRef.current) {
+            clearTimeout(scrollTimeoutRef.current);
+            scrollTimeoutRef.current = null;
+        }
+
         setChatOptions((prevData) => {
             const newData = { ...prevData };
             newData.knowledgeId = knowledgeId;
             return newData;
         });
+
+        // 重置当前知识库的分页信息
+        setPaginationInfo((prev) => ({
+            ...prev,
+            [knowledgeId]: {
+                current: 1,
+                hasMore: true,
+                loading: false,
+            },
+        }));
     };
 
     return (
@@ -439,6 +678,36 @@ const AIChat: React.FC = () => {
                                 <Flex vertical={true} className={styles.autoHeight}>
                                     <div ref={chatListCtnRef} className={styles.chatListCtn}>
                                         <div className={styles.maxCtn}>
+                                            {/* 历史消息加载指示器 */}
+                                            {chatOptions!.knowledgeId !== undefined &&
+                                                paginationInfo[chatOptions!.knowledgeId]
+                                                    ?.loading && (
+                                                    <Spin
+                                                        size="small"
+                                                        tip="加载历史消息中..."
+                                                        style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                            padding: '10px',
+                                                        }}
+                                                    />
+                                                )}
+
+                                            {/* 顶部提示 - 没有更多历史消息 */}
+                                            {chatOptions!.knowledgeId !== undefined &&
+                                                !paginationInfo[chatOptions!.knowledgeId]
+                                                    ?.loading &&
+                                                !paginationInfo[chatOptions!.knowledgeId]
+                                                    ?.hasMore &&
+                                                knowledgeData[chatOptions!.knowledgeId]
+                                                    ?.chatDataList.length > 0 && (
+                                                    <div className={styles.noMoreMessagesCtn}>
+                                                        <span>
+                                                            已经到达顶部，没有更多历史消息了
+                                                        </span>
+                                                    </div>
+                                                )}
+
                                             {chatOptions!.knowledgeId !== undefined &&
                                                 knowledgeData[
                                                     chatOptions!.knowledgeId
