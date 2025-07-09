@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { message, Switch } from 'antd';
 import { system } from '@/utils/twelvet';
-import { changeStatus } from '@/pages/Log/Job/service';
+import { changeStatus } from '../service';
 
 /**
  * 状态组件操作

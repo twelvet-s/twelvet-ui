@@ -347,7 +347,7 @@ const Model: React.FC = () => {
                         {...formItemLayout}
                         label="供应商"
                         rules={[{ required: true, message: '供应商不能为空' }]}
-                        name="modelSupplier"
+                        name="modelProvider"
                     >
                         <DictionariesSelect type="ai_model_provider" />
                     </Form.Item>
