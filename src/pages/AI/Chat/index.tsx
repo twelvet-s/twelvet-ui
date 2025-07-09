@@ -74,6 +74,15 @@ const AIChat: React.FC = () => {
     // 储存每一个div控制，用于获取value
     const chatDataRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+    // 音频播放控制相关的引用
+    const audioControlRefs = useRef<{
+        [messageIndex: number]: {
+            audioContext?: AudioContext;
+            source?: AudioBufferSourceNode;
+            intervalId?: NodeJS.Timeout;
+        };
+    }>({});
+
     /**
      * 初始化数据
      */
@@ -355,6 +364,19 @@ const AIChat: React.FC = () => {
     }, [handleWheel]);
 
     /**
+     * 组件卸载时清理所有音频播放
+     */
+    useEffect(() => {
+        return () => {
+            // 停止所有正在播放的音频（不更新状态，因为组件即将卸载）
+            Object.keys(audioControlRefs.current).forEach((indexStr) => {
+                const index = parseInt(indexStr);
+                stopTTSContent(index, false);
+            });
+        };
+    }, []);
+
+    /**
      * 发起SSE请求
      */
     const doSse = async () => {
@@ -473,10 +495,103 @@ const AIChat: React.FC = () => {
     };
 
     /**
+     * 停止TTS语音播报
+     * @param index 消息索引
+     * @param updateState 是否更新状态，默认为true
+     */
+    const stopTTSContent = (index: number, updateState: boolean = true) => {
+        const audioControl = audioControlRefs.current[index];
+        if (audioControl) {
+            // 停止音频播放
+            if (audioControl.source) {
+                try {
+                    audioControl.source.stop();
+                } catch (error) {
+                    // 如果已经停止，忽略错误
+                    console.log('Audio source already stopped');
+                }
+            }
+
+            // 关闭音频上下文
+            if (audioControl.audioContext) {
+                try {
+                    audioControl.audioContext.close();
+                } catch (error) {
+                    console.log('AudioContext already closed');
+                }
+            }
+
+            // 清除定时器
+            if (audioControl.intervalId) {
+                clearInterval(audioControl.intervalId);
+            }
+
+            // 清除引用
+            delete audioControlRefs.current[index];
+        }
+
+        // 重置语音播放状态为等待（如果需要更新状态）
+        if (updateState) {
+            setKnowledgeData((prevData) => {
+                const newData = { ...prevData };
+                const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+                const aiContent = newChatDataList[index];
+                if (aiContent) {
+                    aiContent.voicePlay = 'wait';
+                    newChatDataList[index] = aiContent;
+                }
+
+                return newData;
+            });
+        }
+    };
+
+    /**
+     * 停止所有正在播放的语音
+     */
+    const stopAllTTSContent = () => {
+        // 批量停止所有音频，但不立即更新状态
+        const playingIndexes = Object.keys(audioControlRefs.current).map(indexStr => parseInt(indexStr));
+
+        playingIndexes.forEach((index) => {
+            stopTTSContent(index, false); // 不更新状态
+        });
+
+        // 批量更新所有相关消息的状态
+        if (playingIndexes.length > 0) {
+            setKnowledgeData((prevData) => {
+                const newData = { ...prevData };
+                const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+                playingIndexes.forEach((index) => {
+                    const aiContent = newChatDataList[index];
+                    if (aiContent) {
+                        aiContent.voicePlay = 'wait';
+                        newChatDataList[index] = aiContent;
+                    }
+                });
+
+                return newData;
+            });
+        }
+    };
+
+    /**
      * TTS文字转语音播报
      */
     const tTSContent = async (index: number) => {
-        // TODO 需要实现暂停播放相关功能
+        // 检查当前消息的播放状态
+        const currentMessage = knowledgeData[chatOptions.knowledgeId!]?.chatDataList[index];
+
+        // 如果点击的是当前正在播放的消息，则停止播放
+        if (currentMessage?.voicePlay === 'playing') {
+            stopTTSContent(index);
+            return;
+        }
+
+        // 停止所有正在播放的语音
+        stopAllTTSContent();
 
         // 开始播放前需要加入转换中状态
         setKnowledgeData((prevData) => {
@@ -539,11 +654,6 @@ const AIChat: React.FC = () => {
                 source.buffer = audioBuffer;
                 source.connect(audioContext.destination);
 
-                // 开始播放音频
-                source.start(0);
-
-                //let currentIndex = 0;
-
                 // 定时检查音频播放的时间
                 const intervalId = setInterval(() => {
                     const currentTime = audioContext.currentTime;
@@ -557,9 +667,14 @@ const AIChat: React.FC = () => {
                     //     currentIndex++;
                     // }
 
-                    // 如果音频播放完毕，清除定时器
+                    // 如果音频播放完毕，清除定时器和引用
                     if (currentTime >= audioBuffer.duration) {
                         clearInterval(intervalId);
+
+                        // 清除音频控制引用
+                        delete audioControlRefs.current[index];
+
+                        // 重置状态为等待
                         setKnowledgeData((prevData) => {
                             const newData = { ...prevData };
                             const newChatDataList = [
@@ -574,9 +689,50 @@ const AIChat: React.FC = () => {
                         });
                     }
                 }, 100); // 每100毫秒检查一次
+
+                // 存储音频控制引用，用于停止播放
+                audioControlRefs.current[index] = {
+                    audioContext,
+                    source,
+                    intervalId,
+                };
+
+                // 开始播放音频
+                source.start(0);
+
+                // 监听音频结束事件
+                source.onended = () => {
+                    // 清除音频控制引用
+                    delete audioControlRefs.current[index];
+
+                    // 重置状态为等待
+                    setKnowledgeData((prevData) => {
+                        const newData = { ...prevData };
+                        const newChatDataList = [
+                            ...newData[chatOptions!.knowledgeId].chatDataList,
+                        ];
+
+                        const aiContent = newChatDataList[index];
+                        aiContent.voicePlay = 'wait';
+                        newChatDataList[index] = aiContent;
+
+                        return newData;
+                    });
+                };
             },
             (error) => {
                 console.error('解码音频失败', error);
+                // 解码失败时重置状态
+                setKnowledgeData((prevData) => {
+                    const newData = { ...prevData };
+                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+                    const aiContent = newChatDataList[index];
+                    aiContent.voicePlay = 'wait';
+                    newChatDataList[index] = aiContent;
+
+                    return newData;
+                });
             },
         );
     };
@@ -792,8 +948,16 @@ const AIChat: React.FC = () => {
                                                                                 />
                                                                             ) : (
                                                                                 <PauseOutlined
+                                                                                    onClick={() => {
+                                                                                        stopTTSContent(
+                                                                                            index,
+                                                                                        );
+                                                                                    }}
                                                                                     className={
                                                                                         styles.chatInfoTool
+                                                                                    }
+                                                                                    title={
+                                                                                        '停止播放'
                                                                                     }
                                                                                 />
                                                                             )}
