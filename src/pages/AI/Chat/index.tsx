@@ -194,8 +194,6 @@ const AIChat: React.FC = () => {
                 // 转换历史消息格式
                 const formattedMessages = historyMessages
                     .map((record: any) => {
-                        // 调试信息：打印原始数据结构
-                        console.log('历史消息原始数据:', record);
 
                         // 尝试多个可能的内容字段
                         const content =
@@ -209,8 +207,6 @@ const AIChat: React.FC = () => {
                         // 尝试多个可能的时间字段
                         const sendTime = record.createTime || record.sendTime || record.time || '';
 
-                        console.log('转换后的消息:', { content, role, sendTime });
-
                         return {
                             msgId: record.msgId || record.id || '',
                             role,
@@ -222,33 +218,43 @@ const AIChat: React.FC = () => {
                     })
                     .filter((msg) => msg.content.trim() !== ''); // 过滤掉空内容的消息
 
-                // 记录当前滚动位置
+                // 获取容器引用
                 const container = chatListCtnRef.current;
-                const oldScrollHeight = container?.scrollHeight || 0;
-
-                // 调试信息：打印格式化后的消息
-                console.log('格式化后的历史消息:', formattedMessages);
 
                 // 将历史消息插入到现有消息列表的开头
                 setKnowledgeData((prevData) => {
                     const newData = { ...prevData };
                     const currentMessages = newData[knowledgeId].chatDataList;
-                    const updatedMessages = [...formattedMessages, ...currentMessages];
-
-                    console.log('合并后的消息列表:', updatedMessages);
-
-                    newData[knowledgeId].chatDataList = updatedMessages;
+                    newData[knowledgeId].chatDataList = [...formattedMessages, ...currentMessages];
                     return newData;
                 });
 
-                // 在下一个渲染周期中调整滚动位置，保持用户当前查看的内容位置不变
+                // 在下一个渲染周期中，将滚动位置设置到新加载的历史消息的合适位置
                 setTimeout(() => {
-                    if (container) {
-                        const newScrollHeight = container.scrollHeight;
-                        const scrollDiff = newScrollHeight - oldScrollHeight;
-                        container.scrollTop = container.scrollTop + scrollDiff;
+                    if (container && formattedMessages.length > 0) {
+                        try {
+                            // 方法1: 尝试使用DOM元素的实际位置
+                            const targetMessageIndex = Math.max(0, formattedMessages.length - 3); // 显示倒数第3条新消息
+                            const targetElement = container.querySelector(`#message-${targetMessageIndex}`);
+
+                            if (targetElement) {
+                                // 使用实际DOM元素位置
+                                targetElement.scrollIntoView({
+                                    behavior: 'auto',
+                                    block: 'start'
+                                });
+                            } else {
+                                // 备用方法: 使用估算高度
+                                const estimatedMessageHeight = 120;
+                                const visibleMessages = Math.min(3, formattedMessages.length);
+                                const scrollToPosition = Math.max(0, (formattedMessages.length - visibleMessages) * estimatedMessageHeight);
+                                container.scrollTop = scrollToPosition;
+                            }
+                        } catch (error) {
+                            console.error('滚动定位失败:', error);
+                        }
                     }
-                }, 0);
+                }, 200); // 延长时间确保DOM完全更新
 
                 // 更新分页信息
                 setPaginationInfo((prev) => ({
@@ -714,7 +720,8 @@ const AIChat: React.FC = () => {
                                                 ].chatDataList.map((chatData, index) => (
                                                     <>
                                                         <div
-                                                            key={index}
+                                                            key={chatData.msgId || `${chatData.role}-${index}-${chatData.sendTime}`}
+                                                            id={`message-${index}`}
                                                             className={`
                                                             ${styles.chatInfoCtn}
                                                             ${
