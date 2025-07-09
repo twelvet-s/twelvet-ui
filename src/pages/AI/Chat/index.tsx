@@ -414,61 +414,56 @@ const AIChat: React.FC = () => {
         await sendMessage(
             sendData,
             (value) => {
-                // 需要进行自动播报
-                if (chatOptions.voicePlayFlag) {
-                } else {
-                    // 非语音播报直接显示文字
-                    setKnowledgeData((prevData) => {
-                        const newData = { ...prevData };
-                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+                // 无论是否开启语音播报，都需要显示文字内容
+                setKnowledgeData((prevData) => {
+                    const newData = { ...prevData };
+                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
-                        const aiContent = newChatDataList[newChatDataList.length - 1];
-                        // 插入数据
-                        if (aiContent.content !== undefined) {
-                            aiContent.content += value.content;
-                        } else {
-                            aiContent.msgId = value.msgId;
-                            aiContent.sendTime = moment().format('YYYY-MM-DD HH:mm:ss');
-                            aiContent.content = value.content;
-                        }
-                        newChatDataList[newChatDataList.length - 1] = aiContent;
-                        return newData;
-                    });
-                }
+                    const aiContent = newChatDataList[newChatDataList.length - 1];
+                    // 插入数据
+                    if (aiContent.content !== undefined) {
+                        aiContent.content += value.content;
+                    } else {
+                        aiContent.msgId = value.msgId;
+                        aiContent.sendTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                        aiContent.content = value.content;
+                    }
+                    newChatDataList[newChatDataList.length - 1] = aiContent;
+                    return newData;
+                });
             },
             () => {
-                // 需要进行自动播报
+                // 完成输出显示工具
+                setKnowledgeData((prevData) => {
+                    const newData = { ...prevData };
+                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+                    const aiContent = newChatDataList[newChatDataList.length - 1];
+                    aiContent.okFlag = true;
+                    aiContent.voicePlay = 'wait';
+                    newChatDataList[newChatDataList.length - 1] = aiContent;
+
+                    return newData;
+                });
+
+                // 如果开启了自动语音播报，则自动调用语音播放
                 if (chatOptions.voicePlayFlag) {
-                    // TODO 需要实现自动语音播放
-                    // 非语音播报直接显示文字
-                    // 完成输出显示工具
-                    setKnowledgeData((prevData) => {
-                        const newData = { ...prevData };
-                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+                    // 延迟一小段时间确保状态更新和DOM渲染完成，然后自动播放语音
+                    setTimeout(() => {
+                        // 重新获取最新的消息列表长度，确定最新AI消息的索引
+                        setKnowledgeData((currentData) => {
+                            const currentKnowledgeData = currentData[chatOptions.knowledgeId!];
+                            const messageIndex = currentKnowledgeData.chatDataList.length - 1;
 
-                        const aiContent = newChatDataList[newChatDataList.length - 1];
-                        aiContent.okFlag = true;
-                        // 如果开启了自动播放需要调用自动转语音的方法进行播放
-                        aiContent.voicePlay = 'wait';
-                        newChatDataList[newChatDataList.length - 1] = aiContent;
+                            // 确保是AI消息且内容存在才进行语音播放
+                            const lastMessage = currentKnowledgeData.chatDataList[messageIndex];
+                            if (lastMessage && lastMessage.role === 'AI' && lastMessage.content && lastMessage.okFlag) {
+                                tTSContent(messageIndex);
+                            }
 
-                        return newData;
-                    });
-                } else {
-                    // 非语音播报直接显示文字
-                    // 完成输出显示工具
-                    setKnowledgeData((prevData) => {
-                        const newData = { ...prevData };
-                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
-
-                        const aiContent = newChatDataList[newChatDataList.length - 1];
-                        aiContent.okFlag = true;
-                        // 如果开启了自动播放需要调用自动转语音的方法进行播放
-                        aiContent.voicePlay = 'wait';
-                        newChatDataList[newChatDataList.length - 1] = aiContent;
-
-                        return newData;
-                    });
+                            return currentData; // 不修改状态，只是为了获取最新数据
+                        });
+                    }, 200);
                 }
 
                 // 关闭处理数据中
@@ -490,7 +485,7 @@ const AIChat: React.FC = () => {
 
             const aiContent = newChatDataList[index];
             aiContent.voicePlay = 'transition';
-            newChatDataList[newChatDataList.length - 1] = aiContent;
+            newChatDataList[index] = aiContent;
 
             return newData;
         });
@@ -512,7 +507,7 @@ const AIChat: React.FC = () => {
 
                 const aiContent = newChatDataList[index];
                 aiContent.voicePlay = 'playing';
-                newChatDataList[newChatDataList.length - 1] = aiContent;
+                newChatDataList[index] = aiContent;
 
                 return newData;
             });
@@ -573,7 +568,7 @@ const AIChat: React.FC = () => {
 
                             const aiContent = newChatDataList[index];
                             aiContent.voicePlay = 'wait';
-                            newChatDataList[newChatDataList.length - 1] = aiContent;
+                            newChatDataList[index] = aiContent;
 
                             return newData;
                         });
