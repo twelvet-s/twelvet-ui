@@ -123,6 +123,12 @@ const AIChat: React.FC = () => {
         setKnowledgeData(chatDataListTemp);
         setKnowledgeList(knowledgeDataList);
 
+        // 初始化消息计数器
+        if (knowledgeDataList.length > 0) {
+            const firstKnowledgeId = knowledgeDataList[0].knowledgeId;
+            messageCountRef.current = chatDataListTemp[firstKnowledgeId]?.chatDataList.length || 0;
+        }
+
         // 初始化分页信息
         const paginationTemp: {
             [knowledgeId: number]: {
@@ -140,16 +146,6 @@ const AIChat: React.FC = () => {
         }
         setPaginationInfo(paginationTemp);
     };
-
-    /**
-     * 初始化数据
-     */
-    useEffect(() => {
-        initData().then(() => {
-            // 取消全局加载中
-            setLoading(false);
-        });
-    }, []);
 
     /**
      * 加载历史消息
@@ -334,17 +330,43 @@ const AIChat: React.FC = () => {
         [chatOptions.knowledgeId, loadHistoryMessages, paginationInfo],
     );
 
+    // 用于跟踪消息数量变化的引用
+    const messageCountRef = useRef<number>(0);
+
+    /**
+     * 初始化数据
+     */
+    useEffect(() => {
+        initData().then(() => {
+            // 取消全局加载中
+            setLoading(false);
+        });
+    }, []);
+
     /**
      * 需要时刻保持在底部（仅在新消息时）
      */
     useEffect(() => {
-        // 移动到底部
-        if (!loading) {
-            if (chatListCtnRef!.current!.scrollTop !== chatListCtnRef!.current!.scrollHeight) {
-                chatListCtnRef!.current!.scrollTop = chatListCtnRef!.current!.scrollHeight;
+        if (!loading && chatOptions.knowledgeId !== undefined) {
+            const currentMessages = knowledgeData[chatOptions.knowledgeId]?.chatDataList || [];
+            const currentMessageCount = currentMessages.length;
+
+            // 只有在消息数量增加时才自动滚动到底部
+            if (currentMessageCount > messageCountRef.current) {
+                messageCountRef.current = currentMessageCount;
+
+                // 延迟滚动，确保DOM更新完成
+                setTimeout(() => {
+                    if (chatListCtnRef.current) {
+                        chatListCtnRef.current.scrollTop = chatListCtnRef.current.scrollHeight;
+                    }
+                }, 100);
+            } else {
+                // 更新消息数量引用，但不滚动
+                messageCountRef.current = currentMessageCount;
             }
         }
-    }, [knowledgeData]);
+    }, [knowledgeData, loading, chatOptions.knowledgeId]);
 
     /**
      * 添加鼠标滚轮事件监听
@@ -772,11 +794,18 @@ const AIChat: React.FC = () => {
             scrollTimeoutRef.current = null;
         }
 
+        // 停止所有正在播放的语音
+        stopAllTTSContent();
+
         setChatOptions((prevData) => {
             const newData = { ...prevData };
             newData.knowledgeId = knowledgeId;
             return newData;
         });
+
+        // 重置消息计数器
+        const newKnowledgeMessages = knowledgeData[knowledgeId]?.chatDataList || [];
+        messageCountRef.current = newKnowledgeMessages.length;
 
         // 重置当前知识库的分页信息
         setPaginationInfo((prev) => ({
