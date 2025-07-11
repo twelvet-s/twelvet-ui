@@ -37,6 +37,12 @@ export async function tts(data: { [key: string]: any }) {
     });
 }
 
+/**
+ * 发送SSE请求数据
+ * @param data 请求参数
+ * @param handleMessage 接受处理
+ * @param handleDone 结束处理
+ */
 export const sendMessage = async (
     data: {
         knowledgeId: number;
@@ -45,8 +51,9 @@ export const sendMessage = async (
     },
     handleMessage: (data: any) => void,
     handleDone: () => void,
+    handleError?: () => void,
 ): Promise<void> => {
-    eventSource(`${controller}`, data, handleMessage, handleDone);
+    eventSource(`${controller}`, data, handleMessage, handleDone, handleError);
 };
 
 // export const sendMessage = async (

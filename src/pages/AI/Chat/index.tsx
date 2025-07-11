@@ -199,7 +199,6 @@ const AIChat: React.FC = () => {
                 // 转换历史消息格式
                 const formattedMessages = historyMessages
                     .map((record: any) => {
-
                         // 尝试多个可能的内容字段
                         const content =
                             record.content || record.remark || record.message || record.text || '';
@@ -240,19 +239,25 @@ const AIChat: React.FC = () => {
                         try {
                             // 方法1: 尝试使用DOM元素的实际位置
                             const targetMessageIndex = Math.max(0, formattedMessages.length - 3); // 显示倒数第3条新消息
-                            const targetElement = container.querySelector(`#message-${targetMessageIndex}`);
+                            const targetElement = container.querySelector(
+                                `#message-${targetMessageIndex}`,
+                            );
 
                             if (targetElement) {
                                 // 使用实际DOM元素位置
                                 targetElement.scrollIntoView({
                                     behavior: 'auto',
-                                    block: 'start'
+                                    block: 'start',
                                 });
                             } else {
                                 // 备用方法: 使用估算高度
                                 const estimatedMessageHeight = 120;
                                 const visibleMessages = Math.min(3, formattedMessages.length);
-                                const scrollToPosition = Math.max(0, (formattedMessages.length - visibleMessages) * estimatedMessageHeight);
+                                const scrollToPosition = Math.max(
+                                    0,
+                                    (formattedMessages.length - visibleMessages) *
+                                        estimatedMessageHeight,
+                                );
                                 container.scrollTop = scrollToPosition;
                             }
                         } catch (error) {
@@ -501,7 +506,12 @@ const AIChat: React.FC = () => {
 
                             // 确保是AI消息且内容存在才进行语音播放
                             const lastMessage = currentKnowledgeData.chatDataList[messageIndex];
-                            if (lastMessage && lastMessage.role === 'AI' && lastMessage.content && lastMessage.okFlag) {
+                            if (
+                                lastMessage &&
+                                lastMessage.role === 'AI' &&
+                                lastMessage.content &&
+                                lastMessage.okFlag
+                            ) {
                                 tTSContent(messageIndex);
                             }
 
@@ -510,6 +520,11 @@ const AIChat: React.FC = () => {
                     }, 200);
                 }
 
+                // 关闭处理数据中
+                setProcessingDataFlag((prevData) => !prevData);
+            },
+            () => {
+                // 发生错误关闭处理中状态
                 // 关闭处理数据中
                 setProcessingDataFlag((prevData) => !prevData);
             },
@@ -574,7 +589,9 @@ const AIChat: React.FC = () => {
      */
     const stopAllTTSContent = () => {
         // 批量停止所有音频，但不立即更新状态
-        const playingIndexes = Object.keys(audioControlRefs.current).map(indexStr => parseInt(indexStr));
+        const playingIndexes = Object.keys(audioControlRefs.current).map((indexStr) =>
+            parseInt(indexStr),
+        );
 
         playingIndexes.forEach((index) => {
             stopTTSContent(index, false); // 不更新状态
@@ -730,9 +747,7 @@ const AIChat: React.FC = () => {
                     // 重置状态为等待
                     setKnowledgeData((prevData) => {
                         const newData = { ...prevData };
-                        const newChatDataList = [
-                            ...newData[chatOptions!.knowledgeId].chatDataList,
-                        ];
+                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                         const aiContent = newChatDataList[index];
                         aiContent.voicePlay = 'wait';
@@ -900,7 +915,10 @@ const AIChat: React.FC = () => {
                                                 ].chatDataList.map((chatData, index) => (
                                                     <>
                                                         <div
-                                                            key={chatData.msgId || `${chatData.role}-${index}-${chatData.sendTime}`}
+                                                            key={
+                                                                chatData.msgId ||
+                                                                `${chatData.role}-${index}-${chatData.sendTime}`
+                                                            }
                                                             id={`message-${index}`}
                                                             className={`
                                                             ${styles.chatInfoCtn}

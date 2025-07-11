@@ -361,6 +361,7 @@ export const eventSource = async (
     data: any,
     handleMessage: (data: any) => void,
     handleDone: () => void,
+    handleError?: () => void,
 ): Promise<void> => {
     const requestUri = TWT.requestUri.endsWith('/') ? TWT.requestUri.slice(0, -1) : TWT.requestUri;
 
@@ -387,6 +388,10 @@ export const eventSource = async (
                 console.error('EventSource error:', err);
                 controller.abort(); // 处理错误时中止连接
                 message.error('链接发生异常');
+                if (handleError) {
+                    handleError()
+                }
+
                 // 抛出错误，否则会自动重试
                 throw err;
             },
