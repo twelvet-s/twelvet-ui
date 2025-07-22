@@ -1,8 +1,8 @@
-import { refreshToken } from '@/pages/Login/service';
+import {refreshToken} from '@/pages/Login/service';
 import TWT from '@/setting';
-import { history, request } from '@umijs/max';
-import { message, notification } from 'antd';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
+import {history, request} from '@umijs/max';
+import {message, notification} from 'antd';
+import {fetchEventSource} from '@microsoft/fetch-event-source';
 
 /**
  * 系统日志输出
@@ -38,7 +38,7 @@ export const system = {
 export function getToken() {
     const local = localStorage.getItem(TWT.accessToken);
 
-    const { access_token } = local ? JSON.parse(local) : { access_token: '' };
+    const {access_token} = local ? JSON.parse(local) : {access_token: ''};
     return access_token;
 }
 
@@ -54,7 +54,7 @@ export function timedRefreshToken() {
 
     // 定时刷新token避免过期
     const local = localStorage.getItem(TWT.accessToken);
-    const { expires_in } = local ? JSON.parse(local) : { expires_in: 0 };
+    const {expires_in} = local ? JSON.parse(local) : {expires_in: 0};
     if (expires_in) {
         const expires = expires_in - (new Date().getTime() + 60 * 5 * 1000);
         tokenTimed = setTimeout(
@@ -123,54 +123,39 @@ export const makeTree = (params: {
     parentId?: string | 'parentId';
     children?: string | 'children';
     enhance?: Record<string, string>;
-    rootId?: number | false | 0;
 }) => {
     // 获取默认数据
     const id = params.id || 'id';
     const parentId = params.parentId || 'parentId';
     const children = params.children || 'children';
     const enhance = params.enhance || {};
-    const rootId = params.rootId || 0;
 
-    // 对源数据深克隆
-    const cloneData = JSON.parse(JSON.stringify(params.dataSource));
-
-    // 循环所有项
-    const treeData = cloneData.filter((father: { [key: string]: any; children: any }) => {
+    let childrenListMap: any = {}
+    let tree = []
+    for (let d of params.dataSource) {
         // 增强参数
-        for (let key in enhance) {
-            if (enhance.hasOwnProperty(key)) {
-                father[key] = father[enhance[key]];
+        for (let key in enhance) { // 判断节点是否存在需要增强参数的key，存在将进行增加处理
+            if (d.hasOwnProperty(enhance[key])) {
+                d[key] = d[enhance[key]];
             }
         }
 
-        // 循环找出每个父目录的子目录
-        const branchArr = cloneData.filter((child: Record<string, any>) => {
-            // 返回每一项的子级数组
-            return father[id] === child[parentId];
-        });
+        childrenListMap[d[id]] = d
 
-        // 放进子分类
-        if (branchArr.length > 0) {
-            father[children] = branchArr;
+        if (!d[children]) {
+            d[children] = []
         }
-
-        // 无需判断直接返回
-        if (!rootId && rootId !== 0) {
-            return true;
-        }
-
-        // 返回第一层
-        return father[parentId] === rootId;
-    });
-
-    if (treeData.length > 0) {
-        return treeData;
     }
 
-    system.error('树列表制作可能出错了,请检查是否正确数据');
-
-    return cloneData;
+    for (let d of params.dataSource) {
+        let parentObj = childrenListMap[d[parentId]]
+        if (!parentObj) {
+            tree.push(d)
+        } else {
+            parentObj[children].push(d)
+        }
+    }
+    return tree
 };
 
 /**
