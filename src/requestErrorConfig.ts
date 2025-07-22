@@ -144,11 +144,10 @@ export const errorConfig: RequestConfig = {
                     throw error;
                 }
             } catch (error) {
-                const { status } = error.response;
                 system.error(error);
                 if (error instanceof RefreshTokenError) {
                     return;
-                } else if (status === 500) {
+                } else if (error.response &&  error.response.status === 500) {
                     return;
                 } else {
                     system.error('=====', error);
