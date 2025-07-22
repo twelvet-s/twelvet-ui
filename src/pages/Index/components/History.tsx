@@ -13,6 +13,7 @@ const History = () => {
                 <ol>
                     <li>Spring Cloud v2025.0.0</li>
                     <li>支持 Nacos V3.0.0</li>
+                    <li>支持 跨库数据权限控制注解</li>
                     <li>大模型视觉分析</li>
                     <li>RAG知识库（LLM、TTS、STT）</li>
                     <li>支持第三方GitHub直接授权登录</li>
