@@ -42,6 +42,12 @@ const AIChat: React.FC = () => {
     // 是否处于处理数据中
     const [processingDataFlag, setProcessingDataFlag] = useState<boolean>(false);
 
+    // 当前请求的控制器，用于停止输出
+    const [currentController, setCurrentController] = useState<AbortController | null>(null);
+
+    // 是否已经开始接收响应（用于控制是否允许停止输出）
+    const [hasReceivedResponse, setHasReceivedResponse] = useState<boolean>(false);
+
     // 输入内容，准备发送sse内容
     const [content, setContent] = useState<string>('');
 
@@ -391,7 +397,7 @@ const AIChat: React.FC = () => {
     }, [handleWheel]);
 
     /**
-     * 组件卸载时清理所有音频播放
+     * 组件卸载时清理所有音频播放和停止当前请求
      */
     useEffect(() => {
         return () => {
@@ -400,8 +406,26 @@ const AIChat: React.FC = () => {
                 const index = parseInt(indexStr);
                 stopTTSContent(index, false);
             });
+
+            // 停止当前请求
+            if (currentController) {
+                currentController.abort();
+            }
         };
-    }, []);
+    }, [currentController]);
+
+    /**
+     * 停止输出
+     */
+    const stopOutput = () => {
+        if (currentController && hasReceivedResponse) {
+            currentController.abort();
+            setCurrentController(null);
+            setProcessingDataFlag(false);
+            setHasReceivedResponse(false);
+            message.info('已停止输出');
+        }
+    };
 
     /**
      * 发起SSE请求
@@ -425,6 +449,9 @@ const AIChat: React.FC = () => {
 
         // 数据处理中
         setProcessingDataFlag(!processingDataFlag);
+
+        // 重置响应状态
+        setHasReceivedResponse(false);
 
         // 用户输入
         const userChat = {
@@ -460,9 +487,12 @@ const AIChat: React.FC = () => {
         // 清空输入
         setContent('');
 
-        await sendMessage(
+        const controller = await sendMessage(
             sendData,
             (value) => {
+                // 标记已经开始接收响应
+                setHasReceivedResponse(true);
+
                 // 无论是否开启语音播报，都需要显示文字内容
                 setKnowledgeData((prevData) => {
                     const newData = { ...prevData };
@@ -520,15 +550,21 @@ const AIChat: React.FC = () => {
                     }, 200);
                 }
 
-                // 关闭处理数据中
-                setProcessingDataFlag((prevData) => !prevData);
+                // 清除控制器引用并关闭处理数据中
+                setCurrentController(null);
+                setProcessingDataFlag(false);
+                setHasReceivedResponse(false);
             },
             () => {
                 // 发生错误关闭处理中状态
-                // 关闭处理数据中
-                setProcessingDataFlag((prevData) => !prevData);
+                setCurrentController(null);
+                setProcessingDataFlag(false);
+                setHasReceivedResponse(false);
             },
         );
+
+        // 保存控制器引用，用于停止输出
+        setCurrentController(controller);
     };
 
     /**
@@ -1148,10 +1184,24 @@ const AIChat: React.FC = () => {
                                         />
                                         <Button
                                             type="primary"
-                                            onClick={doSse}
-                                            disabled={processingDataFlag}
+                                            onClick={processingDataFlag && hasReceivedResponse ? stopOutput : doSse}
+                                            disabled={processingDataFlag && !hasReceivedResponse}
+                                            danger={processingDataFlag && hasReceivedResponse}
+                                            title={
+                                                processingDataFlag && hasReceivedResponse
+                                                    ? "停止输出"
+                                                    : processingDataFlag
+                                                        ? "等待响应中..."
+                                                        : "发送提问"
+                                            }
                                         >
-                                            <SendOutlined rotate={-45} />
+                                            {processingDataFlag && hasReceivedResponse ? (
+                                                <PauseOutlined />
+                                            ) : processingDataFlag ? (
+                                                <LoadingOutlined />
+                                            ) : (
+                                                <SendOutlined rotate={-45} />
+                                            )}
                                         </Button>
                                     </Flex>
                                 </Flex>

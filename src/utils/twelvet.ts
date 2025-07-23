@@ -340,6 +340,8 @@ export const auth = (authStr: string) => {
  * @param data
  * @param handleMessage
  * @param handleDone
+ * @param handleError
+ * @returns AbortController 用于控制停止请求
  */
 export const eventSource = async (
     eventSourceUrl: string,
@@ -347,7 +349,7 @@ export const eventSource = async (
     handleMessage: (data: any) => void,
     handleDone: () => void,
     handleError?: () => void,
-): Promise<void> => {
+): Promise<AbortController> => {
     const requestUri = TWT.requestUri.endsWith('/') ? TWT.requestUri.slice(0, -1) : TWT.requestUri;
 
     const controller = new AbortController();
@@ -385,4 +387,6 @@ export const eventSource = async (
             },
         },
     );
+
+    return controller;
 };

@@ -42,6 +42,8 @@ export async function tts(data: { [key: string]: any }) {
  * @param data 请求参数
  * @param handleMessage 接受处理
  * @param handleDone 结束处理
+ * @param handleError 错误处理
+ * @returns AbortController 用于控制停止请求
  */
 export const sendMessage = async (
     data: {
@@ -52,8 +54,8 @@ export const sendMessage = async (
     handleMessage: (data: any) => void,
     handleDone: () => void,
     handleError?: () => void,
-): Promise<void> => {
-    eventSource(`${controller}`, data, handleMessage, handleDone, handleError);
+): Promise<AbortController> => {
+    return eventSource(`${controller}`, data, handleMessage, handleDone, handleError);
 };
 
 // export const sendMessage = async (
