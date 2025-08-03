@@ -18,6 +18,7 @@ export interface ToolCategory {
 export interface ToolPanelProps {
     categories?: ToolCategory[];
     onToolClick?: (tool: ToolItem) => void;
+    onNodeCreate?: (nodeData: any) => void;
     searchPlaceholder?: string;
     showSearch?: boolean;
     className?: string;

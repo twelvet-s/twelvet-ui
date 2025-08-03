@@ -1,11 +1,33 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ReactFlow, Controls, Background, MiniMap } from '@xyflow/react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import {
+    ReactFlow,
+    Controls,
+    Background,
+    MiniMap,
+    addEdge,
+    useNodesState,
+    useEdgesState,
+    Connection,
+    Edge,
+    ReactFlowProvider
+} from '@xyflow/react';
 import ToolPanel from './components/ToolPanel';
+import CustomNode from './components/Nodes/CustomNode';
+import { CustomNode as CustomNodeType, CustomEdge, DragData } from './components/Nodes/types';
 import '@xyflow/react/dist/style.css';
 import styles from './styles.less';
 import {ToolCategory} from "@/components/AIFlow/components/ToolPanel/data";
 import {message} from "antd";
 import { ToolOutlined } from '@ant-design/icons';
+
+// 节点类型配置
+const nodeTypes = {
+    customNode: CustomNode,
+};
+
+// 初始节点和边
+const initialNodes: CustomNodeType[] = [];
+const initialEdges: CustomEdge[] = [];
 
 /**
  * AI工作流
@@ -16,6 +38,12 @@ const AIFlow : React.FC = () => {
     const [showToolPanel, setShowToolPanel] = useState<boolean>(false);
     const toolPanelRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLDivElement>(null);
+    const reactFlowWrapper = useRef<HTMLDivElement>(null);
+    const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+
+    // 节点和边的状态管理
+    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
     const customCategories: ToolCategory[] = [
         {
@@ -195,13 +223,129 @@ const AIFlow : React.FC = () => {
         setShowToolPanel(!showToolPanel);
     };
 
+    // 处理连接创建
+    const onConnect = useCallback(
+        (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+        [setEdges]
+    );
+
+    // 处理节点创建（来自点击或拖拽）
+    const handleNodeCreate = useCallback((nodeData: any, position?: { x: number; y: number }) => {
+        console.log('handleNodeCreate 被调用:', nodeData, position);
+
+        let finalPosition = position;
+
+        // 如果没有指定位置，使用随机位置
+        if (!finalPosition) {
+            finalPosition = {
+                x: Math.random() * 400 + 100,
+                y: Math.random() * 300 + 100
+            };
+        }
+
+        const newNode: CustomNodeType = {
+            ...nodeData,
+            position: finalPosition,
+        };
+
+        console.log('创建的新节点:', newNode);
+        setNodes((nds) => {
+            const updatedNodes = nds.concat(newNode);
+            console.log('更新后的节点列表:', updatedNodes);
+            return updatedNodes;
+        });
+        message.success(`已添加 ${nodeData.data.label} 节点`);
+    }, [setNodes]);
+
+    // 处理拖拽结束（放置到画布）
+    const onDrop = useCallback(
+        (event: React.DragEvent) => {
+            event.preventDefault();
+
+            const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+            const data = event.dataTransfer.getData('application/reactflow');
+
+            // 检查是否是有效的拖拽数据
+            if (typeof data === 'undefined' || !data || !reactFlowBounds) {
+                return;
+            }
+
+            let dragData: DragData;
+            try {
+                dragData = JSON.parse(data);
+            } catch (error) {
+                console.error('Invalid drag data:', error);
+                return;
+            }
+
+            // 计算节点在画布中的位置
+            const position = reactFlowInstance?.screenToFlowPosition({
+                x: event.clientX - reactFlowBounds.left,
+                y: event.clientY - reactFlowBounds.top,
+            });
+
+            if (!position) return;
+
+            // 创建节点数据
+            const nodeData = {
+                id: `${dragData.nodeType}-${Date.now()}`,
+                type: 'customNode',
+                data: {
+                    id: dragData.nodeType,
+                    label: dragData.label,
+                    icon: dragData.icon,
+                    color: dragData.color,
+                    description: dragData.description,
+                    type: dragData.nodeType,
+                },
+            };
+
+            handleNodeCreate(nodeData, position);
+        },
+        [reactFlowInstance, handleNodeCreate]
+    );
+
+    // 处理拖拽悬停
+    const onDragOver = useCallback((event: React.DragEvent) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }, []);
+
     return (
-        <div className={styles.ctn}>
-            <ReactFlow>
-                <Background />
-                <Controls />
-                <MiniMap />
-            </ReactFlow>
+        <ReactFlowProvider>
+            <div className={styles.ctn}>
+                <div className={styles.reactflowWrapper} ref={reactFlowWrapper}>
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
+                    onInit={setReactFlowInstance}
+                    onDrop={onDrop}
+                    onDragOver={onDragOver}
+                    nodeTypes={nodeTypes}
+                    defaultEdgeOptions={{
+                        animated: true,
+                        style: { strokeWidth: 2 },
+                    }}
+                    fitView
+                    attributionPosition="bottom-left"
+                >
+                    <Background />
+                    <Controls />
+                    <MiniMap
+                        nodeStrokeColor={(n) => {
+                            if (n.type === 'customNode') return '#1890ff';
+                            return '#eee';
+                        }}
+                        nodeColor={(n) => {
+                            if (n.type === 'customNode') return '#fff';
+                            return '#fff';
+                        }}
+                    />
+                </ReactFlow>
+            </div>
 
             {/* 工具面板触发器 */}
             <div
@@ -223,14 +367,16 @@ const AIFlow : React.FC = () => {
                     <ToolPanel
                         categories={customCategories}
                         onToolClick={(tool) => {
-                            message.success(`点击了工具: ${tool.name}`).then();
+                            message.info(`${tool.name}: ${tool.description || '已添加到画布'}`);
                             // 点击工具后可以选择是否关闭面板
-                            //setShowToolPanel(false);
+                            // setShowToolPanel(false);
                         }}
+                        onNodeCreate={handleNodeCreate}
                     />
                 </div>
             )}
-        </div>
+            </div>
+        </ReactFlowProvider>
     );
 };
 
