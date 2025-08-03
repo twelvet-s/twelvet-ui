@@ -14,12 +14,19 @@
     //    display: none !important;
     //}
 
-    // 工具面板触发器样式
-    .toolTrigger {
+    // 工具面板触发器组样式
+    .toolTriggerGroup {
         position: fixed;
         bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 1000;
+    }
+
+    // 工具面板触发器样式
+    .toolTrigger {
         background: #1890ff;
         color: white;
         padding: 12px 20px;
@@ -30,20 +37,19 @@
         gap: 8px;
         box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
         transition: all 0.3s ease;
-        z-index: 1000;
         user-select: none;
         font-size: 14px;
         font-weight: 500;
 
         &:hover {
             background: #40a9ff;
-            transform: translateX(-50%) translateY(-2px);
+            transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(24, 144, 255, 0.4);
         }
 
         &.active {
             background: #096dd9;
-            transform: translateX(-50%) translateY(-1px);
+            transform: translateY(-1px);
         }
 
         span {
@@ -51,10 +57,46 @@
         }
     }
 
+    // 布局优化按钮样式
+    .layoutTrigger {
+        background: #52c41a;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+        transition: all 0.3s ease;
+        user-select: none;
+        font-size: 14px;
+        font-weight: 500;
+
+        &:hover:not(.disabled) {
+            background: #73d13d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(82, 196, 26, 0.4);
+        }
+
+        &.disabled {
+            background: #d9d9d9;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        span {
+            font-size: 14px;
+        }
+    }
+
+
+
     // 工具面板容器样式
     .toolPanelContainer {
         position: fixed;
-        bottom: 90px;
+        bottom: 110px; // 增加底部距离，为按钮组留出空间
         left: 50%;
         transform: translateX(-50%);
         width: 35%;
@@ -140,14 +182,20 @@
             min-width: 300px;
             left: 5%;
             transform: none;
+            bottom: 90px; // 调整移动端的底部距离
         }
 
         .nodeToolPanelContainer {
             // 响应式尺寸通过 JavaScript 动态设置
         }
 
-        .toolTrigger {
+        .toolTriggerGroup {
             bottom: 20px;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toolTrigger, .layoutTrigger {
             padding: 10px 16px;
             font-size: 13px;
 
@@ -155,5 +203,7 @@
                 font-size: 13px;
             }
         }
+
+
     }
 }

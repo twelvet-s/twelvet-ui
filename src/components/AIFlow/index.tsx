@@ -16,6 +16,7 @@ import {CustomEdge, CustomNode as CustomNodeType, DragData, HandleType} from './
 import '@xyflow/react/dist/style.css';
 import styles from './styles.less';
 import {ToolCategory} from "@/components/AIFlow/components/ToolPanel/data";
+import {autoLayout, centerLayout, LayoutType} from './utils/layoutUtils';
 
 // 节点类型配置
 const nodeTypes = {
@@ -42,9 +43,11 @@ const AIFlow: React.FC = () => {
     // 用于跟踪拖拽源节点信息
     const [dragSourceNode, setDragSourceNode] = useState<{nodeId: string, handleType: HandleType} | null>(null);
 
+
     const toolPanelRef = useRef<HTMLDivElement>(null);
     const nodeToolPanelRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLDivElement>(null);
+
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
     const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
@@ -185,6 +188,8 @@ const AIFlow: React.FC = () => {
                 }
             }
 
+
+
             // 关闭节点工具面板
             if (showNodeToolPanel && nodeToolPanelRef.current) {
                 // 检查点击的是否是工具面板内部
@@ -227,6 +232,39 @@ const AIFlow: React.FC = () => {
     const toggleToolPanel = () => {
         setShowToolPanel(!showToolPanel);
     };
+
+    // 一键整理布局 - 从左到右排列
+    const handleAutoLayout = useCallback(() => {
+        if (nodes.length === 0) return;
+
+        console.log('开始布局整理，当前节点数量:', nodes.length);
+
+        // 使用层次布局，方向设置为从左到右
+        const layoutedNodes = autoLayout(nodes, edges, LayoutType.HIERARCHICAL, {
+            nodeSpacing: 150,
+            levelSpacing: 200,
+            direction: 'LR' // 从左到右
+        });
+
+        console.log('布局完成，节点位置:', layoutedNodes.map(n => ({ id: n.id, position: n.position })));
+
+        // 居中布局
+        const centeredNodes = centerLayout(layoutedNodes);
+
+        console.log('居中完成，最终位置:', centeredNodes.map(n => ({ id: n.id, position: n.position })));
+
+        // 应用新位置（带动画效果）
+        setNodes(centeredNodes);
+
+        // 关闭工具面板
+        setShowToolPanel(false);
+    }, [nodes, edges, setNodes]);
+
+    // 处理布局按钮点击
+    const handleLayoutTriggerClick = useCallback(() => {
+        if (nodes.length === 0) return;
+        handleAutoLayout();
+    }, [nodes.length, handleAutoLayout]);
 
     // 处理节点工具按钮点击
     const handleNodeToolClick = (nodeId: string, event: React.MouseEvent, handleType?: HandleType) => {
@@ -509,13 +547,24 @@ const AIFlow: React.FC = () => {
                 </div>
 
                 {/* 工具面板触发器 */}
-                <div
-                    ref={triggerRef}
-                    className={`${styles.toolTrigger} ${showToolPanel ? styles.active : ''}`}
-                    onClick={toggleToolPanel}
-                    title="工具面板"
-                >
-                    <span>+ 添加节点</span>
+                <div className={styles.toolTriggerGroup}>
+                    <div
+                        ref={triggerRef}
+                        className={`${styles.toolTrigger} ${showToolPanel ? styles.active : ''}`}
+                        onClick={toggleToolPanel}
+                        title="工具面板"
+                    >
+                        <span>+ 添加节点</span>
+                    </div>
+
+                    {/* 布局优化按钮 */}
+                    <div
+                        className={`${styles.layoutTrigger} ${nodes.length === 0 ? styles.disabled : ''}`}
+                        onClick={handleLayoutTriggerClick}
+                        title="一键整理布局（从左到右排列）"
+                    >
+                        <span>🎯 整理布局</span>
+                    </div>
                 </div>
 
                 {/* 工具面板 */}
