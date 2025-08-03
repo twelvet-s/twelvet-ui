@@ -613,7 +613,7 @@ const AIFlow: React.FC = () => {
                                 }
 
                                 // 计算新节点位置
-                                const offset = 150; // 偏移距离
+                                const offset = 250; // 偏移距离，增加节点间距
                                 let newPosition = position;
 
                                 if (!newPosition) {
