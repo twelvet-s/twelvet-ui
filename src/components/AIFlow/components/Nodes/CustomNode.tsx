@@ -29,7 +29,11 @@ const CustomNode: React.FC<NodeProps<NodeData>> = ({data, selected}) => {
                     className="custom-handle input-handle"
                     style={{background: nodeColor}}
                     onClick={handleToolClick}
-                />
+                >
+                    <div className="handle-plus-icon">
+                        <PlusOutlined />
+                    </div>
+                </Handle>
             </div>
 
             {/* 节点内容 */}
@@ -56,7 +60,11 @@ const CustomNode: React.FC<NodeProps<NodeData>> = ({data, selected}) => {
                     className="custom-handle output-handle"
                     style={{background: nodeColor}}
                     onClick={handleToolClick}
-                />
+                >
+                    <div className="handle-plus-icon">
+                        <PlusOutlined />
+                    </div>
+                </Handle>
             </div>
         </div>
     );

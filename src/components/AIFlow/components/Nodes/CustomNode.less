@@ -120,17 +120,29 @@
 
   // 自定义连接点样式
   .custom-handle {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border: 2px solid #fff;
     border-radius: 50%;
     transition: all 0.2s ease;
     position: relative;
+    cursor: crosshair;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // 使用 transform-origin 确保从中心点缩放
+    transform-origin: center center;
 
     &:hover {
-      width: 10px;
-      height: 10px;
-      border-width: 3px;
+      // 调整缩放比例：10px * 2.2 = 22px，比之前的20px稍大一点
+      transform: scale(2.2);
+      border-width: 1px; // 相应调整边框宽度
+
+      .handle-plus-icon {
+        opacity: 1;
+        // 因为父元素放大了2.2倍，调整子元素缩放：0.45 * 2.2 ≈ 1.0
+        transform: scale(0.45);
+      }
     }
 
     &.input-handle {
@@ -139,6 +151,24 @@
 
     &.output-handle {
       right: 0;
+    }
+
+    // 加号图标样式
+    .handle-plus-icon {
+      position: absolute;
+      color: white;
+      font-size: 10px; // 保持正常字体大小，通过 scale 来控制最终显示
+      opacity: 0;
+      transition: all 0.2s ease;
+      pointer-events: none;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // 使用 inset 来确保完全居中，避免 top/left 的偏移问题
+      inset: 0;
+      // 默认状态：适当调整缩放比例以匹配新的Handle尺寸
+      transform: scale(0.25);
     }
   }
 }
