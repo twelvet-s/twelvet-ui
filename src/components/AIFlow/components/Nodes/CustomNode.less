@@ -171,6 +171,48 @@
       transform: scale(0.25);
     }
   }
+
+  // 开始节点特殊样式
+  &.start-node {
+    border-color: #52c41a;
+    background: linear-gradient(135deg, #f6ffed 0%, #ffffff 100%);
+
+    &.selected {
+      border-color: #52c41a;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+    }
+
+    .start-icon {
+      background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%) !important;
+      box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);
+    }
+
+    .start-handle {
+      background: #52c41a !important;
+      box-shadow: 0 2px 4px rgba(82, 196, 26, 0.3);
+    }
+  }
+
+  // 结束节点特殊样式
+  &.end-node {
+    border-color: #ff4d4f;
+    background: linear-gradient(135deg, #fff2f0 0%, #ffffff 100%);
+
+    &.selected {
+      border-color: #ff4d4f;
+      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+    }
+
+    .end-icon {
+      background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%) !important;
+      box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
+    }
+
+    .end-handle {
+      background: #ff4d4f !important;
+      box-shadow: 0 2px 4px rgba(255, 77, 79, 0.3);
+    }
+  }
 }
 
 // 连接线样式

@@ -28,6 +28,8 @@ export type CustomEdge = Edge;
 
 // 节点类型枚举
 export enum NodeType {
+  START = 'start',
+  END = 'end',
   AI_MODEL = 'ai-model',
   WORKFLOW = 'workflow',
   PLUGIN = 'plugin',
@@ -43,6 +45,8 @@ export enum NodeType {
 
 // 节点样式配置
 export const NODE_COLORS = {
+  'start': '#52c41a',
+  'end': '#ff4d4f',
   'ai-model': '#000000',
   'workflow': '#52c41a',
   'business': '#1890ff',

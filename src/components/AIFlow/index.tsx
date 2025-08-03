@@ -10,9 +10,10 @@ import {
     useEdgesState,
     useNodesState
 } from '@xyflow/react';
+import { message } from 'antd';
 import ToolPanel from './components/ToolPanel';
-import CustomNode from './components/Nodes/CustomNode';
-import {CustomEdge, CustomNode as CustomNodeType, DragData, HandleType} from './components/Nodes/types';
+import {CustomNode, StartNode, EndNode} from './components/Nodes';
+import {CustomEdge, CustomNode as CustomNodeType, DragData, HandleType, NodeType} from './components/Nodes/types';
 import '@xyflow/react/dist/style.css';
 import styles from './styles.less';
 import {ToolCategory} from "@/components/AIFlow/components/ToolPanel/data";
@@ -21,10 +22,55 @@ import {autoLayout, centerLayout, LayoutType, autoFitView, setZoomLevel, smartFi
 // 节点类型配置
 const nodeTypes = {
     customNode: CustomNode,
+    startNode: StartNode,
+    endNode: EndNode,
+};
+
+// 创建初始节点的函数
+const createInitialNodes = (): CustomNodeType[] => {
+    const startNodeId = 'start-node-initial';
+    const endNodeId = 'end-node-initial';
+
+    return [
+        {
+            id: startNodeId,
+            type: 'startNode',
+            position: { x: 100, y: 200 },
+            data: {
+                id: NodeType.START,
+                label: '开始',
+                icon: '▶️',
+                color: 'start',
+                description: '工作流开始节点',
+                type: NodeType.START,
+                onToolClick: (event: React.MouseEvent, handleType?: HandleType) => {
+                    // 这个回调会在组件初始化后被重新设置
+                }
+            },
+            deletable: false, // 不可删除
+        },
+        {
+            id: endNodeId,
+            type: 'endNode',
+            position: { x: 600, y: 200 },
+            data: {
+                id: NodeType.END,
+                label: '结束',
+                icon: '⏹️',
+                color: 'end',
+                description: '工作流结束节点',
+                type: NodeType.END,
+                onToolClick: (event: React.MouseEvent, handleType?: HandleType) => {
+                    // 这个回调会在组件初始化后被重新设置
+                }
+            },
+            deletable: false, // 不可删除
+        }
+    ];
 };
 
 // 初始节点和边
-const initialNodes: CustomNodeType[] = [];
+const initialNodes: CustomNodeType[] = createInitialNodes();
 const initialEdges: CustomEdge[] = [];
 
 /**
@@ -54,6 +100,25 @@ const AIFlow: React.FC = () => {
     // 节点和边的状态管理
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+    // 更新初始节点的onToolClick回调
+    useEffect(() => {
+        setNodes((nds) =>
+            nds.map((node) => {
+                if (node.id === 'start-node-initial' || node.id === 'end-node-initial') {
+                    return {
+                        ...node,
+                        data: {
+                            ...node.data,
+                            onToolClick: (event: React.MouseEvent, handleType?: HandleType) =>
+                                handleNodeToolClick(node.id, event, handleType)
+                        }
+                    };
+                }
+                return node;
+            })
+        );
+    }, []); // 只在组件挂载时执行一次
 
     const customCategories: ToolCategory[] = [
         {
@@ -373,10 +438,36 @@ const AIFlow: React.FC = () => {
         setShowToolPanel(false);
     };
 
+    // 验证连接是否有效
+    const isValidConnection = useCallback((connection: Connection) => {
+        const { source, target } = connection;
+
+        // 防止开始节点和结束节点直接连接
+        if (source === 'start-node-initial' && target === 'end-node-initial') {
+            return false;
+        }
+
+        // 防止结束节点和开始节点直接连接（反向）
+        if (source === 'end-node-initial' && target === 'start-node-initial') {
+            return false;
+        }
+
+        // 防止节点连接到自己
+        if (source === target) {
+            return false;
+        }
+
+        return true;
+    }, []);
+
     // 处理连接创建
     const onConnect = useCallback(
-        (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-        [setEdges]
+        (params: Connection) => {
+            if (isValidConnection(params)) {
+                setEdges((eds) => addEdge(params, eds));
+            }
+        },
+        [setEdges, isValidConnection]
     );
 
     // 处理节点创建（来自点击或拖拽）
@@ -485,6 +576,9 @@ const AIFlow: React.FC = () => {
             // 创建新节点
             handleNodeCreate(nodeData, position);
 
+            // 关闭节点工具面板（和点击逻辑一样）
+            setShowNodeToolPanel(false);
+
             // 检查是否有拖拽源信息
             if (dragData.sourceNode && dragData.sourceNode.nodeId) {
                 const sourceNodeId = dragData.sourceNode.nodeId;
@@ -511,13 +605,16 @@ const AIFlow: React.FC = () => {
                     };
                 }
 
-                if (newEdge) {
+                if (newEdge && isValidConnection(newEdge)) {
                     // 延迟添加边，确保新节点已经被添加到状态中
                     setTimeout(() => {
                         setEdges((eds) => eds.concat(newEdge));
                         // 清除拖拽源信息
                         setDragSourceNode(null);
                     }, 100);
+                } else {
+                    // 清除拖拽源信息，即使连接无效
+                    setDragSourceNode(null);
                 }
             } else if (nearestNode) {
                 // 如果没有拖拽源信息，使用原来的逻辑（从最近节点的输出连接到新节点的输入）
@@ -529,10 +626,13 @@ const AIFlow: React.FC = () => {
                     style: { strokeWidth: 2 }
                 };
 
-                // 延迟添加边，确保新节点已经被添加到状态中
-                setTimeout(() => {
-                    setEdges((eds) => eds.concat(newEdge));
-                }, 100);
+                // 验证连接是否有效
+                if (isValidConnection(newEdge)) {
+                    // 延迟添加边，确保新节点已经被添加到状态中
+                    setTimeout(() => {
+                        setEdges((eds) => eds.concat(newEdge));
+                    }, 100);
+                }
             }
         },
         [reactFlowInstance, handleNodeCreate, findNearestNode, setEdges]
@@ -565,6 +665,7 @@ const AIFlow: React.FC = () => {
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
                         onConnect={onConnect}
+                        isValidConnection={isValidConnection}
                         onInit={setReactFlowInstance}
                         onDrop={onDrop}
                         onDragOver={onDragOver}
@@ -691,7 +792,10 @@ const AIFlow: React.FC = () => {
                                         animated: true,
                                         style: { strokeWidth: 2 }
                                     };
-                                    setEdges((eds) => eds.concat(newEdge));
+                                    // 验证连接是否有效
+                                    if (isValidConnection(newEdge)) {
+                                        setEdges((eds) => eds.concat(newEdge));
+                                    }
                                 } else if (currentHandleType === HandleType.INPUT) {
                                     // 从新节点的输出连接到当前节点的输入
                                     const newEdge = {
@@ -701,7 +805,10 @@ const AIFlow: React.FC = () => {
                                         animated: true,
                                         style: { strokeWidth: 2 }
                                     };
-                                    setEdges((eds) => eds.concat(newEdge));
+                                    // 验证连接是否有效
+                                    if (isValidConnection(newEdge)) {
+                                        setEdges((eds) => eds.concat(newEdge));
+                                    }
                                 }
 
                                 setShowNodeToolPanel(false);
