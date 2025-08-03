@@ -16,7 +16,7 @@ import {CustomEdge, CustomNode as CustomNodeType, DragData, HandleType} from './
 import '@xyflow/react/dist/style.css';
 import styles from './styles.less';
 import {ToolCategory} from "@/components/AIFlow/components/ToolPanel/data";
-import {autoLayout, centerLayout, LayoutType, autoFitView, setZoomLevel} from './utils/layoutUtils';
+import {autoLayout, centerLayout, LayoutType, autoFitView, setZoomLevel, smartFitView, calculateOptimalZoom} from './utils/layoutUtils';
 
 // 节点类型配置
 const nodeTypes = {
@@ -233,25 +233,34 @@ const AIFlow: React.FC = () => {
         setShowToolPanel(!showToolPanel);
     };
 
-    // 一键整理布局 - 从左到右排列
+    // 智能布局整理 - 优化版
     const handleAutoLayout = useCallback(async () => {
         if (nodes.length === 0) return;
 
-        console.log('开始布局整理，当前节点数量:', nodes.length);
+        console.log('开始智能布局整理，当前节点数量:', nodes.length);
 
-        // 使用层次布局，方向设置为从左到右
+        // 获取容器尺寸用于智能布局
+        const container = reactFlowWrapper.current;
+        const containerSize = container ? {
+            width: container.clientWidth,
+            height: container.clientHeight
+        } : { width: 800, height: 600 };
+
+        console.log('容器尺寸:', containerSize);
+
+        // 使用优化的层次布局，方向设置为从左到右
         const layoutedNodes = autoLayout(nodes, edges, LayoutType.HIERARCHICAL, {
-            nodeSpacing: 220, // 增加垂直间距，让上下节点距离更远
-            levelSpacing: 320, // 增加水平间距，让左右节点距离更远
+            nodeSpacing: 200, // 基础间距，会根据节点数量自动调整
+            levelSpacing: 280, // 基础层级间距，会根据节点数量自动调整
             direction: 'LR' // 从左到右
         });
 
         console.log('布局完成，节点位置:', layoutedNodes.map(n => ({ id: n.id, position: n.position })));
 
-        // 居中布局
-        const centeredNodes = centerLayout(layoutedNodes);
+        // 智能居中布局（考虑容器尺寸）
+        const centeredNodes = centerLayout(layoutedNodes, containerSize);
 
-        console.log('居中完成，最终位置:', centeredNodes.map(n => ({ id: n.id, position: n.position })));
+        console.log('智能居中完成，最终位置:', centeredNodes.map(n => ({ id: n.id, position: n.position })));
 
         // 应用新位置（带动画效果）
         setNodes(centeredNodes);
@@ -259,23 +268,41 @@ const AIFlow: React.FC = () => {
         // 关闭工具面板
         setShowToolPanel(false);
 
-        // 延迟执行缩放到50%，确保节点位置更新完成
+        // 延迟执行智能缩放，确保节点位置更新完成
         setTimeout(async () => {
             try {
-                const success = await setZoomLevel(reactFlowInstance, 1, {
-                    duration: 1000, // 稍长的动画时间，让用户能看到缩放过程
-                    center: true // 居中显示
+                console.log('开始智能缩放和居中...');
+
+                // 使用智能缩放，自动计算最佳缩放比例
+                const success = await smartFitView(reactFlowInstance, centeredNodes, {
+                    duration: 1200, // 较长的动画时间，让用户看到整个过程
+                    padding: 80, // 边距
+                    minZoom: 0.2, // 最小缩放20%
+                    maxZoom: 1.5 // 最大缩放150%
                 });
 
                 if (success) {
-                    console.log('画布缩放到50%完成');
+                    console.log('智能缩放和居中完成');
                 } else {
-                    console.warn('画布缩放到50%失败');
+                    console.warn('智能缩放失败，尝试备用方案');
+
+                    // 备用方案：计算最佳缩放比例并手动设置
+                    const optimalZoom = calculateOptimalZoom(centeredNodes, containerSize, 80);
+                    const fallbackSuccess = await setZoomLevel(reactFlowInstance, optimalZoom, {
+                        duration: 1000,
+                        center: true
+                    });
+
+                    if (fallbackSuccess) {
+                        console.log(`备用缩放完成，缩放比例: ${(optimalZoom * 100).toFixed(1)}%`);
+                    } else {
+                        console.error('备用缩放也失败了');
+                    }
                 }
             } catch (error) {
-                console.error('画布缩放到50%出错:', error);
+                console.error('智能缩放出错:', error);
             }
-        }, 100); // 100ms延迟，确保节点位置更新完成
+        }, 150); // 150ms延迟，确保节点位置更新完成
     }, [nodes, edges, setNodes, reactFlowInstance]);
 
     // 处理布局按钮点击
@@ -575,13 +602,13 @@ const AIFlow: React.FC = () => {
                         <span>+ 添加节点</span>
                     </div>
 
-                    {/* 布局优化按钮 */}
+                    {/* 智能布局优化按钮 */}
                     <div
                         className={`${styles.layoutTrigger} ${nodes.length === 0 ? styles.disabled : ''}`}
                         onClick={handleLayoutTriggerClick}
-                        title="一键整理布局（从左到右排列，自动缩放到50%）"
+                        title="智能整理布局（层次化排列，自动居中，智能缩放）"
                     >
-                        <span>🎯 整理布局</span>
+                        <span>🎯 智能布局</span>
                     </div>
                 </div>
 
