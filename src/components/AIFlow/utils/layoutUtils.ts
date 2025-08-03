@@ -381,3 +381,85 @@ export function autoFitView(
         interpolate: 'smooth' as const // 平滑插值
     });
 }
+
+/**
+ * 设置画布缩放到指定比例
+ * @param reactFlowInstance ReactFlow实例
+ * @param zoomLevel 缩放比例 (例如: 0.5 表示50%)
+ * @param options 缩放选项
+ */
+export function setZoomLevel(
+    reactFlowInstance: any,
+    zoomLevel: number,
+    options?: {
+        duration?: number;
+        center?: boolean;
+    }
+) {
+    if (!reactFlowInstance) {
+        console.warn('ReactFlow实例不存在，无法执行缩放');
+        return Promise.resolve(false);
+    }
+
+    const defaultOptions = {
+        duration: 800, // 动画持续时间800ms
+        center: true, // 是否居中显示
+        ...options
+    };
+
+    console.log(`开始设置画布缩放到 ${zoomLevel * 100}%，选项:`, defaultOptions);
+
+    try {
+        if (defaultOptions.center) {
+            // 先居中视图，然后设置缩放
+            const viewport = reactFlowInstance.getViewport();
+            const bounds = reactFlowInstance.getNodes().reduce((acc: any, node: any) => {
+                const nodeWithPosition = { ...node, position: node.position || { x: 0, y: 0 } };
+                if (!acc) {
+                    return {
+                        x: nodeWithPosition.position.x,
+                        y: nodeWithPosition.position.y,
+                        x2: nodeWithPosition.position.x + 200, // 假设节点宽度200
+                        y2: nodeWithPosition.position.y + 100  // 假设节点高度100
+                    };
+                }
+                return {
+                    x: Math.min(acc.x, nodeWithPosition.position.x),
+                    y: Math.min(acc.y, nodeWithPosition.position.y),
+                    x2: Math.max(acc.x2, nodeWithPosition.position.x + 200),
+                    y2: Math.max(acc.y2, nodeWithPosition.position.y + 100)
+                };
+            }, null);
+
+            if (bounds) {
+                const centerX = (bounds.x + bounds.x2) / 2;
+                const centerY = (bounds.y + bounds.y2) / 2;
+
+                // 获取画布容器尺寸
+                const container = reactFlowInstance.getContainer?.();
+                const containerWidth = container?.clientWidth || 800;
+                const containerHeight = container?.clientHeight || 600;
+
+                // 计算居中位置
+                const x = containerWidth / 2 - centerX * zoomLevel;
+                const y = containerHeight / 2 - centerY * zoomLevel;
+
+                // 设置视图位置和缩放
+                return reactFlowInstance.setViewport(
+                    { x, y, zoom: zoomLevel },
+                    { duration: defaultOptions.duration }
+                );
+            }
+        }
+
+        // 如果不需要居中或没有节点，直接设置缩放
+        const currentViewport = reactFlowInstance.getViewport();
+        return reactFlowInstance.setViewport(
+            { ...currentViewport, zoom: zoomLevel },
+            { duration: defaultOptions.duration }
+        );
+    } catch (error) {
+        console.error('设置画布缩放出错:', error);
+        return Promise.resolve(false);
+    }
+}
