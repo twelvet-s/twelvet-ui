@@ -340,3 +340,44 @@ export function centerLayout(nodes: CustomNodeType[]): CustomNodeType[] {
     console.log('居中后节点位置:', centeredNodes.map(n => ({ id: n.id, position: n.position })));
     return centeredNodes;
 }
+
+/**
+ * 自动缩放画布以适应所有节点
+ * @param reactFlowInstance ReactFlow实例
+ * @param options 缩放选项
+ */
+export function autoFitView(
+    reactFlowInstance: any,
+    options?: {
+        padding?: number;
+        duration?: number;
+        minZoom?: number;
+        maxZoom?: number;
+    }
+) {
+    if (!reactFlowInstance) {
+        console.warn('ReactFlow实例不存在，无法执行自动缩放');
+        return Promise.resolve(false);
+    }
+
+    const defaultOptions = {
+        padding: 50, // 默认边距50px
+        duration: 800, // 动画持续时间800ms
+        minZoom: 0.1, // 最小缩放比例
+        maxZoom: 2, // 最大缩放比例
+        ...options
+    };
+
+    console.log('开始自动缩放画布，选项:', defaultOptions);
+
+    // 调用ReactFlow的fitView方法
+    return reactFlowInstance.fitView({
+        padding: defaultOptions.padding,
+        duration: defaultOptions.duration,
+        minZoom: defaultOptions.minZoom,
+        maxZoom: defaultOptions.maxZoom,
+        includeHiddenNodes: false, // 不包含隐藏节点
+        ease: (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t, // 缓动函数
+        interpolate: 'smooth' as const // 平滑插值
+    });
+}

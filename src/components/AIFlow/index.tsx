@@ -16,7 +16,7 @@ import {CustomEdge, CustomNode as CustomNodeType, DragData, HandleType} from './
 import '@xyflow/react/dist/style.css';
 import styles from './styles.less';
 import {ToolCategory} from "@/components/AIFlow/components/ToolPanel/data";
-import {autoLayout, centerLayout, LayoutType} from './utils/layoutUtils';
+import {autoLayout, centerLayout, LayoutType, autoFitView} from './utils/layoutUtils';
 
 // 节点类型配置
 const nodeTypes = {
@@ -234,7 +234,7 @@ const AIFlow: React.FC = () => {
     };
 
     // 一键整理布局 - 从左到右排列
-    const handleAutoLayout = useCallback(() => {
+    const handleAutoLayout = useCallback(async () => {
         if (nodes.length === 0) return;
 
         console.log('开始布局整理，当前节点数量:', nodes.length);
@@ -258,7 +258,27 @@ const AIFlow: React.FC = () => {
 
         // 关闭工具面板
         setShowToolPanel(false);
-    }, [nodes, edges, setNodes]);
+
+        // 延迟执行自动缩放，确保节点位置更新完成
+        setTimeout(async () => {
+            try {
+                const success = await autoFitView(reactFlowInstance, {
+                    padding: 80, // 增加边距，让布局更美观
+                    duration: 1000, // 稍长的动画时间，让用户能看到缩放过程
+                    minZoom: 0.1,
+                    maxZoom: 1.5
+                });
+
+                if (success) {
+                    console.log('画布自动缩放完成');
+                } else {
+                    console.warn('画布自动缩放失败');
+                }
+            } catch (error) {
+                console.error('画布自动缩放出错:', error);
+            }
+        }, 100); // 100ms延迟，确保节点位置更新完成
+    }, [nodes, edges, setNodes, reactFlowInstance]);
 
     // 处理布局按钮点击
     const handleLayoutTriggerClick = useCallback(() => {
