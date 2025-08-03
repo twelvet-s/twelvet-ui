@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import AIFlow from '@/components/AIFlow';
 
 /**
@@ -7,10 +7,13 @@ import AIFlow from '@/components/AIFlow';
  */
 const Flow = () => {
 
+    // 设置页面标题
+    useEffect(() => {
+        document.title = 'AI工作流 - TwelveT';
+    }, []);
+
     return (
-        <>
-            <AIFlow />
-        </>
+        <AIFlow/>
     );
 };
 
