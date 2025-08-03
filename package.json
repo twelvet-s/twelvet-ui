@@ -50,6 +50,7 @@
         "@ant-design/pro-components": "^2.8.6",
         "@microsoft/fetch-event-source": "^2.0.1",
         "@umijs/route-utils": "^2.2.2",
+        "@xyflow/react": "^12.8.2",
         "ace-builds": "^1.32.8",
         "antd": "^5.24.7",
         "antd-img-crop": "^4.21.0",

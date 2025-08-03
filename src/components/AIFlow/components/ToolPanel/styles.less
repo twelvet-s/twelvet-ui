@@ -1,0 +1,160 @@
+.tool-panel {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+
+    .search-container {
+        margin-bottom: 20px;
+
+        .search-input {
+            width: 100%;
+            border-radius: 20px;
+            padding: 8px 16px;
+            border: 1px solid #d9d9d9;
+            font-size: 14px;
+
+            &:focus {
+                border-color: #1890ff;
+                box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+            }
+        }
+    }
+
+    .category-section {
+        margin-bottom: 24px;
+
+        .category-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+
+            .tool-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 10px 6px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: 1px solid transparent;
+
+                &:hover {
+                    background-color: #f5f5f5;
+                    border-color: #d9d9d9;
+                    transform: translateY(-1px);
+                }
+
+                .tool-icon {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 6px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 6px;
+                    font-size: 14px;
+                    color: #fff;
+                    font-weight: bold;
+
+                    &.ai-model {
+                        background-color: #000;
+                    }
+
+                    &.workflow {
+                        background-color: #52c41a;
+                    }
+
+                    &.business {
+                        background-color: #1890ff;
+                    }
+
+                    &.code {
+                        background-color: #13c2c2;
+                    }
+
+                    &.selector {
+                        background-color: #1890ff;
+                    }
+
+                    &.loop {
+                        background-color: #52c41a;
+                    }
+
+                    &.variable {
+                        background-color: #13c2c2;
+                    }
+
+                    &.batch {
+                        background-color: #13c2c2;
+                    }
+
+                    &.input {
+                        background-color: #722ed1;
+                    }
+
+                    &.output {
+                        background-color: #722ed1;
+                    }
+
+                    &.database {
+                        background-color: #fa8c16;
+                    }
+
+                    &.knowledge {
+                        background-color: #fa8c16;
+                    }
+                }
+
+                .tool-name {
+                    font-size: 11px;
+                    color: #333;
+                    text-align: center;
+                    line-height: 1.2;
+                    word-break: break-all;
+                }
+            }
+        }
+    }
+
+    .no-results {
+        text-align: center;
+        color: #999;
+        padding: 40px 0;
+        font-size: 14px;
+    }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+    .tool-panel {
+        .category-section {
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 8px;
+
+                .tool-item {
+                    padding: 8px 4px;
+
+                    .tool-icon {
+                        width: 28px;
+                        height: 28px;
+                        font-size: 14px;
+                    }
+
+                    .tool-name {
+                        font-size: 11px;
+                    }
+                }
+            }
+        }
+    }
+}
