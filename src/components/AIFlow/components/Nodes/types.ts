@@ -1,5 +1,11 @@
 import { Node, Edge } from '@xyflow/react';
 
+// Handle类型枚举
+export enum HandleType {
+  INPUT = 'input',
+  OUTPUT = 'output'
+}
+
 // 节点数据接口
 export interface NodeData {
   id: string;
@@ -11,7 +17,7 @@ export interface NodeData {
   // 节点特定的配置
   config?: Record<string, any>;
   // 工具窗口相关回调
-  onToolClick?: (event: React.MouseEvent) => void;
+  onToolClick?: (event: React.MouseEvent, handleType?: HandleType) => void;
 }
 
 // 自定义节点类型
@@ -57,4 +63,6 @@ export interface DragData {
   icon: string;
   color: string;
   description?: string;
+  // 拖拽源节点信息
+  sourceNode?: {nodeId: string, handleType: string} | null;
 }

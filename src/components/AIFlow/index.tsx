@@ -12,7 +12,7 @@ import {
 } from '@xyflow/react';
 import ToolPanel from './components/ToolPanel';
 import CustomNode from './components/Nodes/CustomNode';
-import {CustomEdge, CustomNode as CustomNodeType, DragData} from './components/Nodes/types';
+import {CustomEdge, CustomNode as CustomNodeType, DragData, HandleType} from './components/Nodes/types';
 import '@xyflow/react/dist/style.css';
 import styles from './styles.less';
 import {ToolCategory} from "@/components/AIFlow/components/ToolPanel/data";
@@ -38,6 +38,9 @@ const AIFlow: React.FC = () => {
     const [nodeToolPanelPosition, setNodeToolPanelPosition] = useState<{x: number, y: number}>({x: 0, y: 0});
     const [nodeToolPanelSize, setNodeToolPanelSize] = useState<{width: number, height: number}>({width: 300, height: 400});
     const [currentNodeId, setCurrentNodeId] = useState<string>('');
+    const [currentHandleType, setCurrentHandleType] = useState<HandleType | null>(null);
+    // 用于跟踪拖拽源节点信息
+    const [dragSourceNode, setDragSourceNode] = useState<{nodeId: string, handleType: HandleType} | null>(null);
 
     const toolPanelRef = useRef<HTMLDivElement>(null);
     const nodeToolPanelRef = useRef<HTMLDivElement>(null);
@@ -193,6 +196,7 @@ const AIFlow: React.FC = () => {
                 // 如果点击的不是面板内部，也不是工具按钮，则关闭面板
                 if (!isClickInsidePanel && !isClickOnToolButton) {
                     setShowNodeToolPanel(false);
+                    setDragSourceNode(null); // 清除拖拽源信息
                 }
             }
         };
@@ -202,6 +206,7 @@ const AIFlow: React.FC = () => {
             if (event.key === 'Escape') {
                 if (showNodeToolPanel) {
                     setShowNodeToolPanel(false);
+                    setDragSourceNode(null); // 清除拖拽源信息
                 } else if (showToolPanel) {
                     setShowToolPanel(false);
                 }
@@ -224,7 +229,7 @@ const AIFlow: React.FC = () => {
     };
 
     // 处理节点工具按钮点击
-    const handleNodeToolClick = (nodeId: string, event: React.MouseEvent) => {
+    const handleNodeToolClick = (nodeId: string, event: React.MouseEvent, handleType?: HandleType) => {
         // 计算工具面板位置，智能避免被浏览器边界遮挡
         const rect = reactFlowWrapper.current?.getBoundingClientRect();
         if (rect) {
@@ -275,6 +280,11 @@ const AIFlow: React.FC = () => {
         }
 
         setCurrentNodeId(nodeId);
+        setCurrentHandleType(handleType || null);
+        // 设置拖拽源信息
+        if (handleType) {
+            setDragSourceNode({nodeId, handleType});
+        }
         setShowNodeToolPanel(true);
         // 关闭主工具面板
         setShowToolPanel(false);
@@ -305,7 +315,7 @@ const AIFlow: React.FC = () => {
             position: finalPosition,
             data: {
                 ...nodeData.data,
-                onToolClick: (event: React.MouseEvent) => handleNodeToolClick(nodeData.id, event)
+                onToolClick: (event: React.MouseEvent, handleType?: HandleType) => handleNodeToolClick(nodeData.id, event, handleType)
             }
         };
 
@@ -317,6 +327,29 @@ const AIFlow: React.FC = () => {
         });
 
     }, [setNodes]);
+
+    // 查找最近的节点
+    const findNearestNode = useCallback((position: { x: number; y: number }) => {
+        if (nodes.length === 0) return null;
+
+        let nearestNode = null;
+        let minDistance = Infinity;
+
+        nodes.forEach(node => {
+            const distance = Math.sqrt(
+                Math.pow(node.position.x - position.x, 2) +
+                Math.pow(node.position.y - position.y, 2)
+            );
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestNode = node;
+            }
+        });
+
+        // 只有距离在合理范围内才返回最近节点（比如300像素内）
+        return minDistance < 300 ? nearestNode : null;
+    }, [nodes]);
 
     // 处理拖拽结束（放置到画布）
     const onDrop = useCallback(
@@ -347,6 +380,9 @@ const AIFlow: React.FC = () => {
 
             if (!position) return;
 
+            // 查找最近的节点
+            const nearestNode = findNearestNode(position);
+
             // 创建节点数据
             const nodeId = `${dragData.nodeType}-${Date.now()}`;
             const nodeData = {
@@ -359,13 +395,64 @@ const AIFlow: React.FC = () => {
                     color: dragData.color,
                     description: dragData.description,
                     type: dragData.nodeType,
-                    onToolClick: (event: React.MouseEvent) => handleNodeToolClick(nodeId, event)
+                    onToolClick: (event: React.MouseEvent, handleType?: HandleType) => handleNodeToolClick(nodeId, event, handleType)
                 },
             };
 
+            // 创建新节点
             handleNodeCreate(nodeData, position);
+
+            // 检查是否有拖拽源信息
+            if (dragData.sourceNode && dragData.sourceNode.nodeId) {
+                const sourceNodeId = dragData.sourceNode.nodeId;
+                const handleType = dragData.sourceNode.handleType;
+
+                let newEdge;
+                if (handleType === 'output') {
+                    // 从源节点的输出连接到新节点的输入
+                    newEdge = {
+                        id: `edge-${sourceNodeId}-${nodeId}`,
+                        source: sourceNodeId,
+                        target: nodeId,
+                        animated: true,
+                        style: { strokeWidth: 2 }
+                    };
+                } else if (handleType === 'input') {
+                    // 从新节点的输出连接到源节点的输入
+                    newEdge = {
+                        id: `edge-${nodeId}-${sourceNodeId}`,
+                        source: nodeId,
+                        target: sourceNodeId,
+                        animated: true,
+                        style: { strokeWidth: 2 }
+                    };
+                }
+
+                if (newEdge) {
+                    // 延迟添加边，确保新节点已经被添加到状态中
+                    setTimeout(() => {
+                        setEdges((eds) => eds.concat(newEdge));
+                        // 清除拖拽源信息
+                        setDragSourceNode(null);
+                    }, 100);
+                }
+            } else if (nearestNode) {
+                // 如果没有拖拽源信息，使用原来的逻辑（从最近节点的输出连接到新节点的输入）
+                const newEdge = {
+                    id: `edge-${nearestNode.id}-${nodeId}`,
+                    source: nearestNode.id,
+                    target: nodeId,
+                    animated: true,
+                    style: { strokeWidth: 2 }
+                };
+
+                // 延迟添加边，确保新节点已经被添加到状态中
+                setTimeout(() => {
+                    setEdges((eds) => eds.concat(newEdge));
+                }, 100);
+            }
         },
-        [reactFlowInstance, handleNodeCreate]
+        [reactFlowInstance, handleNodeCreate, findNearestNode, setEdges]
     );
 
     // 处理拖拽悬停
@@ -378,6 +465,7 @@ const AIFlow: React.FC = () => {
     const onPaneClick = useCallback(() => {
         if (showNodeToolPanel) {
             setShowNodeToolPanel(false);
+            setDragSourceNode(null); // 清除拖拽源信息
         }
         if (showToolPanel) {
             setShowToolPanel(false);
@@ -461,19 +549,69 @@ const AIFlow: React.FC = () => {
                     >
                         <ToolPanel
                             categories={customCategories}
+                            dragSourceInfo={dragSourceNode}
                             onToolClick={(tool) => {
                                 // 点击工具后关闭节点面板
                                 setShowNodeToolPanel(false);
                             }}
                             onNodeCreate={(nodeData, position) => {
-                                // 在节点附近创建新节点
+                                // 获取当前节点信息
+                                const currentNode = nodes.find(node => node.id === currentNodeId);
+                                if (!currentNode) {
+                                    handleNodeCreate(nodeData, position);
+                                    setShowNodeToolPanel(false);
+                                    return;
+                                }
+
+                                // 计算新节点位置
                                 const offset = 150; // 偏移距离
-                                const newPosition = position || {
-                                    x: nodeToolPanelPosition.x + offset,
-                                    y: nodeToolPanelPosition.y
-                                };
+                                let newPosition = position;
+
+                                if (!newPosition) {
+                                    // 根据Handle类型决定新节点位置
+                                    if (currentHandleType === HandleType.OUTPUT) {
+                                        // 右侧Handle，新节点放在右边
+                                        newPosition = {
+                                            x: currentNode.position.x + offset,
+                                            y: currentNode.position.y
+                                        };
+                                    } else {
+                                        // 左侧Handle，新节点放在左边
+                                        newPosition = {
+                                            x: currentNode.position.x - offset,
+                                            y: currentNode.position.y
+                                        };
+                                    }
+                                }
+
+                                // 创建新节点
                                 handleNodeCreate(nodeData, newPosition);
+
+                                // 创建连接
+                                if (currentHandleType === HandleType.OUTPUT) {
+                                    // 从当前节点的输出连接到新节点的输入
+                                    const newEdge = {
+                                        id: `edge-${currentNodeId}-${nodeData.id}`,
+                                        source: currentNodeId,
+                                        target: nodeData.id,
+                                        animated: true,
+                                        style: { strokeWidth: 2 }
+                                    };
+                                    setEdges((eds) => eds.concat(newEdge));
+                                } else if (currentHandleType === HandleType.INPUT) {
+                                    // 从新节点的输出连接到当前节点的输入
+                                    const newEdge = {
+                                        id: `edge-${nodeData.id}-${currentNodeId}`,
+                                        source: nodeData.id,
+                                        target: currentNodeId,
+                                        animated: true,
+                                        style: { strokeWidth: 2 }
+                                    };
+                                    setEdges((eds) => eds.concat(newEdge));
+                                }
+
                                 setShowNodeToolPanel(false);
+                                setDragSourceNode(null); // 清除拖拽源信息
                             }}
                         />
                     </div>

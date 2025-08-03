@@ -26,6 +26,7 @@ const ToolPanel: React.FC<ToolPanelProps> = ({
                                                  showSearch = true,
                                                  className = '',
                                                  style = {},
+                                                 dragSourceInfo = null,
                                              }) => {
     const [searchValue, setSearchValue] = useState<string>('');
 
@@ -104,6 +105,8 @@ const ToolPanel: React.FC<ToolPanelProps> = ({
             icon: tool.icon,
             color: tool.color,
             description: tool.description,
+            // 包含拖拽源信息
+            sourceNode: dragSourceInfo,
         };
 
         event.dataTransfer.setData('application/reactflow', JSON.stringify(dragData));

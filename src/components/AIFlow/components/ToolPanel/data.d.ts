@@ -23,6 +23,8 @@ export interface ToolPanelProps {
     showSearch?: boolean;
     className?: string;
     style?: React.CSSProperties;
+    // 拖拽源信息
+    dragSourceInfo?: {nodeId: string, handleType: string} | null;
 }
 
 export interface ToolPanelState {

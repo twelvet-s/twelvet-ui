@@ -1,6 +1,6 @@
 import React from 'react';
 import {Handle, Position, NodeProps} from '@xyflow/react';
-import {NodeData, NODE_COLORS} from './types';
+import {NodeData, NODE_COLORS, HandleType} from './types';
 import {PlusOutlined} from '@ant-design/icons';
 import './CustomNode.less';
 
@@ -12,10 +12,10 @@ const CustomNode: React.FC<NodeProps<NodeData>> = ({data, selected}) => {
     const nodeColor = NODE_COLORS[color] || '#1890ff';
 
     // 处理工具按钮点击
-    const handleToolClick = (e: React.MouseEvent) => {
+    const handleToolClick = (e: React.MouseEvent, handleType: HandleType) => {
         e.stopPropagation(); // 防止触发节点选择
         if (onToolClick) {
-            onToolClick(e);
+            onToolClick(e, handleType);
         }
     };
 
@@ -28,7 +28,7 @@ const CustomNode: React.FC<NodeProps<NodeData>> = ({data, selected}) => {
                     position={Position.Left}
                     className="custom-handle input-handle"
                     style={{background: nodeColor}}
-                    onClick={handleToolClick}
+                    onClick={(e) => handleToolClick(e, HandleType.INPUT)}
                 >
                     <div className="handle-plus-icon">
                         <PlusOutlined />
@@ -59,7 +59,7 @@ const CustomNode: React.FC<NodeProps<NodeData>> = ({data, selected}) => {
                     position={Position.Right}
                     className="custom-handle output-handle"
                     style={{background: nodeColor}}
-                    onClick={handleToolClick}
+                    onClick={(e) => handleToolClick(e, HandleType.OUTPUT)}
                 >
                     <div className="handle-plus-icon">
                         <PlusOutlined />
