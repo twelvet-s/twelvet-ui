@@ -64,6 +64,16 @@
         overflow-y: auto;
         z-index: 999;
         animation: slideUp 0.3s ease-out;
+    }
+
+    // 节点工具面板容器样式
+    .nodeToolPanelContainer {
+        position: absolute;
+        overflow-y: auto;
+        z-index: 1000;
+        animation: fadeIn 0.2s ease-out;
+        transform: none; // 不使用transform偏移，直接使用计算好的位置
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); // 增强阴影效果，提高可见性
 
         // 滑入动画
         @keyframes slideUp {
@@ -77,17 +87,32 @@
             }
         }
 
-        // 自定义滚动条
-        &::-webkit-scrollbar {
+        // 淡入动画
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        // 自定义滚动条（应用于两个面板）
+        &::-webkit-scrollbar,
+        .nodeToolPanelContainer::-webkit-scrollbar {
             width: 6px;
         }
 
-        &::-webkit-scrollbar-track {
+        &::-webkit-scrollbar-track,
+        .nodeToolPanelContainer::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 3px;
         }
 
-        &::-webkit-scrollbar-thumb {
+        &::-webkit-scrollbar-thumb,
+        .nodeToolPanelContainer::-webkit-scrollbar-thumb {
             background: #c1c1c1;
             border-radius: 3px;
 
@@ -103,6 +128,10 @@
             width: 45%;
             min-width: 350px;
         }
+
+        .nodeToolPanelContainer {
+            // 响应式尺寸通过 JavaScript 动态设置
+        }
     }
 
     @media (max-width: 768px) {
@@ -111,6 +140,10 @@
             min-width: 300px;
             left: 5%;
             transform: none;
+        }
+
+        .nodeToolPanelContainer {
+            // 响应式尺寸通过 JavaScript 动态设置
         }
 
         .toolTrigger {

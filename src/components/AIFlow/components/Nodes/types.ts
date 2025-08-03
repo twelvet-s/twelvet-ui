@@ -10,6 +10,8 @@ export interface NodeData {
   type: string;
   // 节点特定的配置
   config?: Record<string, any>;
+  // 工具窗口相关回调
+  onToolClick?: (event: React.MouseEvent) => void;
 }
 
 // 自定义节点类型

@@ -18,6 +18,71 @@
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
   }
 
+  // 连接点容器
+  .handle-container {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    z-index: 100;
+
+    &.left {
+      left: -6px;
+      flex-direction: row;
+    }
+
+    &.right {
+      right: -6px;
+      flex-direction: row-reverse;
+    }
+  }
+
+  // 工具链接按钮
+  .tool-link-button {
+    width: 18px;
+    height: 18px;
+    background: #1890ff;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: crosshair;
+    opacity: 0;
+    transition: all 0.2s ease;
+    color: white;
+    font-size: 10px;
+    margin: 0 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 101;
+
+    &:hover {
+      background: #40a9ff;
+      transform: scale(1.2);
+      opacity: 1 !important;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active {
+      background: #096dd9;
+      transform: scale(1);
+    }
+
+    &.left-tool {
+      margin-left: 10px;
+    }
+
+    &.right-tool {
+      margin-right: 10px;
+    }
+  }
+
+  // 节点悬停时显示工具按钮
+  &:hover .tool-link-button {
+    opacity: 0.9;
+  }
+
   .node-content {
     display: flex;
     flex-direction: column;
@@ -60,6 +125,7 @@
     border: 2px solid #fff;
     border-radius: 50%;
     transition: all 0.2s ease;
+    position: relative;
 
     &:hover {
       width: 10px;
@@ -68,11 +134,11 @@
     }
 
     &.input-handle {
-      left: -6px;
+      left: 0;
     }
 
     &.output-handle {
-      right: -6px;
+      right: 0;
     }
   }
 }
