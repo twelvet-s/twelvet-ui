@@ -28,14 +28,8 @@ const CustomNode: React.FC<NodeProps<NodeData>> = ({data, selected}) => {
                     position={Position.Left}
                     className="custom-handle input-handle"
                     style={{background: nodeColor}}
-                />
-                <div
-                    className="tool-link-button left-tool"
                     onClick={handleToolClick}
-                    title="打开工具面板"
-                >
-                    <PlusOutlined />
-                </div>
+                />
             </div>
 
             {/* 节点内容 */}
@@ -61,14 +55,8 @@ const CustomNode: React.FC<NodeProps<NodeData>> = ({data, selected}) => {
                     position={Position.Right}
                     className="custom-handle output-handle"
                     style={{background: nodeColor}}
-                />
-                <div
-                    className="tool-link-button right-tool"
                     onClick={handleToolClick}
-                    title="打开工具面板"
-                >
-                    <PlusOutlined />
-                </div>
+                />
             </div>
         </div>
     );

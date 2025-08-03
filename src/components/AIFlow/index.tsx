@@ -16,7 +16,6 @@ import {CustomEdge, CustomNode as CustomNodeType, DragData} from './components/N
 import '@xyflow/react/dist/style.css';
 import styles from './styles.less';
 import {ToolCategory} from "@/components/AIFlow/components/ToolPanel/data";
-import {ToolOutlined} from '@ant-design/icons';
 
 // 节点类型配置
 const nodeTypes = {
@@ -428,8 +427,7 @@ const AIFlow: React.FC = () => {
                     onClick={toggleToolPanel}
                     title="工具面板"
                 >
-                    <ToolOutlined/>
-                    <span>工具</span>
+                    <span>+ 添加节点</span>
                 </div>
 
                 {/* 工具面板 */}
