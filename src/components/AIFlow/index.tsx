@@ -241,8 +241,8 @@ const AIFlow: React.FC = () => {
 
         // 使用层次布局，方向设置为从左到右
         const layoutedNodes = autoLayout(nodes, edges, LayoutType.HIERARCHICAL, {
-            nodeSpacing: 150,
-            levelSpacing: 200,
+            nodeSpacing: 220, // 增加垂直间距，让上下节点距离更远
+            levelSpacing: 320, // 增加水平间距，让左右节点距离更远
             direction: 'LR' // 从左到右
         });
 
@@ -613,7 +613,7 @@ const AIFlow: React.FC = () => {
                                 }
 
                                 // 计算新节点位置
-                                const offset = 250; // 偏移距离，增加节点间距
+                                const offset = 380; // 偏移距离，大幅增加节点间距，避免重叠
                                 let newPosition = position;
 
                                 if (!newPosition) {

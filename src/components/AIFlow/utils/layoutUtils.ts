@@ -14,8 +14,8 @@ interface LayoutOptions {
 }
 
 const DEFAULT_OPTIONS: LayoutOptions = {
-    nodeSpacing: 150,
-    levelSpacing: 200,
+    nodeSpacing: 220, // 增加默认节点间距
+    levelSpacing: 320, // 增加默认层级间距
     direction: 'TB'
 };
 
