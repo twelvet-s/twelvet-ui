@@ -38,11 +38,14 @@ const createInitialNodes = (): CustomNodeType[] => {
     const endNodeId = 'end-node-initial';
 
     // 计算居中的水平布局位置
-    // 开始节点在左侧，结束节点在右侧，两者之间距离300px，整体居中
-    const nodeSpacing = 300; // 两个节点之间的距离
-    const startX = -nodeSpacing / 2; // 开始节点位置（相对于中心点左侧150px）
-    const endX = nodeSpacing / 2;   // 结束节点位置（相对于中心点右侧150px）
-    const centerY = 0; // 垂直居中
+    // 在 ReactFlow 中，(0,0) 是画布的中心点
+    const nodeSpacing = 1200; // 两个节点之间的距离
+    const centerX = 0; // 画布中心X坐标
+    const centerY = 0; // 画布中心Y坐标
+
+    // 计算两个节点的位置，使它们整体居中
+    const startX = centerX - nodeSpacing / 2; // 开始节点位置（中心左侧150px）
+    const endX = centerX + nodeSpacing / 2;   // 结束节点位置（中心右侧150px）
 
     return [
         {
@@ -85,6 +88,13 @@ const createInitialNodes = (): CustomNodeType[] => {
 // 初始节点和边
 const initialNodes: CustomNodeType[] = createInitialNodes();
 const initialEdges: CustomEdge[] = [];
+
+// 调试：输出初始节点信息
+console.log('初始节点创建完成:', initialNodes.map(node => ({
+    id: node.id,
+    type: node.type,
+    position: node.position
+})));
 
 /**
  * AI工作流
@@ -132,6 +142,55 @@ const AIFlow: React.FC = () => {
             })
         );
     }, []); // 只在组件挂载时执行一次
+
+    // 初始化后自动居中显示初始节点
+    useEffect(() => {
+        if (reactFlowInstance && nodes.length >= 2) {
+            // 检查是否是初始状态（只有开始和结束节点）
+            const hasOnlyInitialNodes = nodes.length === 2 &&
+                nodes.some(node => node.id === 'start-node-initial') &&
+                nodes.some(node => node.id === 'end-node-initial');
+
+            if (hasOnlyInitialNodes) {
+                // 延迟执行，确保ReactFlow完全初始化
+                const timer = setTimeout(() => {
+                    console.log('初始化后自动居中显示初始节点...');
+
+                    // 使用智能缩放和居中功能
+                    smartFitView(reactFlowInstance, nodes, {
+                        duration: 800,
+                        padding: 150,
+                        minZoom: 0.8,
+                        maxZoom: 1.2
+                    }).then((success) => {
+                        if (success) {
+                            console.log('初始节点居中显示成功');
+                        } else {
+                            console.warn('初始节点居中显示失败，尝试备用方案');
+                            // 备用方案：直接设置视图到中心
+                            try {
+                                reactFlowInstance.setCenter(0, 0, { zoom: 1, duration: 800 });
+                            } catch (error) {
+                                console.error('备用居中方案也失败:', error);
+                            }
+                        }
+                    }).catch((error) => {
+                        console.error('初始节点居中出错:', error);
+                        // 最后的备用方案
+                        try {
+                            reactFlowInstance.setCenter(0, 0, { zoom: 1, duration: 800 });
+                        } catch (fallbackError) {
+                            console.error('所有居中方案都失败:', fallbackError);
+                        }
+                    });
+                }, 500); // 增加延迟到500ms，确保组件完全渲染
+
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [reactFlowInstance, nodes]); // 依赖ReactFlow实例和节点数组
+
+
 
     const customCategories: ToolCategory[] = [
         {
@@ -679,7 +738,27 @@ const AIFlow: React.FC = () => {
                         onEdgesChange={onEdgesChange}
                         onConnect={onConnect}
                         isValidConnection={isValidConnection}
-                        onInit={setReactFlowInstance}
+                        onInit={(instance) => {
+                            setReactFlowInstance(instance);
+
+                            // 初始化完成后立即居中显示
+                            setTimeout(() => {
+                                console.log('执行初始居中...');
+                                try {
+                                    // 使用 fitView 确保初始节点可见
+                                    instance.fitView({
+                                        padding: 100,
+                                        duration: 800,
+                                        minZoom: 0.5,
+                                        maxZoom: 1.5
+                                    });
+                                } catch (error) {
+                                    console.error('初始居中失败:', error);
+                                    // 备用方案：设置到中心点
+                                    instance.setCenter(0, 0, { zoom: 1, duration: 800 });
+                                }
+                            }, 100);
+                        }}
                         onDrop={onDrop}
                         onDragOver={onDragOver}
                         onPaneClick={onPaneClick}
