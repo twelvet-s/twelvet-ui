@@ -231,13 +231,6 @@ export default [
                 path: '/ai/chat',
                 component: './AI/Chat',
             },
-            {
-                title: '工作流',
-                name: 'aiFlow1',
-                icon: 'icon-ai-flow-inner',
-                path: '/ai/flow/inner',
-                component: './AI/Flow',
-            },
         ],
     },
     {
