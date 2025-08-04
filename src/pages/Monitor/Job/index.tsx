@@ -441,7 +441,7 @@ const Job: React.FC = () => {
                         </Col>
 
                         <Col sm={12} xs={24}>
-                            <Form.Item {...formItemLayout} label="是否并发" name="concurrent" initialValue={0}>
+                            <Form.Item {...formItemLayout} label="是否并发" name="concurrent" initialValue={'1'}>
                                 <Radio.Group optionType="button" buttonStyle="solid">
                                     <Radio.Button value={'0'}>允许</Radio.Button>
                                     <Radio.Button value={'1'}>禁止</Radio.Button>
@@ -461,7 +461,7 @@ const Job: React.FC = () => {
                         }}
                         label="执行策略"
                         name="misfirePolicy"
-                        initialValue={1}
+                        initialValue={'1'}
                     >
                         <Radio.Group optionType="button" buttonStyle="solid">
                             <Radio.Button value={'1'}>立即执行</Radio.Button>
@@ -481,7 +481,7 @@ const Job: React.FC = () => {
                         }}
                         label="状态"
                         name="status"
-                        initialValue={1}
+                        initialValue={'0'}
                     >
                         <Radio.Group optionType="button" buttonStyle="solid">
                             <Radio value={'0'}>正常</Radio>
