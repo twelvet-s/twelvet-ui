@@ -684,10 +684,10 @@ export function smartFitView(
     }
 
     const defaultOptions = {
-        duration: 1000,
-        padding: 100,
-        minZoom: 0.1,
-        maxZoom: 2.0,
+        duration: 1200, // 较长的动画时间，让用户看到整个过程
+        padding: 80, // 边距
+        minZoom: 0.2, // 最小缩放20%
+        maxZoom: 1.5, // 最大缩放150%
         ...options
     };
 
