@@ -52,7 +52,9 @@ const TWT: any = {
     static: 'https://static.twelvet.cn',
     // 忽略无需登录的路径
     authIgnore: [
-        '/login/oauth2/github'
+        '/login/oauth2/github',
+        // TODO 调试使用，后续移除
+        '/ai/flow'
     ]
 };
 

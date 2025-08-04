@@ -10,14 +10,20 @@ import {
     useEdgesState,
     useNodesState
 } from '@xyflow/react';
-import { message } from 'antd';
 import ToolPanel from './components/ToolPanel';
-import {CustomNode, StartNode, EndNode} from './components/Nodes';
+import {CustomNode, EndNode, StartNode} from './components/Nodes';
 import {CustomEdge, CustomNode as CustomNodeType, DragData, HandleType, NodeType} from './components/Nodes/types';
 import '@xyflow/react/dist/style.css';
 import styles from './styles.less';
 import {ToolCategory} from "@/components/AIFlow/components/ToolPanel/data";
-import {autoLayout, centerLayout, LayoutType, autoFitView, setZoomLevel, smartFitView, calculateOptimalZoom} from './utils/layoutUtils';
+import {
+    autoLayout,
+    calculateOptimalZoom,
+    centerLayout,
+    LayoutType,
+    setZoomLevel,
+    smartFitView
+} from './utils/layoutUtils';
 
 // 节点类型配置
 const nodeTypes = {
@@ -31,11 +37,18 @@ const createInitialNodes = (): CustomNodeType[] => {
     const startNodeId = 'start-node-initial';
     const endNodeId = 'end-node-initial';
 
+    // 计算居中的水平布局位置
+    // 开始节点在左侧，结束节点在右侧，两者之间距离300px，整体居中
+    const nodeSpacing = 300; // 两个节点之间的距离
+    const startX = -nodeSpacing / 2; // 开始节点位置（相对于中心点左侧150px）
+    const endX = nodeSpacing / 2;   // 结束节点位置（相对于中心点右侧150px）
+    const centerY = 0; // 垂直居中
+
     return [
         {
             id: startNodeId,
             type: 'startNode',
-            position: { x: 100, y: 200 },
+            position: { x: startX, y: centerY },
             data: {
                 id: NodeType.START,
                 label: '开始',
@@ -52,7 +65,7 @@ const createInitialNodes = (): CustomNodeType[] => {
         {
             id: endNodeId,
             type: 'endNode',
-            position: { x: 600, y: 200 },
+            position: { x: endX, y: centerY },
             data: {
                 id: NodeType.END,
                 label: '结束',
@@ -675,7 +688,7 @@ const AIFlow: React.FC = () => {
                             animated: true,
                             style: {strokeWidth: 2},
                         }}
-                        attributionPosition="bottom-left"
+                        //attributionPosition="bottom-left"
                     >
                         <Background/>
                         <Controls/>
@@ -709,7 +722,7 @@ const AIFlow: React.FC = () => {
                         onClick={handleLayoutTriggerClick}
                         title="智能整理布局（层次化排列，自动居中，智能缩放）"
                     >
-                        <span>🎯 智能布局</span>
+                        <span>🎯 优化布局</span>
                     </div>
                 </div>
 
