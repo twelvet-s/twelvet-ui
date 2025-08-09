@@ -233,14 +233,6 @@ export default [
             },
         ],
     },
-    {
-        title: 'AI工作流',
-        name: 'aiFlow',
-        icon: 'icon-ai-flow',
-        path: '/ai/flow',
-        layout: false,
-        component: './AI/Flow',
-    },
     // 跳转
     {
         path: '/log',
