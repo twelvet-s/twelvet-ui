@@ -1,7 +1,7 @@
-import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Col, Flex, Input, message, Row, Skeleton, Spin } from 'antd';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { listKnowledgeQueryDoc, pageQueryDoc, sendMessage, tts } from './service';
+import {PageContainer} from '@ant-design/pro-components';
+import {Button, Card, Col, Flex, Input, message, Row, Skeleton, Spin} from 'antd';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {listKnowledgeQueryDoc, pageQueryDoc, sendMessage, tts} from './service';
 import Markdown from 'react-markdown';
 import {
     CodeOutlined,
@@ -17,11 +17,13 @@ import {
 } from '@ant-design/icons';
 import styles from './styles.less';
 import moment from 'moment';
+import {useWebSocket} from "@/hooks";
 
 /**
  * AI助手模块
  */
 const AIChat: React.FC = () => {
+
     // 聊天内容框
     const chatListCtnRef = useRef<HTMLDivElement | null>(null);
 
@@ -94,7 +96,7 @@ const AIChat: React.FC = () => {
      */
     const initData = async () => {
         // 获取所有知识库
-        const { code, msg, data } = await listKnowledgeQueryDoc({});
+        const {code, msg, data} = await listKnowledgeQueryDoc({});
         if (code !== 200) {
             return message.error(msg);
         }
@@ -120,7 +122,7 @@ const AIChat: React.FC = () => {
         }
         // 默认使用第一个知识库
         setChatOptions((prevData) => {
-            const newData = { ...prevData };
+            const newData = {...prevData};
             newData.knowledgeId = knowledgeDataList[0]?.knowledgeId;
             return newData;
         });
@@ -173,7 +175,7 @@ const AIChat: React.FC = () => {
             }));
 
             try {
-                const { code, msg, data } = await pageQueryDoc({
+                const {code, msg, data} = await pageQueryDoc({
                     knowledgeId,
                     current: currentPagination.current,
                     pageSize: 10, // 每次加载10条历史消息
@@ -233,7 +235,7 @@ const AIChat: React.FC = () => {
 
                 // 将历史消息插入到现有消息列表的开头
                 setKnowledgeData((prevData) => {
-                    const newData = { ...prevData };
+                    const newData = {...prevData};
                     const currentMessages = newData[knowledgeId].chatDataList;
                     newData[knowledgeId].chatDataList = [...formattedMessages, ...currentMessages];
                     return newData;
@@ -262,7 +264,7 @@ const AIChat: React.FC = () => {
                                 const scrollToPosition = Math.max(
                                     0,
                                     (formattedMessages.length - visibleMessages) *
-                                        estimatedMessageHeight,
+                                    estimatedMessageHeight,
                                 );
                                 container.scrollTop = scrollToPosition;
                             }
@@ -385,7 +387,7 @@ const AIChat: React.FC = () => {
     useEffect(() => {
         const container = chatListCtnRef.current;
         if (container) {
-            container.addEventListener('wheel', handleWheel, { passive: false });
+            container.addEventListener('wheel', handleWheel, {passive: false});
             return () => {
                 container.removeEventListener('wheel', handleWheel);
                 // 清理定时器
@@ -469,7 +471,7 @@ const AIChat: React.FC = () => {
 
         // 重新赋值数据
         setKnowledgeData((prevData) => {
-            const newData = { ...prevData };
+            const newData = {...prevData};
             const newChatDataList = newData[chatOptions!.knowledgeId].chatDataList;
 
             newData[chatOptions!.knowledgeId].chatDataList = [...newChatDataList, userChat, aiChat];
@@ -495,7 +497,7 @@ const AIChat: React.FC = () => {
 
                 // 无论是否开启语音播报，都需要显示文字内容
                 setKnowledgeData((prevData) => {
-                    const newData = { ...prevData };
+                    const newData = {...prevData};
                     const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                     const aiContent = newChatDataList[newChatDataList.length - 1];
@@ -514,7 +516,7 @@ const AIChat: React.FC = () => {
             () => {
                 // 完成输出显示工具
                 setKnowledgeData((prevData) => {
-                    const newData = { ...prevData };
+                    const newData = {...prevData};
                     const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                     const aiContent = newChatDataList[newChatDataList.length - 1];
@@ -606,7 +608,7 @@ const AIChat: React.FC = () => {
         // 重置语音播放状态为等待（如果需要更新状态）
         if (updateState) {
             setKnowledgeData((prevData) => {
-                const newData = { ...prevData };
+                const newData = {...prevData};
                 const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                 const aiContent = newChatDataList[index];
@@ -636,7 +638,7 @@ const AIChat: React.FC = () => {
         // 批量更新所有相关消息的状态
         if (playingIndexes.length > 0) {
             setKnowledgeData((prevData) => {
-                const newData = { ...prevData };
+                const newData = {...prevData};
                 const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                 playingIndexes.forEach((index) => {
@@ -670,7 +672,7 @@ const AIChat: React.FC = () => {
 
         // 开始播放前需要加入转换中状态
         setKnowledgeData((prevData) => {
-            const newData = { ...prevData };
+            const newData = {...prevData};
             const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
             const aiContent = newChatDataList[index];
@@ -682,7 +684,7 @@ const AIChat: React.FC = () => {
 
         const content = chatDataRefs.current[index]!.innerText;
 
-        const { code, msg, data } = await tts({
+        const {code, msg, data} = await tts({
             content,
         });
 
@@ -692,7 +694,7 @@ const AIChat: React.FC = () => {
         } else {
             // 设置为正在播放中
             setKnowledgeData((prevData) => {
-                const newData = { ...prevData };
+                const newData = {...prevData};
                 const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                 const aiContent = newChatDataList[index];
@@ -751,7 +753,7 @@ const AIChat: React.FC = () => {
 
                         // 重置状态为等待
                         setKnowledgeData((prevData) => {
-                            const newData = { ...prevData };
+                            const newData = {...prevData};
                             const newChatDataList = [
                                 ...newData[chatOptions!.knowledgeId].chatDataList,
                             ];
@@ -782,7 +784,7 @@ const AIChat: React.FC = () => {
 
                     // 重置状态为等待
                     setKnowledgeData((prevData) => {
-                        const newData = { ...prevData };
+                        const newData = {...prevData};
                         const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                         const aiContent = newChatDataList[index];
@@ -797,7 +799,7 @@ const AIChat: React.FC = () => {
                 console.error('解码音频失败', error);
                 // 解码失败时重置状态
                 setKnowledgeData((prevData) => {
-                    const newData = { ...prevData };
+                    const newData = {...prevData};
                     const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
 
                     const aiContent = newChatDataList[index];
@@ -849,7 +851,7 @@ const AIChat: React.FC = () => {
         stopAllTTSContent();
 
         setChatOptions((prevData) => {
-            const newData = { ...prevData };
+            const newData = {...prevData};
             newData.knowledgeId = knowledgeId;
             return newData;
         });
@@ -873,15 +875,15 @@ const AIChat: React.FC = () => {
         <PageContainer>
             <Card>
                 {loading ? (
-                    <Skeleton active />
+                    <Skeleton active/>
                 ) : (
                     <Row className={styles.ctn}>
                         <Col
-                            xs={{ span: 0 }}
-                            sm={{ span: 0 }}
-                            md={{ span: 0 }}
-                            lg={{ span: 0 }}
-                            xxl={{ span: 3 }}
+                            xs={{span: 0}}
+                            sm={{span: 0}}
+                            md={{span: 0}}
+                            lg={{span: 0}}
+                            xxl={{span: 3}}
                             className={styles.autoHeight}
                         >
                             <ul className={styles.knowledgeCtn}>
@@ -895,7 +897,7 @@ const AIChat: React.FC = () => {
                                         }`}
                                         key={index}
                                     >
-                                        <OpenAIOutlined className={styles.knowledgeItemIcon} />
+                                        <OpenAIOutlined className={styles.knowledgeItemIcon}/>
                                         <div className={styles.knowledgeItemInfo}>
                                             <p>{knowledgeItem.knowledgeName}</p>
                                         </div>
@@ -904,11 +906,11 @@ const AIChat: React.FC = () => {
                             </ul>
                         </Col>
                         <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 24 }}
-                            lg={{ span: 24 }}
-                            xxl={{ span: 21 }}
+                            xs={{span: 24}}
+                            sm={{span: 24}}
+                            md={{span: 24}}
+                            lg={{span: 24}}
+                            xxl={{span: 21}}
                             className={styles.autoHeight}
                         >
                             <Flex gap={'small'} vertical={true} className={styles.autoHeight}>
@@ -948,7 +950,7 @@ const AIChat: React.FC = () => {
                                             {chatOptions!.knowledgeId !== undefined &&
                                                 knowledgeData[
                                                     chatOptions!.knowledgeId
-                                                ].chatDataList.map((chatData, index) => (
+                                                    ].chatDataList.map((chatData, index) => (
                                                     <>
                                                         <div
                                                             key={
@@ -984,7 +986,7 @@ const AIChat: React.FC = () => {
                                                                     ref={(el) =>
                                                                         (chatDataRefs.current[
                                                                             index
-                                                                        ] = el)
+                                                                            ] = el)
                                                                     }
                                                                     className={styles.chatInfoDes}
                                                                 >
@@ -1023,7 +1025,7 @@ const AIChat: React.FC = () => {
                                                                                     }
                                                                                 />
                                                                             ) : chatData.voicePlay ===
-                                                                              'transition' ? (
+                                                                            'transition' ? (
                                                                                 <LoadingOutlined
                                                                                     className={
                                                                                         styles.chatInfoTool
@@ -1087,7 +1089,7 @@ const AIChat: React.FC = () => {
                                                     message.success('已关闭联网搜索').then();
                                                 }
                                                 setChatOptions((prevData) => {
-                                                    const newData = { ...prevData };
+                                                    const newData = {...prevData};
                                                     newData.internetFlag = !newData.internetFlag;
                                                     return newData;
                                                 });
@@ -1113,7 +1115,7 @@ const AIChat: React.FC = () => {
                                                         .then();
                                                 }
                                                 setChatOptions((prevData) => {
-                                                    const newData = { ...prevData };
+                                                    const newData = {...prevData};
                                                     newData.carryContextFlag =
                                                         !newData.carryContextFlag;
                                                     return newData;
@@ -1138,7 +1140,7 @@ const AIChat: React.FC = () => {
                                                     message.success('已关闭自动语音播报').then();
                                                 }
                                                 setChatOptions((prevData) => {
-                                                    const newData = { ...prevData };
+                                                    const newData = {...prevData};
                                                     newData.voicePlayFlag = !newData.voicePlayFlag;
                                                     return newData;
                                                 });
@@ -1196,11 +1198,11 @@ const AIChat: React.FC = () => {
                                             }
                                         >
                                             {processingDataFlag && hasReceivedResponse ? (
-                                                <PauseOutlined />
+                                                <PauseOutlined/>
                                             ) : processingDataFlag ? (
-                                                <LoadingOutlined />
+                                                <LoadingOutlined/>
                                             ) : (
-                                                <SendOutlined rotate={-45} />
+                                                <SendOutlined rotate={-45}/>
                                             )}
                                         </Button>
                                     </Flex>

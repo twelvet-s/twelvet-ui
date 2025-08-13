@@ -27,7 +27,7 @@ import { addModel, delModel, exportModel, getModel, pageQueryModel, updateModel 
 import { system } from '@/utils/twelvet';
 import { isArray } from 'lodash';
 import { proTableConfigs } from '@/setting';
-import DictionariesSelect from '@/components/TwelveT/Dictionaries/DictionariesSelect';
+import {DictionariesSelect} from '@/components';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/theme-monokai';
