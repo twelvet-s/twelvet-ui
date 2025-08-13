@@ -1,7 +1,7 @@
 import {PageContainer} from '@ant-design/pro-components';
 import {Button, Card, Col, Flex, Input, message, Row, Skeleton, Spin} from 'antd';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {listKnowledgeQueryDoc, pageQueryDoc, sendMessage, tts} from './service';
+import {listKnowledgeQueryDoc, pageQueryDoc, sendMessage} from './service';
 import Markdown from 'react-markdown';
 import {
     CodeOutlined,
@@ -17,6 +17,7 @@ import {
 } from '@ant-design/icons';
 import styles from './styles.less';
 import moment from 'moment';
+import {useWebSocket} from "@/hooks";
 
 /**
  * AI助手模块
@@ -90,6 +91,9 @@ const AIChat: React.FC = () => {
         };
     }>({});
 
+    // 正在播放的聊天索引
+    const [playIndex, setPlayIndex] = useState<number>();
+
     /**
      * 初始化数据
      */
@@ -153,6 +157,140 @@ const AIChat: React.FC = () => {
         }
         setPaginationInfo(paginationTemp);
     };
+
+    /**
+     * 播放语音
+     */
+    const playBinaryVoice = useCallback((index: number, audio: string) => {
+        // 设置为正在播放中
+        setKnowledgeData((prevData) => {
+            const newData = {...prevData};
+            const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+            const aiContent = newChatDataList[index];
+            aiContent.voicePlay = 'playing';
+            newChatDataList[index] = aiContent;
+
+            return newData;
+        });
+
+        // 解码Base64字符串为二进制数据
+        const binaryString = atob(audio); // atob() 用于解码Base64
+        const byteArray = new Uint8Array(binaryString.length);
+
+        // 将二进制字符串转换为字节数组
+        for (let i = 0; i < binaryString.length; i++) {
+            byteArray[i] = binaryString.charCodeAt(i);
+        }
+
+        // 将字节数组转换为ArrayBuffer
+        const arrayBuffer = byteArray.buffer;
+
+        // 如果是音频数据，可以通过AudioContext来播放
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // 解码音频数据并播放
+        audioContext.decodeAudioData(
+            arrayBuffer,
+            (audioBuffer) => {
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+
+                // 定时检查音频播放的时间
+                const intervalId = setInterval(() => {
+                    const currentTime = audioContext.currentTime;
+
+                    // 检查当前时间是否跨越了下一个字/词的时间段
+                    // if (currentIndex < content.length && (currentTime * 1000) >= textData[currentIndex].beginTime) {
+                    //
+                    //     // 显示当前字并添加高亮
+                    //     const word = textData[currentIndex].text;
+                    //     textDisplay.innerHTML += `<span class="highlight">${word}</span>`;
+                    //     currentIndex++;
+                    // }
+
+                    // 如果音频播放完毕，清除定时器和引用
+                    if (currentTime >= audioBuffer.duration) {
+                        clearInterval(intervalId);
+
+                        // 清除音频控制引用
+                        delete audioControlRefs.current[index];
+
+                        // 重置状态为等待
+                        setKnowledgeData((prevData) => {
+                            const newData = {...prevData};
+                            const newChatDataList = [
+                                ...newData[chatOptions!.knowledgeId].chatDataList,
+                            ];
+
+                            const aiContent = newChatDataList[index];
+                            aiContent.voicePlay = 'wait';
+                            newChatDataList[index] = aiContent;
+
+                            return newData;
+                        });
+                    }
+                }, 100); // 每100毫秒检查一次
+
+                // 存储音频控制引用，用于停止播放
+                audioControlRefs.current[index] = {
+                    audioContext,
+                    source,
+                    intervalId,
+                };
+
+                // 开始播放音频
+                source.start(0);
+
+                // 监听音频结束事件
+                source.onended = () => {
+                    // 清除音频控制引用
+                    delete audioControlRefs.current[index];
+
+                    // 重置状态为等待
+                    setKnowledgeData((prevData) => {
+                        const newData = {...prevData};
+                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+                        const aiContent = newChatDataList[index];
+                        aiContent.voicePlay = 'wait';
+                        newChatDataList[index] = aiContent;
+
+                        return newData;
+                    });
+                };
+            },
+            (error) => {
+                console.error('解码音频失败', error);
+                // 解码失败时重置状态
+                setKnowledgeData((prevData) => {
+                    const newData = {...prevData};
+                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
+
+                    const aiContent = newChatDataList[index];
+                    aiContent.voicePlay = 'wait';
+                    newChatDataList[index] = aiContent;
+
+                    return newData;
+                });
+            },
+        );
+    }, [chatOptions])
+
+    /**
+     * 链接websocket用于处理长时间的信息
+     */
+    const websocket = useWebSocket(`/ai/ws`, {
+        onMessage: event => {
+            try {
+                const {audio} = JSON.parse(event.data);
+                playBinaryVoice(playIndex, audio)
+            } catch (e) {
+                console.error('WebSocket Failed to parse message:', event.data);
+            }
+        }
+    });
 
     /**
      * 加载历史消息
@@ -454,6 +592,9 @@ const AIChat: React.FC = () => {
         // 重置响应状态
         setHasReceivedResponse(false);
 
+        // 停止所有正在播放的语音
+        stopAllTTSContent();
+
         // 用户输入
         const userChat = {
             role: 'USER',
@@ -660,6 +801,9 @@ const AIChat: React.FC = () => {
         // 检查当前消息的播放状态
         const currentMessage = knowledgeData[chatOptions.knowledgeId!]?.chatDataList[index];
 
+        // 播放前重新设置正在播放的index
+        setPlayIndex(() => index)
+
         // 如果点击的是当前正在播放的消息，则停止播放
         if (currentMessage?.voicePlay === 'playing') {
             stopTTSContent(index);
@@ -683,132 +827,12 @@ const AIChat: React.FC = () => {
 
         const content = chatDataRefs.current[index]!.innerText;
 
-        const {code, msg, data} = await tts({
-            content,
-        });
-
-        if (code !== 200) {
-            message.error(msg);
-            return;
-        } else {
-            // 设置为正在播放中
-            setKnowledgeData((prevData) => {
-                const newData = {...prevData};
-                const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
-
-                const aiContent = newChatDataList[index];
-                aiContent.voicePlay = 'playing';
-                newChatDataList[index] = aiContent;
-
-                return newData;
-            });
-        }
-
-        // Base64字符串
-        const base64Data = data.audio;
-
-        // 解码Base64字符串为二进制数据
-        const binaryString = atob(base64Data); // atob() 用于解码Base64
-        const byteArray = new Uint8Array(binaryString.length);
-
-        // 将二进制字符串转换为字节数组
-        for (let i = 0; i < binaryString.length; i++) {
-            byteArray[i] = binaryString.charCodeAt(i);
-        }
-
-        // 将字节数组转换为ArrayBuffer
-        const arrayBuffer = byteArray.buffer;
-
-        // 如果是音频数据，可以通过AudioContext来播放
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-        // 解码音频数据并播放
-        audioContext.decodeAudioData(
-            arrayBuffer,
-            (audioBuffer) => {
-                const source = audioContext.createBufferSource();
-                source.buffer = audioBuffer;
-                source.connect(audioContext.destination);
-
-                // 定时检查音频播放的时间
-                const intervalId = setInterval(() => {
-                    const currentTime = audioContext.currentTime;
-
-                    // 检查当前时间是否跨越了下一个字/词的时间段
-                    // if (currentIndex < content.length && (currentTime * 1000) >= textData[currentIndex].beginTime) {
-                    //
-                    //     // 显示当前字并添加高亮
-                    //     const word = textData[currentIndex].text;
-                    //     textDisplay.innerHTML += `<span class="highlight">${word}</span>`;
-                    //     currentIndex++;
-                    // }
-
-                    // 如果音频播放完毕，清除定时器和引用
-                    if (currentTime >= audioBuffer.duration) {
-                        clearInterval(intervalId);
-
-                        // 清除音频控制引用
-                        delete audioControlRefs.current[index];
-
-                        // 重置状态为等待
-                        setKnowledgeData((prevData) => {
-                            const newData = {...prevData};
-                            const newChatDataList = [
-                                ...newData[chatOptions!.knowledgeId].chatDataList,
-                            ];
-
-                            const aiContent = newChatDataList[index];
-                            aiContent.voicePlay = 'wait';
-                            newChatDataList[index] = aiContent;
-
-                            return newData;
-                        });
-                    }
-                }, 100); // 每100毫秒检查一次
-
-                // 存储音频控制引用，用于停止播放
-                audioControlRefs.current[index] = {
-                    audioContext,
-                    source,
-                    intervalId,
-                };
-
-                // 开始播放音频
-                source.start(0);
-
-                // 监听音频结束事件
-                source.onended = () => {
-                    // 清除音频控制引用
-                    delete audioControlRefs.current[index];
-
-                    // 重置状态为等待
-                    setKnowledgeData((prevData) => {
-                        const newData = {...prevData};
-                        const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
-
-                        const aiContent = newChatDataList[index];
-                        aiContent.voicePlay = 'wait';
-                        newChatDataList[index] = aiContent;
-
-                        return newData;
-                    });
-                };
-            },
-            (error) => {
-                console.error('解码音频失败', error);
-                // 解码失败时重置状态
-                setKnowledgeData((prevData) => {
-                    const newData = {...prevData};
-                    const newChatDataList = [...newData[chatOptions!.knowledgeId].chatDataList];
-
-                    const aiContent = newChatDataList[index];
-                    aiContent.voicePlay = 'wait';
-                    newChatDataList[index] = aiContent;
-
-                    return newData;
-                });
-            },
-        );
+        websocket.sendMessage({
+            type: "ai",
+            tts: {
+                content: content,
+            }
+        })
     };
 
     /**

@@ -242,7 +242,6 @@ const useWebSocket = (
                         ? `${requestUri}${url}`
                         : `${requestUri}/${url}`
                 }?access_token=${getToken()}`
-
             );
             wsRef.current = ws;
 
@@ -259,6 +258,16 @@ const useWebSocket = (
             ws.onmessage = (event: WebSocketEventMap['message']) => {
                 // 接收到任何消息都视为活动，重置心跳计时器
                 resetHeartbeat();
+                if (event.data && typeof event.data === 'string') { // 如果是心跳回应不继续往下执行
+                    try {
+                        const {type} = JSON.parse(event.data);
+                        if ("pong" === type) {
+                            return
+                        }
+                    } catch (e) {
+
+                    }
+                }
                 // 执行用户定义的消息处理
                 onMessageCallback.current(event);
             };
