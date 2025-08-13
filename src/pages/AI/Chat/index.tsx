@@ -17,7 +17,6 @@ import {
 } from '@ant-design/icons';
 import styles from './styles.less';
 import moment from 'moment';
-import {useWebSocket} from "@/hooks";
 
 /**
  * AI助手模块
